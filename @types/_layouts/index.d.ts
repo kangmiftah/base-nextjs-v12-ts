@@ -1,5 +1,4 @@
 import React from "react";
-
-export interface ILayout {
+export declare interface ILayout {
     children : React.ReactNode
 }

@@ -1,0 +1,1 @@
+export { default as layout } from './layouts/layoutSlice';
