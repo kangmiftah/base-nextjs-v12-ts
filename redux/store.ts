@@ -1,17 +1,13 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import * as reducer from "./slices";
 import { createWrapper } from "next-redux-wrapper";
-import { getData } from "./services/test";
+import { applyMiddleware } from "@reduxjs/toolkit";
+import thunkMiddleware from 'redux-thunk';
+
+const middlewareEnhancer = applyMiddleware(thunkMiddleware);
 const store = configureStore({
    reducer,
    devTools: true,
-   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      thunk: {
-        extraArgument: getData,
-      },
-      serializableCheck: false,
-    }),
 });
 const makeStore = () => store;
 
