@@ -17,14 +17,10 @@ const exampleSlices = createSlice({
          };
       },
    },
-   extraReducers: {
-      [HYDRATE]: (state) => {
-         return {
-            ...state,
-         };
-      },
+   extraReducers(builder) {
+      
    },
 });
 
-export const layoutActions = exampleSlices.actions;
+export const exampleActions = exampleSlices.actions;
 export default exampleSlices.reducer;
