@@ -1,4 +1,5 @@
 import { examplePropsType } from "../../@types/redux/slices/example/exampleSlices"
+import exampleService, { getAllPosts } from "../../redux/services/examples"
 import { exampleActions } from "../../redux/slices/example/exampleSlices"
 import {  wrapper } from "../../redux/store"
 import apiFetch from "../../_modules/api"
@@ -21,21 +22,12 @@ const Home = ({title, data = []} : examplePropsType)=>{
 
 export const getServerSideProps = wrapper.getServerSideProps(
    (store)=> async () => {
-      let data = []
-      store.dispatch(exampleActions.toggleSidebar())
-      const resp = await apiFetch.get("/posts", {
-         headers: {
-            "Content-Type" : "*/*"
-         }
-      })
-      if(resp.status === 200) data = resp.data;
-      let props : examplePropsType;
-      props = {
-         title: "this is example pages",
-         data
-      }
+      store.dispatch(getAllPosts.initiate(undefined))
+      await Promise.all(store.dispatch(exampleService.util.getRunningQueriesThunk()))
       return {
-         props 
+         props:{
+            title: "This example page SSR", data :[]
+         }
       }
    }
 )

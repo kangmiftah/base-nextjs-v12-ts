@@ -4,16 +4,19 @@ import { exampleStateType } from "../../../@types/redux/slices/example/exampleSl
 
 const initialState: exampleStateType = {
    data : [],
-   count : 1
+   count : 1,
+   errorMsg: "",
+   isError: false
 };
 
 const exampleSlices = createSlice({
    name: "example",
    initialState,
    reducers: {
-      toggleSidebar: (state) => {
+      setData: (state, {payload = []}) => {
          return {
             ...state,
+            data : payload
          };
       },
    },

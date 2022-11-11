@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import { useSelector } from 'react-redux';
-import { layoutStateType } from '../../@types/redux/slices/layouts/layoutSlice';
-import { RootState } from '../../redux/store';
+import { layoutStateType } from '../../../@types/redux/slices/layouts/layoutSlice';
+import { RootState } from '../../../redux/store';
 
 export default function Sidebar<FC>(){
     const layoutState : layoutStateType = useSelector((state: RootState) => state.layout)

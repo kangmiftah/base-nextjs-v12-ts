@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { ILayout } from '../@types/_layouts';
+import { ILayout } from '../../@types';
 import Navbar from './nav';
 import Sidebar from './side';
-export default function Layout<FC>({ children }: ILayout) {
+export default function Layout<FC>(page : React.ReactElement) {
 
     return <>
         <div className='relative min-h-full max-h-full w-height overflow-hidden'>
@@ -23,7 +23,7 @@ export default function Layout<FC>({ children }: ILayout) {
                 {/* <div className='flex items-center justify-center p-40 border-4 border-dotted'> */}
                 <div className='pt-10 px-5 container block flex-1'>
 
-                    {children}
+                    {page}
                 </div>
                 {/* </div> */}
                 {/* </div> */}

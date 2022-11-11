@@ -3,22 +3,28 @@ import * as reducer from "./slices";
 import { createWrapper } from "next-redux-wrapper";
 import { applyMiddleware } from "@reduxjs/toolkit";
 import thunkMiddleware from 'redux-thunk';
+import serviceReducers from "./services/serviceReducers";
+import serviceMiddleware from "./services/serviceMiddleware";
 
 const middlewareEnhancer = applyMiddleware(thunkMiddleware);
-const store = configureStore({
-   reducer,
+// const store = 
+const makeStore = () => configureStore({
+   reducer: {
+      ...reducer,
+      ...serviceReducers
+   },
    devTools: true,
+   middleware: serviceMiddleware,
 });
-const makeStore = () => store;
 
 export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<AppStore["getState"]>;
+export type AppDispatch = AppStore["dispatch"];
 export type AppThunk<ReturnType = void> = ThunkAction<
    ReturnType,
    RootState,
    unknown,
    Action
 >;
-export const wrapper = createWrapper<AppStore>(makeStore);
-export default store;
+export const wrapper = createWrapper<AppStore>(makeStore, { debug:true });
+// export default store;

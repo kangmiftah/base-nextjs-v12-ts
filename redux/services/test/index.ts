@@ -1,22 +1,29 @@
-import { Dispatch } from "@reduxjs/toolkit";
-import axios from "axios";
-import { layoutActions } from "../../slices/layouts/layoutSlice";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { HYDRATE } from 'next-redux-wrapper'
 
-export const getData = () => async (disp: any, getState:any) => {
-   const { home } = getState();
-   console.log(home);
-   try {
-      const resp = await axios({
-         url: "https://jsonplaceholder.typicode.com/posts",
-         method: "GET",
-      });
-      console.log(resp)
-      if (resp.status === 200) {
-         disp(layoutActions.toggleSidebar());
-      } else {
-         disp(layoutActions.toggleSidebar());
-      }
-   } catch (error: any) {
-      console.log(error.toString())
-   }
-};
+const testService = createApi({
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://jsonplaceholder.typicode.com/'  }),
+  reducerPath:"testService",
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath]
+    }
+  },
+  tagTypes: ["postsTest"],
+  endpoints: (builder) => ({
+    getAllTest : builder.query({
+      query:()=> `posts`
+    }) 
+  }),
+});
+
+export const { 
+   useGetAllTestQuery,
+   useLazyGetAllTestQuery,
+} = testService
+
+export const {
+   getAllTest
+} = testService.endpoints
+
+export default testService;

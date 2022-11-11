@@ -1,9 +1,9 @@
 import { FC } from 'react';
 // import { layoutActions } from '../../slices/layouts/layoutSlice';
-import type { RootState } from '../../redux/store';
+import type { RootState } from '../../../redux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { layoutStateType } from '../../@types/redux/slices/layouts/layoutSlice';
-import { layoutActions } from '../../redux/slices/layouts/layoutSlice';
+import { layoutStateType } from '../../../@types/redux/slices/layouts/layoutSlice';
+import { layoutActions } from '../../../redux/slices/layouts/layoutSlice';
 
 export default function Navbar<FC>() {
     // const toggleSidebar = 

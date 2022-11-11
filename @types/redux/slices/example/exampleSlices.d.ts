@@ -1,7 +1,9 @@
 
 export declare interface exampleStateType {
    count : number;
-   data : Array
+   data : Array;
+   isError : boolean;
+   errorMsg : string;
 }
 
 export declare interface examplePropsType {

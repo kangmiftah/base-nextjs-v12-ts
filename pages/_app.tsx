@@ -1,7 +1,6 @@
 import "../styles/globals.css";
-import "../_layouts/assets/css/index.css";
+import "../components/_adminLayouts/assets/css/index.css";
 import type { AppProps } from "next/app";
-import Layout from "../_layouts";
 // import store from "../_modules/redux/store";
 import { Provider } from "react-redux";
 import { wrapper } from "../redux/store";
@@ -21,9 +20,7 @@ export default function App({ Component, ...rest } : AppPropsWithLayout ) {
    const getLayout = Component.getLayout ?? ((page) => page)
    return (
       <Provider store={store}>
-         {/* <Layout> */}
          {getLayout(<Component {...pageProps} />)}
-         {/* </Layout> */}
       </Provider>
    );
 }

@@ -1,5 +1,5 @@
 import { ReactElement } from "react"
-import AdminLayout from "../layout"
+import { AdminLayout } from "../../../components";
 
 
 const Page = () => {
