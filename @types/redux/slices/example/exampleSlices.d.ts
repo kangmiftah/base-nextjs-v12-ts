@@ -7,6 +7,6 @@ export declare interface exampleStateType {
 }
 
 export declare interface examplePropsType {
-   data : Array = [];
+   data? : Array = [];
    title? : string;
 }
