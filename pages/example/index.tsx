@@ -8,14 +8,11 @@ import exampleService, {
 } from "../../redux/services/examples";
 import { exampleActions } from "../../redux/slices/example/exampleSlices";
 import { RootState, wrapper } from "../../redux/store";
+
 const Home = ({ title }: examplePropsType) => {
    const postsState: RootState = useSelector((state) => state);
    const [test, setTest] = useState(false);
    const [fetch, allPost] = useLazyGetAllPostsQuery();
-   // const { isLoading, data } : { isLoading: Boolean, data: [] | any} = allPost;
-   useEffect(function () {}, [test]);
-   console.log(allPost);
-   // const { data } = allPost
    if (allPost.isLoading)
       return <h2 className=" text-3xl font-bold mb-5">...Loading</h2>;
    return (
