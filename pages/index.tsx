@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { PublicLayout } from '../components'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
@@ -9,3 +10,5 @@ export default function Home() {
     </h1>
   )
 }
+
+Home.getLayout = PublicLayout;

@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { ILayout } from '../../@types';
 import Navbar from './nav';
 import Sidebar from './side';
 export default function Layout<FC>(page : React.ReactElement) {
