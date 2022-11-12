@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Action, AnyAction, createSlice } from "@reduxjs/toolkit";
 import { layoutStateType } from "../../../@types/redux/slices/layouts/layoutSlice";
 import { HYDRATE } from "next-redux-wrapper";
 const initialState: layoutStateType = {
@@ -6,6 +6,12 @@ const initialState: layoutStateType = {
    title: "Aran Ui",
 };
 
+interface RejectedAction extends Action {
+   error: Error
+ }
+ function isRejectedAction(action: AnyAction): action is RejectedAction {
+    return action.type.endsWith('rejected')
+  }
 const layoutSlice = createSlice({
    name: "layout",
    initialState,
@@ -17,13 +23,15 @@ const layoutSlice = createSlice({
          };
       },
    },
-   extraReducers: {
-      [HYDRATE]: (state, action) => {
-         return {
-            ...state,
-            ...action.payload,
-         };
-      },
+   extraReducers(builder) {
+      builder
+      .addMatcher(
+        isRejectedAction,
+        // `action` will be inferred as a RejectedAction due to isRejectedAction being defined as a type guard
+        (state, action) => {}
+      )
+      // and provide a default case if no other handlers matched
+      .addDefaultCase((state, action) => {})
    },
 });
 
