@@ -6,8 +6,11 @@ module.exports = {
       "./components/**/*.{js,ts,jsx,tsx}",
       "./_layouts/**/*.{js,ts,jsx,tsx}",
    ],
+   darkMode: false,
+   // important:true,
    theme: {
       extend: {},
+      
    },
    plugins: [
       require('@tailwindcss/typography'),

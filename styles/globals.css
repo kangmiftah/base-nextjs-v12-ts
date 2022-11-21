@@ -4,12 +4,40 @@
 @tailwind utilities;
 
 .btn {
-   @apply font-bold py-2 px-4 rounded;
+   @apply font-bold py-2 px-4 rounded ;
  }
 html,
 body {
    padding: 0;
    margin: 0;
+   /* overflow: hidden; */
    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
+
+.sticky-nav {
+  @apply fixed top-[25px] rounded-lg left-[20%] w-[60%] shadow-md z-20;
+  transition:all .5s ease;
+}
+.normal-nav {
+  @apply relative w-[100%];
+  transition:all .5s ease;
+}
+::-webkit-scrollbar {
+   width: 7px;
+   /* display: none; */
+ }
+
+ ::-webkit-scrollbar:focus{
+   display: inherit;
+ }
+  
+ /* Handle */
+ ::-webkit-scrollbar-thumb {
+   background: '#282c37'; 
+ }
+ 
+ /* Handle on hover */
+ ::-webkit-scrollbar-thumb:hover {
+   background: #555; 
+ }

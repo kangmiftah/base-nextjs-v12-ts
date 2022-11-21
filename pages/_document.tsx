@@ -4,7 +4,7 @@ import React from "react";
 
 export default function MyDocument(): JSX.Element {
   return (
-    <Html>
+    <Html className="scroll-smooth hover:scroll-auto">
       <Head>
         {/* <link rel="stylesheet" href="/_next/static/style.css" /> */}
 

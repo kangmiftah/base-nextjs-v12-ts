@@ -1,0 +1,47 @@
+[
+   {
+      "city": "Merlion",
+      "latitude": 1.286920,
+      "logitude":  103.854570
+   },
+   {
+      "city": "Asian Civilisations Museum",
+      "latitude": 1.287466,
+      "logitude": 103.851424
+   },
+   {
+      "city": "Clarke Quay",
+      "latitude": 1.290555,
+      "logitude": 103.846188
+   },
+   {
+      "city": "Fort Canning Park",
+      "latitude": 1.295526,
+      "logitude": 103.845331
+   },
+   {
+      "city": "Orchard Road",
+      "latitude": 1.302279,
+      "logitude": 103.837399
+   },
+   {
+      "city": "Singapore Flyer",
+      "latitude": 1.289332,
+      "logitude": 103.863152
+   },
+   {
+      "city": "Marina Bay Sands",
+      "latitude": 1.283099,
+      "logitude": 103.860295
+   },
+   {
+      "city": "Gardens By The Bay",
+      "latitude": 1.281790,
+      "logitude": 103.863954
+   },
+   {
+      "city": "Chinatown",
+      "latitude": 1.284193,
+      "logitude": 103.843362
+   }
+]

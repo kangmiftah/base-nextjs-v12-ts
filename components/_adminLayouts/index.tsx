@@ -20,8 +20,7 @@ export default function Layout<FC>(page : React.ReactElement) {
                 '>
                 {/* <div className='mt-20 w-full  p-4 overflow-y-auto bg-gray-300  ease-in-out duration-300'> */}
                 {/* <div className='flex items-center justify-center p-40 border-4 border-dotted'> */}
-                <div className='pt-10 px-5 container block flex-1'>
-
+                <div className='pt-10 px-5 container block flex-1 overflow-y-auto'>
                     {page}
                 </div>
                 {/* </div> */}
