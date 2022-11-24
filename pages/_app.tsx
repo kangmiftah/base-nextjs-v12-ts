@@ -15,12 +15,17 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
    Component: NextPageWithLayout
  }
 
+ function Page({pageProps, Component} : { pageProps: any | {}, Component: NextPageWithLayout },){
+   const getLayout = Component.getLayout ?? ((page : any) => page)
+   return getLayout(<Component {...pageProps} />)
+ }
+
 export default function App({ Component, ...rest } : AppPropsWithLayout ) {
    const {store, props : { pageProps }} = wrapper.useWrappedStore(rest);
-   const getLayout = Component.getLayout ?? ((page) => page)
+  
    return (
       <Provider store={store}>
-         {getLayout(<Component {...pageProps} />)}
+         <Page Component={Component} pageProps={pageProps} />
       </Provider>
    );
 }

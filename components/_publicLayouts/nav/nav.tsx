@@ -1,10 +1,12 @@
-import { useLayoutEffect, useRef, useState } from "react";
-import MenuDropdown from "../menuDropdown/menuDropdown";
+import { useLayoutEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { layoutStateType } from "../../../@types/redux";
+import { layoutSelector, layoutActions } from "../../../redux/slices/layouts/layoutSlice";
 
 export default function Nav() {
-
-   const [ cssNav, setCssNav ] = useState<string>("normal-nav")
    const stickyHeader = useRef<any>()
+   const layoutState : layoutStateType = useSelector(layoutSelector);
+   const disp = useDispatch();
    useLayoutEffect(() => {
      let fixedTop = 0;
      if(stickyHeader.current){
@@ -12,23 +14,23 @@ export default function Nav() {
      }
      const fixedHeader = () => {
        if (window?.pageYOffset > fixedTop) {
-         setCssNav("sticky-nav")
+         disp(layoutActions.setNavSticky(true))
        } else {
-         setCssNav("normal-nav")
+         disp(layoutActions.setNavSticky(false))
        }
      }
      window.addEventListener('scroll', fixedHeader)
    }, [])
    return (
-      <nav ref={stickyHeader} className={`px-2 bg-white border-gray-200 ${cssNav} transition-all ease-in delay-300`}> {/*  dark:bg-gray-900 dark:border-gray-700 */}
+      <nav ref={stickyHeader} className={`px-2 bg-white border-gray-200 ${layoutState.isSticky ? "sticky-nav" :"normal-nav"} transition-all ease-in delay-300`}> {/*  dark:bg-gray-900 dark:border-gray-700 */}
          <div className="container flex flex-wrap items-center justify-between mx-auto">
             <a href="#" className="flex items-center">
-              
+              <span className=" font-bold text-2xl">LOGO</span>
             </a>
             <button
                data-collapse-toggle="navbar-multi-level"
                type="button"
-               className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+               className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
                aria-controls="navbar-multi-level"
                aria-expanded="false"
             >
@@ -110,7 +112,7 @@ export default function Nav() {
                   </li>
                   <li>
                      <a
-                        onClick={() => setCssNav( v=> v === "normal-nav" ? "sticky-nav" : "normal-nav")}
+                        onClick={() => disp(layoutActions.setNavSticky(true))}
                         href="#"
                         style={{
                           padding:"5px 25px"

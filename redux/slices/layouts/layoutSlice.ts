@@ -1,9 +1,11 @@
-import { Action, AnyAction, createSlice } from "@reduxjs/toolkit";
+import { Action, AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { layoutStateType } from "../../../@types/redux/slices/layouts/layoutSlice";
 import { HYDRATE } from "next-redux-wrapper";
+import { RootState } from "../../store";
 const initialState: layoutStateType = {
    sidebarOpen: false,
    title: "Aran Ui",
+   isSticky: false
 };
 
 interface RejectedAction extends Action {
@@ -22,6 +24,12 @@ const layoutSlice = createSlice({
             sidebarOpen: !state.sidebarOpen,
          };
       },
+      setNavSticky : (state: layoutStateType, action: PayloadAction<boolean>) =>{
+         return {
+            ...state,
+            isSticky: action.payload
+         }
+      }
    },
    extraReducers(builder) {
       builder
@@ -36,4 +44,5 @@ const layoutSlice = createSlice({
 });
 
 export const layoutActions = layoutSlice.actions;
+export const layoutSelector = (state: RootState) : layoutStateType => state.layout;
 export default layoutSlice.reducer;

@@ -1,0 +1,7 @@
+.btn-slider-active {
+   @apply bg-gray-800;
+}
+
+.carousel-body {
+   @apply duration-700 ease-in-out absolute inset-0 transition-all transform translate-x-0 z-20;
+}

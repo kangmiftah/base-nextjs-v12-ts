@@ -1,13 +1,17 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { PublicLayout } from '../components'
+import { Carousel, PublicLayout } from '../components'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <>
+      <Carousel >
+        <h1>Test</h1>
+        <h1>Test</h1>
+        <h1>Test</h1>
+      </Carousel>
+    </>
   )
 }
 
