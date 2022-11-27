@@ -10,7 +10,7 @@ export declare interface CarouselPropsType extends React.PropsWithChildren {
    classNameControlButton?: ClassAttributes;
    indicatorButtonStyle?: CSSProperties;
    classNameIdicatorButton?: ClassAttributes;
-   // isAuto? : boolean = false;
-   // intervalAuto? : number = 0;
+   isAuto? : boolean = false;
+   intervalAuto? : number = 0;
  
 }

@@ -12,6 +12,8 @@ export default function ({
    classNameControlButton,
    indicatorButtonStyle,
    classNameIdicatorButton,
+   isAuto=true,
+   intervalAuto=3000
 
 }: CarouselPropsType): JSX.Element {
    const refD = useRef<any>(null);
@@ -24,6 +26,19 @@ export default function ({
    function prev() {
       setIsopen((x) => (x <= 0 ? React.Children.count(children) - 1 : x - 1));
    }
+
+
+   useEffect(() => {
+      if(isAuto)
+      {
+         
+         const id = setInterval(() => next(), intervalAuto);
+     
+         return () => {
+           clearInterval(id);
+         };
+      }
+    }, []);
 
 
    return (
