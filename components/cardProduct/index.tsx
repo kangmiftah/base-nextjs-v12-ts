@@ -40,7 +40,8 @@ export default function (): JSX.Element {
             </div>
             <div className="h-[50px] grid grid-cols">
                <div className="text-center align-middle flex">
-                  <AiOutlineWhatsApp className="m-auto" size={30} />
+               
+                  <AiOutlineWhatsApp className="m-auto text-red hover:cursor-pointer"  size={30} />
                </div>
             </div>
          </div>
