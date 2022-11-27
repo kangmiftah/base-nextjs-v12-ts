@@ -13,7 +13,7 @@ export default function ({
    indicatorButtonStyle,
    classNameIdicatorButton,
 
-}: CarouselPropsType): ReactElement {
+}: CarouselPropsType): JSX.Element {
    const refD = useRef<any>(null);
    const [isOpen, setIsopen] = useState<number>(0);
 

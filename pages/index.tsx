@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Carousel, PublicLayout } from '../components'
+import { CardProduct, Carousel, PublicLayout } from '../components'
 import styles from '../styles/Home.module.css'
 const test = [
   "bg-[#8DAAA6]",
@@ -23,12 +23,14 @@ export default function Home() {
           </Carousel>
         
       </div>
-      <div className='grid grid-rows-4 grid-flow-col gap-4'>
+      <div className='grid sm:grid-cols-2 md:grid-cols-4 gap-5'>
 
         {/* <Carousel > */}
           {
             test.map(v => (
-              <div className={`w-100 h-100 h-[450px] ${v}`}></div>
+              <div>
+                <CardProduct />
+              </div>
             ))
           }
         {/* </Carousel> */}
