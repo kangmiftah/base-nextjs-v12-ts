@@ -77,7 +77,7 @@ export default function ({
                )}
             </div>
             {/* <!-- Slider indicators --> */}
-            <div className="absolute z-30 flex bottom-[-15px]  right-[70px] max-md:right-2">
+            <div className="absolute z-30 flex bottom-[-15px]  right-[40px] max-md:right-2">
                {/* {showIndicatorButton &&
                   React.Children.map(
                      children,
