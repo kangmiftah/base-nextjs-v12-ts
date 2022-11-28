@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { layoutStateType } from "../../../@types/redux";
 import { layoutSelector, layoutActions } from "../../../redux/slices/layouts/layoutSlice";
@@ -6,6 +6,7 @@ import { layoutSelector, layoutActions } from "../../../redux/slices/layouts/lay
 export default function Nav() {
    const stickyHeader = useRef<any>()
    const layoutState : layoutStateType = useSelector(layoutSelector);
+   const [ menuOpened, setMenuOpened ] = useState<boolean>(false)
    const disp = useDispatch();
    useLayoutEffect(() => {
      let fixedTop = 0;
@@ -28,7 +29,11 @@ export default function Nav() {
               <span className=" font-bold text-2xl">LOGO</span>
             </a>
             <button
-               data-collapse-toggle="navbar-multi-level"
+               onClick={function(){
+                  setMenuOpened( v => !v)
+               }}
+               onBlur={()=>setMenuOpened(false)}
+               data-collapse-toggle=" navbar-multi-level"
                type="button"
                className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
                aria-controls="navbar-multi-level"
@@ -50,7 +55,7 @@ export default function Nav() {
                </svg>
             </button>
             <div
-               className="hidden w-full md:block md:w-auto"
+               className={` ${menuOpened ? "" : "hidden"} ease-in-out duration-500 transition-all transform group-first:block w-full md:block md:w-auto`}
                id="navbar-multi-level"
             >
                <ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
