@@ -110,12 +110,12 @@ export default function ({
                            rounded-full sm:w-10 sm:h-10 
                            bg-[#6C8380]
                            group-hover:bg-[#6C8380]/50
-                           group-focus:ring-4 group-focus:ring-gray-800/70 group-focus:outline-none
+                           group-focus:outline-none
                         "
                      >
                         <svg
                            aria-hidden="true"
-                           className="w-5 h-5 sm:w-6 sm:h-6 text-gray-800"
+                           className="w-5 h-5 sm:w-6 sm:h-6 text-white"
                            fill="none"
                            stroke="currentColor"
                            viewBox="0 0 24 24"
@@ -143,11 +143,10 @@ export default function ({
                         justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 
                         bg-[#6C8380]
                         group-hover:bg-[#6C8380]/50
-                        group-focus:ring-4 group-focus:ring-gray-800/70 
                         group-focus:outline-none">
                         <svg
                            aria-hidden="true"
-                           className="w-5 h-5sm:w-6 sm:h-6 text-gray-800"
+                           className="w-5 h-5sm:w-6 sm:h-6 text-white"
                            fill="none"
                            stroke="currentColor"
                            viewBox="0 0 24 24"
