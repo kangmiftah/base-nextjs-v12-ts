@@ -9,6 +9,15 @@ module.exports = {
    darkMode: false,
    // important:true,
    theme: {
+      container: {
+         padding: {
+           DEFAULT: '5rem',
+           'sm':'3rem',
+           'xs': '3rem',
+           'md': '3rem',
+           'lg': '10rem',
+         },
+       },
       extend: {},
       
    },

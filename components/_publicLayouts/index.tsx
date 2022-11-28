@@ -16,7 +16,7 @@ export default function Layout<FC>(page: React.ReactElement) {
          <div className=" min-h-full w-height">
             <div className="  h-full ">
                { showNav &&  <Nav />}
-               <div className={`container mx-auto px-4 py-4 min-h-screen ${layouState.isSticky ? "mt-[100px]" : ""}`}>
+               <div className={`container mx-auto py-4 min-h-screen ${layouState.isSticky ? "mt-[100px]" : ""}`}>
                   {page}
                </div>
             </div>

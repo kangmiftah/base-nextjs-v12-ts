@@ -23,7 +23,7 @@ export default function Nav() {
    }, [])
    return (
       <nav ref={stickyHeader} className={`px-2 bg-white border-gray-200 ${layoutState.isSticky ? "sticky-nav" :"normal-nav"} transition-all ease-in delay-300`}> {/*  dark:bg-gray-900 dark:border-gray-700 */}
-         <div className="container flex flex-wrap items-center justify-between mx-auto">
+         <div className={` ${layoutState.isSticky ? "" :"container"} flex flex-wrap items-center justify-between mx-auto`}>
             <a href="#" className="flex items-center">
               <span className=" font-bold text-2xl">LOGO</span>
             </a>

@@ -5,7 +5,7 @@ import { AiOutlineWhatsApp } from "react-icons/ai";
 export default function (): JSX.Element {
    return (
       <div
-         className={`relative h-[350px] rounded-2xl p-0 overflow-hidden shadow-md `}
+         className={`relative h-[400px] rounded-2xl p-0 overflow-hidden shadow-md `}
       >
          <div className=" absolute bg-[#8DAAA6] top-[10px] right-[10px] z-10 text-white rounded-full text-sm px-3 py-1 ">
             20%
@@ -25,15 +25,17 @@ export default function (): JSX.Element {
          <div
             className="
                absolute bg-white 
-               h-[125px] z-20 w-full 
+               h-[175px] z-20 w-full 
                bottom-[-50px] 
                hover:bottom-0 hover:rounded-2xl transform duration-500 transition-all
                hover:bg-[rgba(255,255,255,0.8)] 
                p-0
             "
          >
-            <div className="h-[75px] border-b-2 border-solid px-3 py-2 ">
-               <h1 className=" text-md font-bold">Kentang Qtela</h1>
+            <div className="h-[125px] border-b-2 border-solid px-3 py-2 ">
+               <h1 className=" text-md">Kentang Qtela</h1>
+               <h6 className="font-bold text-[10pt]">Rp. 80.000,-</h6>
+               <div className="text-[7pt]"><span className="px-1 bg-fuchsia-200 rounded-sm text-fuchsia-600">20%</span> <span className=" line-through">Rp.10.000</span></div>
                <div className="p-1 text-xs h-full truncate ...">
                   Kentang renyah murah meriah
                </div>
