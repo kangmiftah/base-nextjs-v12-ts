@@ -28,13 +28,31 @@ export default function Home() {
                </span>
             </div>
             <div className="w-full overflow-hidden">
-               <div className="h-[150px] grid grid-rows-1 lg:grid-cols-4 grid-cols-2 2xl:grid-cols-5 gap-2">
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
+               <div className="h-[150px] grid grid-rows-1 lg:grid-cols-4 grid-cols-2 2xl:grid-cols-5 gap-2 animate-pulse">
+                  <div className="h-full bg-[#D9D9D9] rounded-lg">
+                     <div className="h-full bg-[#969696] rounded-lg">
+                     </div>
+                  </div>
+                  <div className="h-full bg-[#D9D9D9] rounded-lg">
+                     <div className="h-full bg-[#969696] rounded-lg">
+                     </div>
+                  </div>
+                  <div className="h-full bg-[#D9D9D9] rounded-lg">
+                     <div className="h-full bg-[#969696] rounded-lg">
+                     </div>
+                  </div>
+                  <div className="h-full bg-[#D9D9D9] rounded-lg">
+                     <div className="h-full bg-[#969696] rounded-lg">
+                     </div>
+                  </div>
+                  <div className="h-full bg-[#D9D9D9] rounded-lg">
+                     <div className="h-full bg-[#969696] rounded-lg">
+                     </div>
+                  </div>
+                  <div className="h-full bg-[#D9D9D9] rounded-lg">
+                     <div className="h-full bg-[#969696] rounded-lg">
+                     </div>
+                  </div>
                </div>
             </div>
          </div>
@@ -46,11 +64,13 @@ export default function Home() {
                </span>
             </div>
             <div className="w-full overflow-hidden">
-               <div className="h-[250px] grid grid-rows-1 lg:grid-cols-2 2xl:grid-cols-2 sm:grid-cols-1 gap-2">
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
-                  <div className="h-full bg-[#D9D9D9] rounded-lg"></div>
+               <div className="h-[250px] grid grid-rows-1 lg:grid-cols-2 2xl:grid-cols-2 sm:grid-cols-1 gap-2 animate-pulse">
+                  <div className="h-full bg-[#D9D9D9] rounded-lg">
+                     <div className="h-full bg-[#969696] rounded-lg "></div>
+                  </div>
+                  <div className="h-full bg-[#D9D9D9] rounded-lg">
+                     <div className="h-full bg-[#969696] rounded-lg "></div>
+                  </div>
                </div>
             </div>
          </div>

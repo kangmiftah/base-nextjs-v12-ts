@@ -7,7 +7,7 @@ import { thousandSparator } from "../../_modules/helpers";
 export default function (props : CardProductProps): JSX.Element {
    return (
       <div
-         className={`relative h-[400px] rounded-2xl p-0 overflow-hidden shadow-md `}
+         className={`relative h-[400px] rounded-2xl p-0 overflow-hidden shadow-md`}
       >
         { props.data.isDisc && <div className=" absolute bg-[#8DAAA6] top-[10px] right-[10px] z-10 text-white rounded-full text-sm px-3 py-1 ">
             { props.data.disc }

@@ -8,14 +8,16 @@ type Data = {
 
 /**
  * @swagger
- * tags: ["Hello World "]
- * /api/hello:
- *   get:
- *     tags: ["Hello World "]
- *     description: Returns the hello world
- *     responses:
- *       200:
- *         description: hello world
+ * tags: ["Users"]
+ * /api/users:
+ *    get:
+ *       tags: ["Users"]
+ *       security: 
+ *          - bearerAuth: []
+ *       description: Get All Users
+ *       responses:
+ *          200:
+ *             description: hello world
  */
 
 export default function handler(
