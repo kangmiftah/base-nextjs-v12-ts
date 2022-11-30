@@ -18,8 +18,28 @@ export default function Home({feed}: propType) {
 
 export const getStaticProps: GetStaticProps = async () => {
   // example with orm
-  // const feed = await prisma.users.findMany()
-  const feed = await prisma.$executeRawUnsafe(`select * from users`)
+  const feed = await prisma.users.findMany({
+    where : {
+      OR: [
+        {
+          name: {
+            startsWith: "ad",
+            mode:"insensitive"
+          }
+        },
+        {
+          name: {
+            endsWith: "ad",
+            mode:"insensitive"
+          }
+        }
+      ]
+
+    }
+  })
+
+  // example raw query
+  // const feed = await prisma.$queryRawUnsafe(`select * from users  where name like '%AD%'`)
   return {
     props: { feed },
     revalidate: 10,
