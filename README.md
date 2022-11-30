@@ -26,6 +26,12 @@ npx prisma generate
 npx prisma db push
 ```
 
+### prisma seeder db
+```bash
+npx prisma db seed
+```
+
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 Open [http://localhost:3000/api-docs](http://localhost:3000/api-docs) with your browser to see the SwaggerUI documentation API.
