@@ -25,6 +25,19 @@ const swaggerHandler = withSwagger({
                name: "SESSIONID"
             }
          },
+         schemas: {
+            Pet: {
+               type: "object",
+               properties: {
+                  id: {
+                     type : "integer",
+                  },
+                  name: {
+                     type : "string"
+                  }
+               }
+            }
+         }
       },
    },
    apiFolder: "src/pages/api",

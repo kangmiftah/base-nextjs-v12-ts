@@ -10,14 +10,21 @@ type Data = {
  * @swagger
  * tags: ["Users"]
  * /api/users:
- *    get:
- *       tags: ["Users"]
- *       security: 
- *          - bearerAuth: []
- *       description: Get All Users
- *       responses:
- *          200:
- *             description: hello world
+ *    post:
+ *        requestBody:
+ *            desctiption: users body
+ *            content:
+ *              application/json:
+ *                schema: 
+ *                    $ref:
+ *                        '#/components/schemas/Pet'
+ *        tags: ["Users"]
+ *        security: 
+ *            - bearerAuth: []
+ *        description: Get All Users
+ *        responses:
+ *            200:
+ *              description: hello world
  */
 
 export default function handler(
