@@ -3,9 +3,9 @@
 First copy .env.local.example .env.local
 
 ```bash
-cp .env.local.example
+cp .env.example .env
 # or
-copy .env.local.example .env.local
+copy .env.example .env
 ```
 
 Second, run the development server:
