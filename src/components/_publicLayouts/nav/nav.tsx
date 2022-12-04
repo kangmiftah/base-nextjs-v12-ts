@@ -5,7 +5,7 @@ import {
    layoutSelector,
    layoutActions,
 } from "../../../redux/slices/layouts/layoutSlice";
-import { Modal } from "../..";
+import { Modal, Input, Button } from "../..";
 
 export default function Nav() {
    const stickyHeader = useRef<any>();
@@ -133,7 +133,7 @@ export default function Nav() {
                   </li>
                   <li>
                      <button
-                        onClick={() => setModalLogin(v => !v)}
+                        onClick={() => setModalLogin((v) => !v)}
                         style={{
                            padding: "5px 25px",
                         }}
@@ -150,19 +150,48 @@ export default function Nav() {
                </ul>
             </div>
          </div>
-         <Modal backdrop="static" size="lg" showModal={modalLogin} onHide={()=> setModalLogin(false)}>
+         <Modal
+            backdrop="static"
+            size="md"
+            showModal={modalLogin}
+            onHide={() => setModalLogin(false)}
+         >
             <Modal.Header closeBtn>
-               <h1 className=" text-lg font-bold">
-                  Login
-               </h1>
+               <h1 className=" text-lg font-bold">Login</h1>
             </Modal.Header>
             <Modal.Body>
-               {/* <div className="h-screen m-3 bg-slate-600"></div> */}
+               <div className="relative border-dashed border-2 rounded-md ">
+                  <div className="grid grid-rows-3 p-4">
+                     <div className="mb-3">
+                        <h2 className=" text-2xl text-center">
+                           Login in your account
+                        </h2>
+                     </div>
+                     <div className="mb-3">
+                        <Input.Label>Username</Input.Label>
+                        <Input.Text placeholder="username or email" />
+                     </div>
+                     <div className="mb-3">
+                        <Input.Label>Password</Input.Label>
+                        <Input.Text placeholder="password" type="password" />
+                     </div>
+                  </div>
+               </div>
             </Modal.Body>
             <Modal.Footer>
                <div className="grid grid-cols-1">
                   <div>
-                     <button className=" bg-blue-600 shadow-sm py-[3px] hover:bg-blue-800 active:bg-blue-600 text-[10pt] float-right px-3 text-white rounded mr-2">Login</button>
+                     <Button size="lg" color="primary" className="float-right ">
+                        Login
+                     </Button>
+                     <Button
+                        size="lg"
+                        color="secondary"
+                        onClick={() => setModalLogin(false)}
+                        className="float-right"
+                     >
+                        Cancel
+                     </Button>
                   </div>
                </div>
             </Modal.Footer>

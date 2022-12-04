@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import { CardProduct, Carousel, PublicLayout } from "../components";
+import { CardProduct, Carousel, PublicLayout } from "../components/";
 import styles from "../styles/Home.module.css";
 const test = [
    "bg-[#8DAAA6]",
