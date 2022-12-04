@@ -14,7 +14,7 @@ Template for nextjs and iclude with module :
 ```bash
    npx create-next-app nama_app --example=https://github.com/kangmiftah/base-nextjs-v12-ts 
 ```
-### copy .env.local.example .env.local
+### copy .env.example .env
 
 ```bash
 cp .env.example .env
