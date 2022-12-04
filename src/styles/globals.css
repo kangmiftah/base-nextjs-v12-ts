@@ -1,0 +1,98 @@
+/* @import '../../node_modules/modern-normalize/modern-normalize.css'; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+  @apply font-bold py-2 px-4 rounded;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  /* overflow: hidden; */
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+.sticky-nav {
+  @apply fixed top-[25px] rounded-lg left-[20%] w-[60%] shadow-md z-50;
+  transition: all .5s ease;
+}
+
+.normal-nav {
+  @apply relative w-[100%];
+  transition: all .5s ease;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  /* display: none; */
+}
+
+::-webkit-scrollbar:focus {
+  display: inherit;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: '#282c37';
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+@layer utilities {
+  @keyframes shake {
+    0% {
+      transform: translate(1px, 1px) rotate(0deg);
+    }
+
+    10% {
+      transform: translate(-1px, -2px) rotate(-1deg);
+    }
+
+    20% {
+      transform: translate(-3px, 0px) rotate(1deg);
+    }
+
+    30% {
+      transform: translate(3px, 2px) rotate(0deg);
+    }
+
+    40% {
+      transform: translate(1px, -1px) rotate(1deg);
+    }
+
+    50% {
+      transform: translate(-1px, 2px) rotate(-1deg);
+    }
+
+    60% {
+      transform: translate(-3px, 1px) rotate(0deg);
+    }
+
+    70% {
+      transform: translate(3px, 1px) rotate(-1deg);
+    }
+
+    80% {
+      transform: translate(-1px, -1px) rotate(1deg);
+    }
+
+    90% {
+      transform: translate(1px, 2px) rotate(0deg);
+    }
+
+    100% {
+      transform: translate(1px, -2px) rotate(-1deg);
+    }
+
+  }
+  .animate-shake {
+    animation: shake 0.5s infinite;
+  }
+}
