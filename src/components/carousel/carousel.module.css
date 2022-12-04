@@ -1,11 +1,3 @@
 .btn-slider-active {
    @apply bg-gray-800;
 }
-
-.carouselBody {
-   @apply z-10;
-}
-
-.carouselBodyActive {
-   @apply  z-20
-}

@@ -62,7 +62,8 @@ export default function ({
                         <div
                            key={i}
                            className={` duration-700 ease-in-out absolute inset-0 transition-all transform 
-                           ${i === isOpen ? "z-20" : "z-10"}
+                           
+                           }
                         `}
                            data-carousel-item
                            style={{
@@ -77,7 +78,7 @@ export default function ({
                )}
             </div>
             {/* <!-- Slider indicators --> */}
-            <div className="absolute z-30 flex bottom-[-15px]  right-[40px] max-md:right-2">
+            <div className="absolute  flex bottom-[-15px]  right-[40px] max-md:right-2">
                {/* {showIndicatorButton &&
                   React.Children.map(
                      children,
@@ -97,7 +98,7 @@ export default function ({
                   <>
                      <button
                      type="button"
-                     className={`${classNameControlButton} z-30 flex items-center justify-center h-full px-2 cursor-pointer group focus:outline-none`}
+                     className={`${classNameControlButton} flex items-center justify-center h-full px-2 cursor-pointer group focus:outline-none`}
                      data-carousel-prev
                      style={controlButtonStyle}
                      onClick={prev}
@@ -133,7 +134,7 @@ export default function ({
                   </button>
                   <button
                      type="button"
-                     className={`${classNameControlButton} z-30 flex items-center justify-center h-full px-2 cursor-pointer group focus:outline-none`}
+                     className={`${classNameControlButton} flex items-center justify-center h-full px-2 cursor-pointer group focus:outline-none`}
                      data-carousel-next
                      style={controlButtonStyle}
                      onClick={next}
@@ -170,7 +171,7 @@ export default function ({
                <>
                   <button
                      type="button"
-                     className={`${classNameControlButton} absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none`}
+                     className={`${classNameControlButton} absolute top-0 left-0 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none`}
                      data-carousel-prev
                      style={controlButtonStyle}
                      onClick={prev}
@@ -204,7 +205,7 @@ export default function ({
                   </button>
                   <button
                      type="button"
-                     className={`${classNameControlButton} absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none`}
+                     className={`${classNameControlButton} absolute top-0 right-0 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none`}
                      data-carousel-next
                      style={controlButtonStyle}
                      onClick={next}

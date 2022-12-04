@@ -11,19 +11,24 @@ module.exports = {
    theme: {
       container: {
          padding: {
-           DEFAULT: '3rem',
-           'sm':'3rem',
-           'xs': '3rem',
-           'md': '3rem',
-           'lg': '7rem',
-           '2xl': '12rem'
+            DEFAULT: "3rem",
+            sm: "3rem",
+            xs: "3rem",
+            md: "3rem",
+            lg: "7rem",
+            "2xl": "12rem",
          },
-       },
-      extend: {},
-      
+      },
+      extend: {
+         colors: {
+            primary: "bg-blue-600",
+         },
+      },
    },
    plugins: [
-      require('@tailwindcss/typography'),
-      require('@tailwindcss/line-clamp'),
+      require("@tailwindcss/typography"),
+      require("@tailwindcss/line-clamp"),
+      require("./plugin.custom")
+
    ],
 };

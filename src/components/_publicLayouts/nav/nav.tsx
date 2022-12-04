@@ -1,38 +1,52 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { layoutStateType } from "../../../@types/redux";
-import { layoutSelector, layoutActions } from "../../../redux/slices/layouts/layoutSlice";
+import {
+   layoutSelector,
+   layoutActions,
+} from "../../../redux/slices/layouts/layoutSlice";
+import { Modal } from "../..";
 
 export default function Nav() {
-   const stickyHeader = useRef<any>()
-   const layoutState : layoutStateType = useSelector(layoutSelector);
-   const [ menuOpened, setMenuOpened ] = useState<boolean>(false)
+   const stickyHeader = useRef<any>();
+   const layoutState: layoutStateType = useSelector(layoutSelector);
+   const [menuOpened, setMenuOpened] = useState<boolean>(false);
+   const [modalLogin, setModalLogin] = useState<boolean>(false);
    const disp = useDispatch();
    useLayoutEffect(() => {
-     let fixedTop = 0;
-     if(stickyHeader.current){
-        fixedTop = stickyHeader?.current.offsetTop
-     }
-     const fixedHeader = () => {
-       if (window?.pageYOffset > fixedTop) {
-         disp(layoutActions.setNavSticky(true))
-       } else {
-         disp(layoutActions.setNavSticky(false))
-       }
-     }
-     window.addEventListener('scroll', fixedHeader)
-   }, [])
+      let fixedTop = 0;
+      if (stickyHeader.current) {
+         fixedTop = stickyHeader?.current.offsetTop;
+      }
+      const fixedHeader = () => {
+         if (window?.pageYOffset > fixedTop)
+            disp(layoutActions.setNavSticky(true));
+         else disp(layoutActions.setNavSticky(false));
+      };
+      window.addEventListener("scroll", fixedHeader);
+   }, []);
    return (
-      <nav ref={stickyHeader} className={`px-2 bg-white border-gray-200 ${layoutState.isSticky ? "sticky-nav" :"normal-nav"} transition-all ease-in delay-300`}> {/*  dark:bg-gray-900 dark:border-gray-700 */}
-         <div className={` ${layoutState.isSticky ? "" :"container"} flex flex-wrap items-center justify-between mx-auto`}>
+      <nav
+         ref={stickyHeader}
+         className={`px-2 bg-white border-gray-200 ${
+            layoutState.isSticky ? "sticky-nav" : "normal-nav"
+         } transition-all ease-in delay-300`}
+      >
+         {" "}
+         {/*  dark:bg-gray-900 dark:border-gray-700 */}
+         <div
+            className={` ${
+               layoutState.isSticky ? "" : "container"
+            } flex flex-wrap items-center justify-between mx-auto`}
+         >
             <a href="#" className="flex items-center">
-              <span className=" font-bold text-2xl">LOGO</span>
+               <span className=" font-bold text-2xl">LOGO</span>
             </a>
             <button
-               onClick={function(){
-                  setMenuOpened( v => !v)
+               onClick={function () {
+                  setMenuOpened((v) => !v);
                }}
-               onBlur={()=>setMenuOpened(false)}
+               onBlur={() => setMenuOpened(false)}
                data-collapse-toggle=" navbar-multi-level"
                type="button"
                className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
@@ -55,7 +69,9 @@ export default function Nav() {
                </svg>
             </button>
             <div
-               className={` ${menuOpened ? "" : "hidden"} ease-in-out duration-500 transition-all transform group-first:block w-full md:block md:w-auto`}
+               className={` ${
+                  menuOpened ? "" : "hidden"
+               } ease-in-out duration-500 transition-all transform group-first:block w-full md:block md:w-auto`}
                id="navbar-multi-level"
             >
                <ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
@@ -116,11 +132,10 @@ export default function Nav() {
                      </a>
                   </li>
                   <li>
-                     <a
-                        onClick={() => disp(layoutActions.setNavSticky(true))}
-                        href="#"
+                     <button
+                        onClick={() => setModalLogin(v => !v)}
                         style={{
-                          padding:"5px 25px"
+                           padding: "5px 25px",
                         }}
                         className="
                            block font-bold text-[12pt] 
@@ -129,12 +144,29 @@ export default function Nav() {
                             rounded-xl
                            md:border-0 md:p-0"
                      >
-                           Sign in
-                      </a>
+                        Sign in
+                     </button>
                   </li>
                </ul>
             </div>
          </div>
+         <Modal backdrop="static" size="lg" showModal={modalLogin} onHide={()=> setModalLogin(false)}>
+            <Modal.Header closeBtn>
+               <h1 className=" text-lg font-bold">
+                  Login
+               </h1>
+            </Modal.Header>
+            <Modal.Body>
+               {/* <div className="h-screen m-3 bg-slate-600"></div> */}
+            </Modal.Body>
+            <Modal.Footer>
+               <div className="grid grid-cols-1">
+                  <div>
+                     <button className=" bg-blue-600 shadow-sm py-[3px] hover:bg-blue-800 active:bg-blue-600 text-[10pt] float-right px-3 text-white rounded mr-2">Login</button>
+                  </div>
+               </div>
+            </Modal.Footer>
+         </Modal>
       </nav>
    );
 }
