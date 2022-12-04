@@ -1,6 +1,20 @@
+# how to use this template
+Template for nextjs and iclude with module : 
+   - Redux Tools [RTK Query etc.]
+   - Tailwind css with custom style and components
+   - Prisma for orm db connection
+   - swagger UI for API Doc
+   - Template admin
+   - Template public
+   - React component with tailwond compatible
 ## Getting Started
 
-First copy .env.local.example .env.local
+### Create next app with template
+
+```bash
+   npx create-next-app nama_app --example=https://github.com/kangmiftah/base-nextjs-v12-ts 
+```
+### copy .env.local.example .env.local
 
 ```bash
 cp .env.example .env
@@ -8,7 +22,7 @@ cp .env.example .env
 copy .env.example .env
 ```
 
-Second, run the development server:
+### run the development server:
 
 ```bash
 npm run dev
