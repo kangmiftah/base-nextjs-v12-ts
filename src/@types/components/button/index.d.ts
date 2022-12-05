@@ -10,4 +10,5 @@ export declare interface ButtonProps
    extends React.HTMLAttributes<HTMLButtonElement> {
    size?: buttonSize;
    color?: ButtonColourType;
+   type? : "button" | "submit" | "reset"
 }

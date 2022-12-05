@@ -1,32 +1,21 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { layoutStateType } from "../../../@types/redux";
 import {
-   layoutSelector,
    layoutActions,
+   layoutSelector,
 } from "../../../redux/slices/layouts/layoutSlice";
-import { Modal, Input, Button } from "../..";
+import ModalLogin from "../modalLogin";
 
 export default function Nav() {
    const stickyHeader = useRef<any>();
    const layoutState: layoutStateType = useSelector(layoutSelector);
    const [menuOpened, setMenuOpened] = useState<boolean>(false);
    const [modalLogin, setModalLogin] = useState<boolean>(false);
-   const disp = useDispatch();
-   useLayoutEffect(() => {
-      let fixedTop = 0;
-      if (stickyHeader.current) {
-         fixedTop = stickyHeader?.current.offsetTop;
-      }
-      const fixedHeader = () => {
-         if (window?.pageYOffset > fixedTop)
-            disp(layoutActions.setNavSticky(true));
-         else disp(layoutActions.setNavSticky(false));
-      };
-      window.addEventListener("scroll", fixedHeader);
-   }, []);
+  
    return (
       <nav
+         id="nav-header"
          ref={stickyHeader}
          className={`px-2 bg-white border-gray-200 ${
             layoutState.isSticky ? "sticky-nav" : "normal-nav"
@@ -86,34 +75,6 @@ export default function Nav() {
                         Home
                      </a>
                   </li>
-                  {/* <li>
-                     <MenuDropdown
-                        menuItems={[
-                           {
-                              name: "Item menu 1",
-                              onClick(data) {
-                                 console.log(data)
-                              },
-                              urlHref:"#"
-                           },
-                           {
-                              name: "Item menu 2",
-                              onClick(data) {
-                                 console.log(data)
-                              },
-                              urlHref:"#"
-                           },
-                           {
-                              name: "Item menu 3",
-                              onClick(data) {
-                                 console.log(data)
-                              },
-                              urlHref:"#"
-                           },
-                        ]}
-                        title="Dropdown TEST"
-                     />
-                  </li> */}
                   <li>
                      <a
                         href="#"
@@ -150,52 +111,8 @@ export default function Nav() {
                </ul>
             </div>
          </div>
-         <Modal
-            backdrop="static"
-            size="md"
-            showModal={modalLogin}
-            onHide={() => setModalLogin(false)}
-         >
-            <Modal.Header closeBtn>
-               <h1 className=" text-lg font-bold">Login</h1>
-            </Modal.Header>
-            <Modal.Body>
-               <div className="relative border-dashed border-2 rounded-md ">
-                  <div className="grid grid-rows-3 p-4">
-                     <div className="mb-3">
-                        <h2 className=" text-2xl text-center">
-                           Login in your account
-                        </h2>
-                     </div>
-                     <div className="mb-3">
-                        <Input.Label>Username</Input.Label>
-                        <Input.Text placeholder="username or email" />
-                     </div>
-                     <div className="mb-3">
-                        <Input.Label>Password</Input.Label>
-                        <Input.Text placeholder="password" type="password" />
-                     </div>
-                  </div>
-               </div>
-            </Modal.Body>
-            <Modal.Footer>
-               <div className="grid grid-cols-1">
-                  <div>
-                     <Button size="lg" color="primary" className="float-right ">
-                        Login
-                     </Button>
-                     <Button
-                        size="lg"
-                        color="secondary"
-                        onClick={() => setModalLogin(false)}
-                        className="float-right"
-                     >
-                        Cancel
-                     </Button>
-                  </div>
-               </div>
-            </Modal.Footer>
-         </Modal>
+                     <ModalLogin show={modalLogin} onHide={()=>setModalLogin(false)} />
+        
       </nav>
    );
 }

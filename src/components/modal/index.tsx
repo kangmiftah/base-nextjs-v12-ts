@@ -36,11 +36,13 @@ export default function Modal(props: ModalProps): JSX.Element {
    React.useEffect(
       function () {
          if (props.showModal) {
-            document.body.style.overflow = "hidden";
+            // document.body.style.overflow = "hidden";
+            // document.body.classList.add("overflow-hidden");
             setShowModal(true);
             setTimeout(() => setInModal(true), 200);
          } else {
-            document.body.style.overflow = "auto";
+            // document.body.style.overflow = "auto";
+            // document.body.classList.remove("overflow-hidden");
             setInModal(false);
             setTimeout(() => setShowModal(false), 300);
          }

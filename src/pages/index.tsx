@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import { CardProduct, Carousel, PublicLayout } from "../components/";
+import { useSession } from "next-auth/react";
 import styles from "../styles/Home.module.css";
 const test = [
    "bg-[#8DAAA6]",
@@ -11,6 +12,8 @@ const test = [
    "bg-[#8D1D2E]",
 ];
 export default function Home() {
+   const { data } = useSession();
+   console.log(data)
    return (
       <>
          <div className="grid grid-rows grid-flow-col">

@@ -7,3 +7,5 @@ export { default as Modal } from './modal';
 export { default as Input } from './input';
 export { Form } from './input';
 export { default as Button } from './button';
+export { default as LoadingPage } from './loadingPage';
+export { default as Loader } from './loader'

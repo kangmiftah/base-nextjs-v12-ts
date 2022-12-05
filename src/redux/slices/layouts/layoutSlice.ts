@@ -5,7 +5,11 @@ import { RootState } from "../../store";
 const initialState: layoutStateType = {
    sidebarOpen: false,
    title: "Aran Ui",
-   isSticky: false
+   isSticky: false,
+   loading: {
+      isLoading: false,
+      loadingText: "Please Wait"
+   }
 };
 
 interface RejectedAction extends Action {
@@ -28,6 +32,13 @@ const layoutSlice = createSlice({
          return {
             ...state,
             isSticky: action.payload
+         }
+      },
+      setLoading : (state: layoutStateType, action: PayloadAction<layoutStateType["loading"]>) => {
+         return {
+            ...state,
+            loading: action.payload
+
          }
       }
    },

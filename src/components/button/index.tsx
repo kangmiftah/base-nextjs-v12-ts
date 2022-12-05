@@ -48,5 +48,6 @@ export default function (_props: ButtonProps): JSX.Element {
       text-[10pt] float-right px-3
       text-white rounded mr-2
       `
+   if(props.type=== undefined) props.type="button"
    return <button {...props}>{props.children}</button>;
 }
