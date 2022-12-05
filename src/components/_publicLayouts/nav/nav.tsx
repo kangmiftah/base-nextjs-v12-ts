@@ -1,3 +1,4 @@
+import { signOut, useSession } from "next-auth/react";
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { layoutStateType } from "../../../@types/redux";
@@ -12,6 +13,7 @@ export default function Nav() {
    const layoutState: layoutStateType = useSelector(layoutSelector);
    const [menuOpened, setMenuOpened] = useState<boolean>(false);
    const [modalLogin, setModalLogin] = useState<boolean>(false);
+   const {data, status} = useSession()
   
    return (
       <nav
@@ -93,26 +95,41 @@ export default function Nav() {
                      </a>
                   </li>
                   <li>
-                     <button
-                        onClick={() => setModalLogin((v) => !v)}
-                        style={{
-                           padding: "5px 25px",
-                        }}
-                        className="
-                           block font-bold text-[12pt] 
-                            bg-[#6C8380]
-                           text-white
-                            rounded-xl
-                           md:border-0 md:p-0"
-                     >
-                        Sign in
-                     </button>
+                     {
+                        status === "unauthenticated" ?   <button
+                           onClick={() => setModalLogin((v) => !v)}
+                           style={{
+                              padding: "5px 25px",
+                           }}
+                           className="
+                              block font-bold text-[12pt] 
+                              bg-[#6C8380]
+                              text-white
+                              rounded-xl
+                              md:border-0 md:p-0"
+                        >
+                           Sign in
+                        </button> :  <button
+                           onClick={() => signOut({redirect:true}) }
+                           style={{
+                              padding: "5px 25px",
+                           }}
+                           className="
+                              block font-bold text-[12pt] 
+                              bg-[#6C8380]
+                              text-white
+                              rounded-xl
+                              md:border-0 md:p-0"
+                        >
+                           Sign out
+                        </button>
+                     }
                   </li>
                </ul>
             </div>
          </div>
-                     <ModalLogin show={modalLogin} onHide={()=>setModalLogin(false)} />
-        
+                     {status  === "unauthenticated" && <ModalLogin show={modalLogin} onHide={()=>setModalLogin(false)} />
+        }
       </nav>
    );
 }

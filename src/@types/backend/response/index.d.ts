@@ -1,5 +1,5 @@
-export declare interface BaseResponseAPI<T> {
+export declare interface BaseResponseAPI<T = any> {
    code : string;
    message : string;
-   data : T;
+   data : T | any;
 }

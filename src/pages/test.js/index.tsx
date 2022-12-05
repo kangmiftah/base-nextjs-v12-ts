@@ -1,6 +1,7 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import appconfig from "../../app.config";
 import prisma from "../../backend/_modules/prisma";
 import styles from "../styles/Home.module.css";
 
@@ -9,7 +10,11 @@ type propType = {
 };
 export default function Home({ feed }: propType) {
    return (
-      <h1 className="text-3xl font-bold underline">{JSON.stringify(feed)}</h1>
+      <>
+         <h1 className="text-3xl font-bold underline">
+            {JSON.stringify(feed)}
+         </h1>
+      </>
    );
 }
 

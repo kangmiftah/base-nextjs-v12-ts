@@ -7,7 +7,7 @@ import {
 import { useLoginMutation } from "../../../redux/services/auth";
 import { useDispatch } from "react-redux";
 import { useSession, signIn, signOut } from "next-auth/react"
-
+import { useRouter } from 'next/router'
 export default function ({
    show,
    onHide,
@@ -15,25 +15,40 @@ export default function ({
    show: boolean;
    onHide: () => void;
 }): JSX.Element {
-   const [login, result] = useLoginMutation();
-   const { isLoading, isError, isSuccess, isUninitialized } = result;
    const disp = useDispatch();
-   React.useEffect(
-      function () {
-         disp(
-            layoutActions.setLoading({
-               isLoading: isLoading,
-               loadingText: "Please wait",
-            })
-         );
-      },
-      [isLoading]
-   );
+   const { status } = useSession();
+   const route = useRouter();
    return (
       <Form
          // ref={formRef}
-         onSubmit={(formData) => {
-            signIn()
+         onSubmit={async (formData) => {
+            disp(
+               layoutActions.setLoading({
+                  isLoading: true,
+                  loadingText: "Please wait",
+               })
+            );
+            try {
+               
+               const resp = await signIn("credentials", { redirect: false, ...formData })
+               console.log(resp)
+               if(resp?.ok) {
+                  onHide();
+                  route.reload()
+                  // window?.location.reload()
+               }
+               else{
+                  alert(resp?.error)
+               }
+            } catch (error) {
+               console.error(error)
+            }
+            disp(
+               layoutActions.setLoading({
+                  isLoading: false,
+                  loadingText: "Please wait",
+               })
+            );
          }}
       >
          <Modal backdrop="static" size="md" showModal={show} onHide={onHide}>
