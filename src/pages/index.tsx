@@ -13,13 +13,12 @@ const test = [
 ];
 export default function Home() {
    const { data } = useSession();
-   console.log(data)
    return (
       <>
          <div className="grid grid-rows grid-flow-col">
             <Carousel>
-               {test.map((v) => (
-                  <div className={`w-100 h-100 h-[450px] ${v}`}></div>
+               {test.map((v,i) => (
+                  <div key={i} className={`w-100 h-100 h-[450px] ${v}`}></div>
                ))}
             </Carousel>
          </div>
@@ -94,7 +93,7 @@ export default function Home() {
               "
             >
                {test.map((v, i) => (
-                  <div>
+                  <div key={i}>
                      <CardProduct
                         data={{
                            id: i,
