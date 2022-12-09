@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-   darkMode : "class",
+   darkMode: "class",
    content: [
       "./src/app/**/*.{js,ts,jsx,tsx}",
       "./src/pages/**/*.{js,ts,jsx,tsx}",
@@ -92,7 +92,30 @@ module.exports = {
                800: "#09414a",
                900: "#052025",
             },
-
+            sidebar: {
+               DEFAULT: "#39393a",
+               100: "#d7d7d8",
+               200: "#b0b0b0",
+               300: "#888889",
+               400: "#616161",
+               500: "#39393a",
+               600: "#2e2e2e",
+               700: "#222223",
+               800: "#171717",
+               900: "#0b0b0c",
+            },
+            navbar: {
+               DEFAULT: "#ffffff",
+               100: "#eeeeee",
+               200: "#dddddd",
+               300: "#cccccc",
+               400: "#bbbbbb",
+               500: "#aaaaaa",
+               600: "#999999",
+               700: "#888888",
+               800: "#666666",
+               900: "#333333",
+            },
          },
       },
    },

@@ -3,7 +3,7 @@ import { layoutStateType } from "../../../@types/redux/slices/layouts/layoutSlic
 import { HYDRATE } from "next-redux-wrapper";
 import { RootState } from "../../store";
 const initialState: layoutStateType = {
-   sidebarOpen: false,
+   sidebarOpen: true,
    title: "Aran Ui",
    isSticky: false,
    loading: {
@@ -22,6 +22,7 @@ const layoutSlice = createSlice({
    name: "layout",
    initialState,
    reducers: {
+      closeSidebar: (state: layoutStateType) => ( {...state, sidebarOpen: false} ),
       toggleSidebar: (state) => {
          return {
             ...state,
