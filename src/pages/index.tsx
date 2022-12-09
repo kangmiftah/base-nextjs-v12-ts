@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
-import { CardProduct, Carousel, PublicLayout } from "../components";
+import { CardProduct, Carousel, PublicLayout } from "../components/";
+import { useSession } from "next-auth/react";
 import styles from "../styles/Home.module.css";
 const test = [
    "bg-[#8DAAA6]",
@@ -11,12 +12,13 @@ const test = [
    "bg-[#8D1D2E]",
 ];
 export default function Home() {
+   const { data } = useSession();
    return (
       <>
          <div className="grid grid-rows grid-flow-col">
             <Carousel>
-               {test.map((v) => (
-                  <div className={`w-100 h-100 h-[450px] ${v}`}></div>
+               {test.map((v,i) => (
+                  <div key={i} className={`w-100 h-100 h-[450px] ${v}`}></div>
                ))}
             </Carousel>
          </div>
@@ -91,7 +93,7 @@ export default function Home() {
               "
             >
                {test.map((v, i) => (
-                  <div>
+                  <div key={i}>
                      <CardProduct
                         data={{
                            id: i,

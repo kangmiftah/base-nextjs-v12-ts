@@ -1,32 +1,23 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { layoutStateType } from "../../../@types/redux";
 import {
-   layoutSelector,
    layoutActions,
+   layoutSelector,
 } from "../../../redux/slices/layouts/layoutSlice";
-import { Modal } from "../..";
+import ModalLogin from "../modalLogin";
 
 export default function Nav() {
    const stickyHeader = useRef<any>();
    const layoutState: layoutStateType = useSelector(layoutSelector);
    const [menuOpened, setMenuOpened] = useState<boolean>(false);
    const [modalLogin, setModalLogin] = useState<boolean>(false);
-   const disp = useDispatch();
-   useLayoutEffect(() => {
-      let fixedTop = 0;
-      if (stickyHeader.current) {
-         fixedTop = stickyHeader?.current.offsetTop;
-      }
-      const fixedHeader = () => {
-         if (window?.pageYOffset > fixedTop)
-            disp(layoutActions.setNavSticky(true));
-         else disp(layoutActions.setNavSticky(false));
-      };
-      window.addEventListener("scroll", fixedHeader);
-   }, []);
+   const {data, status} = useSession()
+  
    return (
       <nav
+         id="nav-header"
          ref={stickyHeader}
          className={`px-2 bg-white border-gray-200 ${
             layoutState.isSticky ? "sticky-nav" : "normal-nav"
@@ -86,34 +77,6 @@ export default function Nav() {
                         Home
                      </a>
                   </li>
-                  {/* <li>
-                     <MenuDropdown
-                        menuItems={[
-                           {
-                              name: "Item menu 1",
-                              onClick(data) {
-                                 console.log(data)
-                              },
-                              urlHref:"#"
-                           },
-                           {
-                              name: "Item menu 2",
-                              onClick(data) {
-                                 console.log(data)
-                              },
-                              urlHref:"#"
-                           },
-                           {
-                              name: "Item menu 3",
-                              onClick(data) {
-                                 console.log(data)
-                              },
-                              urlHref:"#"
-                           },
-                        ]}
-                        title="Dropdown TEST"
-                     />
-                  </li> */}
                   <li>
                      <a
                         href="#"
@@ -132,41 +95,41 @@ export default function Nav() {
                      </a>
                   </li>
                   <li>
-                     <button
-                        onClick={() => setModalLogin(v => !v)}
-                        style={{
-                           padding: "5px 25px",
-                        }}
-                        className="
-                           block font-bold text-[12pt] 
-                            bg-[#6C8380]
-                           text-white
-                            rounded-xl
-                           md:border-0 md:p-0"
-                     >
-                        Sign in
-                     </button>
+                     {
+                        status === "unauthenticated" ?   <button
+                           onClick={() => setModalLogin((v) => !v)}
+                           style={{
+                              padding: "5px 25px",
+                           }}
+                           className="
+                              block font-bold text-[12pt] 
+                              bg-[#6C8380]
+                              text-white
+                              rounded-xl
+                              md:border-0 md:p-0"
+                        >
+                           Sign in
+                        </button> :  <button
+                           onClick={() => signOut({redirect:true}) }
+                           style={{
+                              padding: "5px 25px",
+                           }}
+                           className="
+                              block font-bold text-[12pt] 
+                              bg-[#6C8380]
+                              text-white
+                              rounded-xl
+                              md:border-0 md:p-0"
+                        >
+                           Sign out
+                        </button>
+                     }
                   </li>
                </ul>
             </div>
          </div>
-         <Modal backdrop="static" size="lg" showModal={modalLogin} onHide={()=> setModalLogin(false)}>
-            <Modal.Header closeBtn>
-               <h1 className=" text-lg font-bold">
-                  Login
-               </h1>
-            </Modal.Header>
-            <Modal.Body>
-               {/* <div className="h-screen m-3 bg-slate-600"></div> */}
-            </Modal.Body>
-            <Modal.Footer>
-               <div className="grid grid-cols-1">
-                  <div>
-                     <button className=" bg-blue-600 shadow-sm py-[3px] hover:bg-blue-800 active:bg-blue-600 text-[10pt] float-right px-3 text-white rounded mr-2">Login</button>
-                  </div>
-               </div>
-            </Modal.Footer>
-         </Modal>
+                     {status  === "unauthenticated" && <ModalLogin show={modalLogin} onHide={()=>setModalLogin(false)} />
+        }
       </nav>
    );
 }

@@ -6,26 +6,51 @@ import { Provider } from "react-redux";
 import { wrapper } from "../redux/store";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
+import Head from "next/head";
+import { SessionProvider } from "next-auth/react";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-   getLayout?: (page: ReactElement) => ReactNode
- }
- 
- type AppPropsWithLayout = AppProps & {
-   Component: NextPageWithLayout
- }
+   getLayout?: (page: ReactElement) => ReactNode;
+};
 
- function Page({pageProps, Component} : { pageProps: any | {}, Component: NextPageWithLayout },){
-   const getLayout = Component.getLayout ?? ((page : any) => page)
-   return getLayout(<Component {...pageProps} />)
- }
+type AppPropsWithLayout = AppProps & {
+   Component: NextPageWithLayout;
+};
 
-export default function App({ Component, ...rest } : AppPropsWithLayout ) {
-   const {store, props : { pageProps }} = wrapper.useWrappedStore(rest);
-  
+function Page({
+   pageProps,
+   Component,
+}: {
+   pageProps: any | {};
+   Component: NextPageWithLayout;
+}) {
+   const getLayout = Component.getLayout ?? ((page: any) => page);
+   return getLayout(<Component {...pageProps} />);
+}
+
+export default function App({ Component, ...rest }: AppPropsWithLayout) {
+   const {
+      store,
+      props: {
+         pageProps: { session, ...pageProps },
+      },
+   } = wrapper.useWrappedStore(rest);
    return (
-      <Provider store={store}>
-         <Page Component={Component} pageProps={pageProps} />
-      </Provider>
+      <>
+         <Head>
+            <title>E-Commerce App</title>
+         </Head>
+         <SessionProvider
+            refetchInterval={5 * 60}
+            
+            // Re-fetches session when window is focused
+            refetchOnWindowFocus={true}
+            session={session}
+         >
+            <Provider store={store}>
+               <Page Component={Component} pageProps={pageProps} />
+            </Provider>
+         </SessionProvider>
+      </>
    );
 }

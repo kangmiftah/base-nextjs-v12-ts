@@ -1,6 +1,9 @@
-
 export declare interface layoutStateType {
-   sidebarOpen : boolean;
+   sidebarOpen: boolean;
    title?: string;
-   isSticky? : boolean = false;
+   isSticky?: boolean = false;
+   loading: {
+      isLoading: boolean = false;
+      loadingText: string = "Please Wait";
+   };
 }

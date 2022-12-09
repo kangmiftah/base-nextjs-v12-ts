@@ -1,10 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from "next";
+import { BaseResponseAPI } from "../../../@types/backend/response";
+import { authApiPublic } from "../../../backend/_modules/middleware";
 
 type Data = {
-  name: string
-}
-
+   name: string;
+};
 
 /**
  * @swagger
@@ -15,11 +16,11 @@ type Data = {
  *            desctiption: users body
  *            content:
  *              application/json:
- *                schema: 
+ *                schema:
  *                    $ref:
  *                        '#/components/schemas/Pet'
  *        tags: ["Users"]
- *        security: 
+ *        security:
  *            - bearerAuth: []
  *        description: Get All Users
  *        responses:
@@ -27,9 +28,11 @@ type Data = {
  *              description: hello world
  */
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  res.status(200).json({ name: 'John Doe' })
-}
+export default (req: NextApiRequest, res: NextApiResponse<BaseResponseAPI>) =>
+   authApiPublic(res, req, async function (session: any) {
+      res.json({
+         code: "00",
+         message: "Success",
+         data: session,
+      });
+   });

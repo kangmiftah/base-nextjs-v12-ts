@@ -3,9 +3,13 @@ import { layoutStateType } from "../../../@types/redux/slices/layouts/layoutSlic
 import { HYDRATE } from "next-redux-wrapper";
 import { RootState } from "../../store";
 const initialState: layoutStateType = {
-   sidebarOpen: false,
+   sidebarOpen: true,
    title: "Aran Ui",
-   isSticky: false
+   isSticky: false,
+   loading: {
+      isLoading: false,
+      loadingText: "Please Wait"
+   }
 };
 
 interface RejectedAction extends Action {
@@ -18,6 +22,7 @@ const layoutSlice = createSlice({
    name: "layout",
    initialState,
    reducers: {
+      closeSidebar: (state: layoutStateType) => ( {...state, sidebarOpen: false} ),
       toggleSidebar: (state) => {
          return {
             ...state,
@@ -28,6 +33,13 @@ const layoutSlice = createSlice({
          return {
             ...state,
             isSticky: action.payload
+         }
+      },
+      setLoading : (state: layoutStateType, action: PayloadAction<layoutStateType["loading"]>) => {
+         return {
+            ...state,
+            loading: action.payload
+
          }
       }
    },
