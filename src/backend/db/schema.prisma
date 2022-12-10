@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,11 +7,81 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Role {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  menuList    RoleMenu[]
+  userList    Users[]    @relation("UserRole")
+
+  @@map("roles")
+}
+
 model Users {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  name     String?
-  password String
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  name       String?
+  password   String
+  role_id    Int
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  created_by Int?
+  role       Role      @relation("UserRole", fields: [role_id], references: [id])
 
   @@map("users")
+}
+
+model Menu {
+  id         Int          @id @default(autoincrement())
+  name       String
+  url        String
+  icon       String?
+  icon_type  IconTypeEnum
+  hash_child Boolean      @default(false)
+  parent_id  Int?
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  created_by Int?
+  actionList ActionMenu[] @relation("ActionList")
+  parent     Menu?        @relation("ParentChild", fields: [parent_id], references: [id])
+  childs     Menu[]       @relation("ParentChild")
+  roleList   RoleMenu[]
+
+  @@map("menu")
+}
+
+model RoleMenu {
+  menu_id     Int
+  role_id     Int
+  assigned_at DateTime @default(now())
+  assign_by   Int?
+  menuList    Menu     @relation(fields: [menu_id], references: [id])
+  roleList    Role     @relation(fields: [role_id], references: [id])
+
+  @@id([menu_id, role_id])
+  @@map("role_menu")
+}
+
+model ActionMenu {
+  id            Int            @id @default(autoincrement())
+  name          String
+  type          ActionTypeEnum
+  function_name String
+  menu_id       Int
+  created_by    Int?
+  menu          Menu           @relation("ActionList", fields: [menu_id], references: [id])
+}
+
+enum IconTypeEnum {
+  CSS
+  FILE
+  COMPONENT
+}
+
+enum ActionTypeEnum {
+  DROPDOWN_IN_LIST
+  SYSTEM
+  BUTTON_TOOLS
 }
