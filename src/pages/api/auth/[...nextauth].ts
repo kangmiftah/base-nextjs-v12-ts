@@ -9,11 +9,20 @@ export const optionsAuth: NextAuthOptions = {
    session: {
       strategy: "jwt",
       maxAge: 10 * 60,
-      updateAge:5 * 60
+      updateAge:5 * 60,
+   },
+   jwt:{
+      async encode({token, secret, maxAge}) {
+         return "";
+      },
+      async decode({token, secret}) {
+         return {};
+      },
    },
    providers: [
       Credentials({
          type: "credentials",
+         
          credentials: {},
          async authorize(credentials, req) {
             console.log(req);

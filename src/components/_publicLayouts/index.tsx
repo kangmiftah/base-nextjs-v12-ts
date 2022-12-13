@@ -19,7 +19,7 @@ export default function Layout<FC>(page: React.ReactElement) {
       let html = e.target as HTMLElement;
       let nav: HTMLElement | null =
          document.getElementById("nav-header");
-      if (html.scrollTop > (nav?.offsetTop || 0))
+      if (html.scrollTop > ( 0))
          disp(layoutActions.setNavSticky(true));
       else disp(layoutActions.setNavSticky(false));
    }

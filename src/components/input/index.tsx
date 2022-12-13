@@ -91,7 +91,7 @@ export const Form = React.forwardRef<
       [formData]
    );
    return (
-      <form
+      <form className="peer"
          ref={ref}
          onSubmit={(e: React.SyntheticEvent<HTMLFormElement>) => {
             e.preventDefault();
@@ -129,12 +129,12 @@ const Text = React.forwardRef<HTMLInputElement, InputTextProps>(function (
    let props = { ..._props };
    let ref = _ref
    if (!ref) ref = useRef<HTMLInputElement>(null)
-   props.className = `
+   props.className =`
       appearance-none shadow
       border rounded w-full ${getSize(props.sizeInput)} px-3 
       text-gray-700 leading-tight focus:border-primary-500
       focus:outline-none focus:shadow-outline] ${props.className}
-      peer peer-invalid:border-danger
+      focus:invalid:border-danger
    `;
    if (props.type === undefined) props.type = "text";
    const {
@@ -159,7 +159,7 @@ const Text = React.forwardRef<HTMLInputElement, InputTextProps>(function (
          [props.name]
       );
    }
-   return <input  ref={ref} type="text" {...props} />;
+   return <input  ref={ref} type="text" {...props}  />;
 });
 
 function Label({ children, ..._props }: {} & HTMLProps<HTMLLabelElement>) {
