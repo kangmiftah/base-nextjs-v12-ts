@@ -14,8 +14,6 @@ export default function Nav() {
    const [menuOpened, setMenuOpened] = useState<boolean>(false);
    const [modalLogin, setModalLogin] = useState<boolean>(false);
    const {data, status} = useSession()
-
-   console.log(data)
   
    return (
       <nav
