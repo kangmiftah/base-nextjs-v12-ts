@@ -30,7 +30,7 @@ export default function ({
             );
             try {
                
-               const resp = await signIn("credentials", { redirect: false, ...formData })
+               const resp = await signIn("credentials", { redirect: false, ...formData, loginType: "PUBLIC" })
                console.log(resp)
                if(resp?.ok) {
                   onHide();

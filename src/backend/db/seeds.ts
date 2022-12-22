@@ -10,21 +10,30 @@ async function main() {
 
    //    }
    // })
+   const role = await prisma.role.create({
+      data: {
+         name: "SUPER ADMIN",
+         description: "Role of super admin"
+      }
+   })
    const users = await prisma.users.createMany({
       data : [
          {
-            name: "Admin 1",
-            email: "admin1@email.com",
-            password: bcrypt.hashSync("123123", bcrypt.genSaltSync())
+            name: "Admin",
+            email: "admin@email.com",
+            password: bcrypt.hashSync("123123", bcrypt.genSaltSync()),
+            is_public: false,
+            role_id: role.id
          },
          {
-            name: "Admin 2",
-            email: "admin2@email.com",
-            password: bcrypt.hashSync("321321", bcrypt.genSaltSync())
+            name: "Customer",
+            email: "customer@email.com",
+            password: bcrypt.hashSync("321321", bcrypt.genSaltSync()),
+            is_public: true
          }
       ]
    })
-   console.log({users})
+   console.log({users, role})
 }
 main()
    .then(async () => {

@@ -7,8 +7,8 @@ export default async function (
    callback: (session: Session | null) => any
 ) {
    let session: any= await getSession(context);
-   console.log("session FE PUBLIC", session?.PUBLIC);
-   if (!session?.PUBLIC) {
+   console.log("session FE ADMIN", session?.ADMIN);
+   if (!session?.ADMIN) {
       return {
          redirect: {
             permanent: false,
@@ -17,5 +17,5 @@ export default async function (
          props: {},
       };
    }
-   return callback(session.PUBLIC);
+   return callback(session.ADMIN);
 }

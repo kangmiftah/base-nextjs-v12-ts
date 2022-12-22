@@ -12,7 +12,7 @@ model Role {
   name        String
   description String?
   created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  updated_at  DateTime?  @updatedAt
   menuList    RoleMenu[]
   userList    Users[]    @relation("UserRole")
 
@@ -24,11 +24,12 @@ model Users {
   email      String    @unique
   name       String?
   password   String
-  role_id    Int
+  role_id    Int?
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
   created_by Int?
-  role       Role      @relation("UserRole", fields: [role_id], references: [id])
+  is_public  Boolean   @default(true)
+  role       Role?     @relation("UserRole", fields: [role_id], references: [id])
 
   @@map("users")
 }
@@ -42,7 +43,7 @@ model Menu {
   hash_child Boolean      @default(false)
   parent_id  Int?
   created_at DateTime     @default(now())
-  updated_at DateTime     @updatedAt
+  updated_at DateTime?    @updatedAt
   created_by Int?
   actionList ActionMenu[] @relation("ActionList")
   parent     Menu?        @relation("ParentChild", fields: [parent_id], references: [id])
