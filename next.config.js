@@ -4,11 +4,7 @@ const nextConfig = {
   swcMinify: true,
   async redirects() {
     return [
-      {
-        source: '/admin',
-        destination: '/admin/dashboard',
-        permanent: true,
-      },
+      
     ]
   },
 }
