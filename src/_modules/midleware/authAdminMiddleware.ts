@@ -6,16 +6,17 @@ export default async function (
    context: GetServerSidePropsContext,
    callback: (session: Session | null) => any
 ) {
-   let session: any= await getSession(context);
-   console.log("session FE ADMIN", session?.ADMIN);
-   if (!session?.ADMIN) {
+
+   let session: Session | null= await getSession(context);
+   console.log("session admin : ",session)
+   if (!session) {
       return {
          redirect: {
             permanent: false,
-            destination: "/",
+            destination: "/login",
          },
          props: {},
       };
    }
-   return callback(session.ADMIN);
+   return callback(session);
 }

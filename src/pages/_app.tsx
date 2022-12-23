@@ -8,6 +8,10 @@ import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
+import LoadingPage from "../components/loadingPage";
+import { layoutStateType } from "../@types/redux";
+import { useSelector } from "react-redux";
+import { layoutSelector } from "../redux/slices/layouts/layoutSlice";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
    getLayout?: (page: ReactElement) => ReactNode;
@@ -25,7 +29,15 @@ function Page({
    Component: NextPageWithLayout;
 }) {
    const getLayout = Component.getLayout ?? ((page: any) => page);
-   return getLayout(<Component {...pageProps} />);
+   const layoutState: layoutStateType = useSelector(layoutSelector);
+   return (
+      <>
+         <LoadingPage isLoading={layoutState.loading.isLoading}>
+            {layoutState.loading.loadingText}
+         </LoadingPage>
+         {getLayout(<Component {...pageProps} />)};
+      </>
+   );
 }
 
 export default function App({ Component, ...rest }: AppPropsWithLayout) {
@@ -42,7 +54,6 @@ export default function App({ Component, ...rest }: AppPropsWithLayout) {
          </Head>
          <SessionProvider
             refetchInterval={5 * 60}
-            
             // Re-fetches session when window is focused
             refetchOnWindowFocus={true}
             session={session}

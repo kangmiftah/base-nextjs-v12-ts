@@ -26,9 +26,6 @@ export default function Layout<FC>(page: React.ReactElement) {
 
    return (
       <>
-         <LoadingPage isLoading={layouState.loading.isLoading} >
-            {layouState.loading.loadingText}
-         </LoadingPage>
          <div
             className=" min-h-full w-height max-h-screen overflow-y-auto"
             onScroll={handleScroll}

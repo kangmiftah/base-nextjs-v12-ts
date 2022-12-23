@@ -1,7 +1,7 @@
 import { Users } from "@prisma/client";
 import NextAuth, { NextAuthOptions, Session } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import prisma from "../../../backend/_modules/prisma";
+import prisma from "../../../../backend/_modules/prisma";
 import bcrypt from 'bcrypt'
 import { randomUUID } from "crypto";
 
@@ -20,14 +20,34 @@ export const optionsAuth: NextAuthOptions = {
                   email: String(session.user?.email)
                },
                select: {
-                
+                  role: {
+                     select: {
+                        name: true,
+                        id: true,
+                        description: true,
+                        menuList: {
+                           select: {
+                              menuList: {
+                                 select:{
+                                    name: true,
+                                    icon:true,
+                                    icon_type: true,
+                                    childs:true,
+                                    hash_child: true,
+                                    url: true
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  },
                   is_public: true,
                   email: true,
                   id: true,
                   name: true,
                },
             })
-            return { ...session, userDetail : { ... newUser}}
+            return { ...session, userDetail : { ... newUser}, menu: newUser?.role?.menuList || []}
       },
    },
    providers: [
@@ -48,7 +68,7 @@ export const optionsAuth: NextAuthOptions = {
                      {
                         email: body?.username
                      },{
-                        is_public:true
+                        is_public: false
                      }
                   ]
                }
@@ -56,6 +76,9 @@ export const optionsAuth: NextAuthOptions = {
             if(!user) throw new Error("Email is didnt match")
             let passIsmatch = await bcrypt.compare(body.password, user.password)
             if(!passIsmatch) throw new Error("Password is didnt match")
+            // console.log({user.se;})
+            
+
             return { ... user, role_id: user.role_id, id:String(user.id)} ;
          },
          

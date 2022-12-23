@@ -30,8 +30,6 @@ export function middleware(req: NextRequest): NextResponse | Response {
             pathname_ = pathname_.replace("/api", "");
             req.nextUrl.pathname = `/api/admin${pathname_}`;
          }
-         console.log(url.pathname);
-         console.log(req.nextUrl);
          return NextResponse.rewrite(req.nextUrl);
       }
    }
