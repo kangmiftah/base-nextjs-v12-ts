@@ -33,7 +33,78 @@ async function main() {
          }
       ]
    })
-   console.log({users, role})
+   const menus = await prisma.menu.createMany({
+      data : [
+         {
+            id: 1,
+            name : "Dashboard",
+            icon_type : "COMPONENT",
+            icon :"FiBarChart2",
+            url : "/dashboard",
+            hash_child: false
+         },
+         {
+            id: 2,
+            name : "Management User",
+            icon_type : "COMPONENT",
+            icon :"FiUsers",
+            url : "/management-users",
+            hash_child: true
+         },
+         {
+            id: 3,
+            name : "Users",
+            url : "/management-users/users",
+            hash_child: false,
+            parent_id : 2,
+         },
+         {
+            id: 4,
+            name : "Roles",
+            url : "/management-users/roles",
+            hash_child: false,
+            parent_id : 2,
+         },
+         {
+            id: 5,
+            name : "Menu",
+            url : "/management-users/menu",
+            hash_child: false,
+            parent_id : 2,
+         }
+      ]
+   })
+   
+   const roleMenu = await prisma.roleMenu.createMany({
+      data: [
+         {
+            menu_id :1,
+            role_id: role.id
+         },
+         {
+            menu_id :2,
+            role_id: role.id
+         },
+         {
+            menu_id :3,
+            role_id: role.id
+         },
+         {
+            menu_id :4,
+            role_id: role.id
+         },
+         {
+            menu_id :5,
+            role_id: role.id
+         }
+      ]
+   })
+
+   console.log({users, role, menus})
+
+   
+
+   
 }
 main()
    .then(async () => {

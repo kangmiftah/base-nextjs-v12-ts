@@ -20,34 +20,25 @@ export const optionsAuth: NextAuthOptions = {
                   email: String(session.user?.email)
                },
                select: {
-                  role: {
-                     select: {
-                        name: true,
-                        id: true,
-                        description: true,
-                        menuList: {
-                           select: {
-                              menuList: {
-                                 select:{
-                                    name: true,
-                                    icon:true,
-                                    icon_type: true,
-                                    childs:true,
-                                    hash_child: true,
-                                    url: true
-                                 }
-                              }
-                           }
-                        }
-                     }
-                  },
+                  role: true,
                   is_public: true,
                   email: true,
                   id: true,
                   name: true,
+                  role_id: true,
                },
             })
-            return { ...session, userDetail : { ... newUser}, menu: newUser?.role?.menuList || []}
+            let menuList = await prisma.menu.findMany({
+               where: {
+                  AND : {
+                     parent_id : null
+                  }
+               },
+               include : {
+                  childs: true
+               }
+            })
+            return { ...session, userDetail : { ... newUser}, menuList}
       },
    },
    providers: [
@@ -76,9 +67,6 @@ export const optionsAuth: NextAuthOptions = {
             if(!user) throw new Error("Email is didnt match")
             let passIsmatch = await bcrypt.compare(body.password, user.password)
             if(!passIsmatch) throw new Error("Password is didnt match")
-            // console.log({user.se;})
-            
-
             return { ... user, role_id: user.role_id, id:String(user.id)} ;
          },
          

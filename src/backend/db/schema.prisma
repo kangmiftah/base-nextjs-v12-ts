@@ -39,7 +39,7 @@ model Menu {
   name       String
   url        String
   icon       String?
-  icon_type  IconTypeEnum
+  icon_type  IconTypeEnum?
   hash_child Boolean      @default(false)
   parent_id  Int?
   created_at DateTime     @default(now())
