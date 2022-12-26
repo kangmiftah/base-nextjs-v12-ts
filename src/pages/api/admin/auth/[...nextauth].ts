@@ -43,9 +43,6 @@ export const optionsAuth: NextAuthOptions = {
       },
       
    },
-   events:{
-      
-   },
    providers: [
       Credentials({
          type: "credentials",
@@ -78,6 +75,9 @@ export const optionsAuth: NextAuthOptions = {
       }),
       
       // ...add more providers here
-   ]
+   ],
+   pages: {
+      signOut:"/"
+   }
 };
 export default NextAuth(optionsAuth);
