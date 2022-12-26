@@ -5,20 +5,24 @@ import { useSelector } from "react-redux";
 import { layoutStateType } from "../../../@types/redux/slices/layouts/layoutSlice";
 import { layoutActions } from "../../../redux/slices/layouts/layoutSlice";
 import { RootState } from "../../../redux/store";
+import Sidemenu from "./sidemenu";
 
 export default function Sidebar<FC>() {
    const layoutState: layoutStateType = useSelector(
       (state: RootState) => state.layout
    );
    const disp = useDispatch();
-   const [hidingMobile, setHidingMobile] = useState<boolean>(false)
-   useEffect(function () {
-    let a: any;
-      if(layoutState.sidebarOpen){
-        a = setTimeout(()=> setHidingMobile(true), 500)
-      }else setHidingMobile(false);
-      return () => clearTimeout(a)
-   }, [layoutState.sidebarOpen]);
+   const [hidingMobile, setHidingMobile] = useState<boolean>(false);
+   useEffect(
+      function () {
+         let a: any;
+         if (layoutState.sidebarOpen) {
+            a = setTimeout(() => setHidingMobile(true), 500);
+         } else setHidingMobile(false);
+         return () => clearTimeout(a);
+      },
+      [layoutState.sidebarOpen]
+   );
    // ${ layoutState.sidebarOpen ? "-translate-x-full" : "translate-x-full" }
    let cn = classNames({
       "md:translate-x-0": layoutState.sidebarOpen,
@@ -39,6 +43,10 @@ export default function Sidebar<FC>() {
             <h1 id="sidebar" className="text-2xl font-semibold text-white">
                E-Admin
             </h1>
+         </div>
+         <div className=" max-w-full mt-5 overflow-hidden 
+                  bg-sidebar-600 rounded-md">
+            <Sidemenu />
          </div>
       </div>
    );

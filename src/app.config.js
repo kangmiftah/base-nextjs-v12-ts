@@ -6,7 +6,8 @@ const appconfig =  {
    DATABASE_HOST:process.env.DATABASE_HOST,
    DATABASE_DB:process.env.DATABASE_DB,
    DATABASE_PORT:process.env.DATABASE_PORT,
-   SECRET_KEY_JWT:process.env.SECRET_KEY_JWT
+   SECRET_KEY_JWT:process.env.SECRET_KEY_JWT,
+   SUB_DOMAIN_ADMIN:process.env.SUB_DOMAIN_ADMIN || "admin"
 }
 
 export default appconfig;

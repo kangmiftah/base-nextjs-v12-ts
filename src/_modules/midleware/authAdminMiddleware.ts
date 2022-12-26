@@ -6,13 +6,14 @@ export default async function (
    context: GetServerSidePropsContext,
    callback: (session: Session | null) => any
 ) {
+
    let session: Session | null= await getSession(context);
-   console.log("session FE PUBLIC", session);
+   console.log("session admin : ",session)
    if (!session) {
       return {
          redirect: {
             permanent: false,
-            destination: "/",
+            destination: "/login",
          },
          props: {},
       };

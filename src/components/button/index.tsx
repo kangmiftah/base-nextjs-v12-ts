@@ -24,7 +24,8 @@ function getColour(colourType: ButtonColourType): string {
          hover:bg-secondary-600 active:bg-secondary 
          `;
       default:
-         return ""
+         return `bg-primary 
+         hover:bg-primary-600 active:bg-primary `
    }
 }
 
@@ -45,7 +46,7 @@ export default function (_props: ButtonProps): JSX.Element {
    props.className = `
       ${props.className} ${getColour(props.color)} ${getSize(props.size)}
       focus:outline-none
-      text-[10pt] float-right px-3
+      text-[10pt] px-3
       text-white rounded mr-2
       `
    if(props.type=== undefined) props.type="button"

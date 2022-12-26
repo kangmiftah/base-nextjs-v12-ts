@@ -1,7 +1,7 @@
 import { Users } from "@prisma/client";
 import NextAuth, { NextAuthOptions, Session } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import prisma from "../../../backend/_modules/prisma";
+import prisma from "../../../../backend/_modules/prisma";
 import bcrypt from 'bcrypt'
 import { randomUUID } from "crypto";
 
@@ -13,6 +13,7 @@ export const optionsAuth: NextAuthOptions = {
       updateAge:5 * 60,
    },
    callbacks: {
+      
       async session(params) {
             let { session, user, token } = params
             let newUser = await prisma.users.findFirst({
@@ -20,15 +21,27 @@ export const optionsAuth: NextAuthOptions = {
                   email: String(session.user?.email)
                },
                select: {
-                
+                  role: true,
                   is_public: true,
                   email: true,
                   id: true,
                   name: true,
+                  role_id: true,
                },
             })
-            return { ...session, userDetail : { ... newUser}}
+            let menuList = await prisma.menu.findMany({
+               where: {
+                  AND : {
+                     parent_id : null
+                  }
+               },
+               include : {
+                  childs: true
+               }
+            })
+            return { ...session, userDetail : { ... newUser}, menuList}
       },
+      
    },
    providers: [
       Credentials({
@@ -48,7 +61,7 @@ export const optionsAuth: NextAuthOptions = {
                      {
                         email: body?.username
                      },{
-                        is_public:true
+                        is_public: false
                      }
                   ]
                }
@@ -63,8 +76,8 @@ export const optionsAuth: NextAuthOptions = {
       
       // ...add more providers here
    ],
-   pages:{
-      signIn:"/"
+   pages: {
+      signOut:"/"
    }
 };
 export default NextAuth(optionsAuth);
