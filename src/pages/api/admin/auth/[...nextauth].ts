@@ -13,6 +13,7 @@ export const optionsAuth: NextAuthOptions = {
       updateAge:5 * 60,
    },
    callbacks: {
+      
       async session(params) {
             let { session, user, token } = params
             let newUser = await prisma.users.findFirst({
@@ -40,6 +41,10 @@ export const optionsAuth: NextAuthOptions = {
             })
             return { ...session, userDetail : { ... newUser}, menuList}
       },
+      
+   },
+   events:{
+      
    },
    providers: [
       Credentials({
@@ -73,9 +78,6 @@ export const optionsAuth: NextAuthOptions = {
       }),
       
       // ...add more providers here
-   ],
-   pages:{
-      signIn:"/"
-   }
+   ]
 };
 export default NextAuth(optionsAuth);

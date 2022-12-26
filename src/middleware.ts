@@ -16,7 +16,8 @@ export function middleware(req: NextRequest): NextResponse | Response {
       if (subdomain[0].toLocaleLowerCase() === subdomainadmin) {
          if (
             pathname.startsWith("/static") || // exclude static files
-            pathname.startsWith("/files") || // exclude static files
+            pathname.startsWith("/files") || // exclude static files _next
+            pathname.startsWith("/_next") || // exclude static files _next
             pathname.includes(".") // exclude all files in the public folder
          ) {
             return NextResponse.next();
