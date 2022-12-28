@@ -12,6 +12,7 @@ const initialState: layoutStateType = {
    title: "Aran Ui",
    isSticky: false,
    screenSize: { width: 0, height: 0 },
+   breadcrumbs: [],
    loading: {
       isLoading: false,
       loadingText: "Please Wait",
@@ -58,6 +59,15 @@ const layoutSlice = createSlice({
          return {
             ...state,
             loading: action.payload,
+         };
+      },
+      setBreadcrumbs: (
+         state: layoutStateType,
+         action: PayloadAction<layoutStateType["breadcrumbs"]>
+      ) => {
+         return {
+            ...state,
+            breadcrumbs: action.payload,
          };
       },
    },

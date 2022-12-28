@@ -7,6 +7,8 @@ import { useSession } from "next-auth/react";
 import { IconTypeEnum, Menu } from "@prisma/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { layoutActions } from "../../../redux/slices/layouts/layoutSlice";
 
 const ComponentIconMenu = {
    ...Fi,
@@ -69,29 +71,46 @@ export default function (props: SideMenuProps): JSX.Element {
    const menuList: Array<Menu & { childs: Array<Menu> }> | [] =
       data?.menuList || [];
    let router = useRouter();
-   // useEffect(function(){
-   //    let childKey = 0;
-   //    let key = menuList.findIndex((v) => {
-   //       return v.hash_child ? v.childs.some( (vc, cx) => {
-   //          console.log(router.asPath, v.url, vc.url)
-   //          console.log(v.url === router.asPath)
-   //          if(vc.url === router.asPath) childKey = cx;
-   //          return vc.url === router.asPath
-   //       }) :
-   //       v.url === router.asPath
-   //    })
-   //    setIsActive({
-   //       key,
-   //       childKey
-   //    })
-   // },[router.asPath])
+   const disp = useDispatch();
 
-   // useEffect(function(){
-   //    console.log(isActive)
-   // },[isActive])
    function getPath() {
-      return router.asPath?.replace("#", "")
+      return router.asPath?.replace("#", "");
    }
+   useEffect(
+      function () {
+         let menu = undefined;
+         let childKey: undefined | number = undefined;
+         let key: number = -1;
+         menuList.forEach((v, i) => {
+            if (v.childs)
+               v.childs.forEach((x, ic) => {
+                  if (x.url === getPath()) {
+                     childKey = ic;
+                     key= i
+                     menu = {
+                        name: x.name,
+                        url: x.url,
+                        isActive: true,
+                     };
+                  }
+               });
+            if (v.url === getPath()) {
+               key = i;
+               childKey= undefined;
+               menu = {
+                  name: v.name,
+                  url: v.url,
+                  isActive: true,
+               };
+            }
+         });
+         if (menu) disp(layoutActions.setBreadcrumbs([menu]));
+         setIsActive({
+            childKey, key
+         })
+      },
+      [router.asPath]
+   );
    return (
       <>
          {menuList.map(
@@ -116,10 +135,16 @@ export default function (props: SideMenuProps): JSX.Element {
                transform 
             `,
                         {
-                           "hover:bg-sidebar-800": isActive.key === x ||  ( 
-                              hash_child ? (childs.some( vc => vc.url === getPath())) : (url === getPath()) ),
-                           "bg-sidebar-800":isActive.key === x ||  ( 
-                              hash_child ? (childs.some( vc => vc.url === getPath())) : (url === getPath()) ),
+                           "hover:bg-sidebar-800":
+                              isActive.key === x ||
+                              (hash_child
+                                 ? childs.some((vc) => vc.url === getPath())
+                                 : url === getPath()),
+                           "bg-sidebar-800":
+                              isActive.key === x ||
+                              (hash_child
+                                 ? childs.some((vc) => vc.url === getPath())
+                                 : url === getPath()),
                            // "rounded-t-md":isActive
                         }
                      )}
@@ -182,19 +207,22 @@ export default function (props: SideMenuProps): JSX.Element {
                            className={`${classNames(
                               " mt-3 bg-sidebar-800 py-3 rounded-md",
                               {
-                                 hidden: !(isOpen === x || childs.some( vx => vx.url === getPath())),
+                                 hidden: !(
+                                    isOpen === x ||
+                                    childs.some((vx) => vx.url === getPath())
+                                 ),
                               }
                            )}`}
                         >
                            {childs?.map((c, i) => (
                               <Link href={c.url} key={i}>
                                  <dt
-                                    onClick={() =>
+                                    onClick={() => {
                                        setIsActive({
                                           key: x,
                                           childKey: i,
-                                       })
-                                    }
+                                       });
+                                    }}
                                     className={classNames(
                                        `
                                  mx-2 hover:font-bold 
