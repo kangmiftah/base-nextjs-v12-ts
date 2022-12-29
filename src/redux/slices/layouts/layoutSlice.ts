@@ -13,6 +13,13 @@ const initialState: layoutStateType = {
    isSticky: false,
    screenSize: { width: 0, height: 0 },
    breadcrumbs: [],
+   contextMenu: {
+      show: false,
+      x: 0,
+      y: 0,
+      listMenu: [],
+      indexSelected: null,
+   },
    loading: {
       isLoading: false,
       loadingText: "Please Wait",
@@ -70,6 +77,24 @@ const layoutSlice = createSlice({
             breadcrumbs: action.payload,
          };
       },
+      setContextMenu(state: layoutStateType, action: PayloadAction<layoutStateType["contextMenu"]>){
+         return {
+            ...state, 
+            contextMenu: action.payload
+         }
+      },
+      closeContextMenu(state: layoutStateType){
+         return {
+            ...state,
+            contextMenu: {
+               show: false,
+               x: 0,
+               y: 0,
+               listMenu: [],
+               indexSelected: null,
+            }
+         }
+      }
    },
    extraReducers(builder) {
       builder

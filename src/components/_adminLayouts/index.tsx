@@ -15,6 +15,7 @@ import {
    layoutActions,
    layoutSelector,
 } from "../../redux/slices/layouts/layoutSlice";
+import { useOutside } from "../../_modules/hooks/useOutside";
 import LoadingPage from "../loadingPage";
 import Navbar from "./nav";
 import Sidebar from "./side";
@@ -42,9 +43,52 @@ export default function Layout<FC>(page: React.ReactElement) {
       "md:ml-[0px]": !layoutState.sidebarOpen,
       "max-md:blur-sm": !layoutState.sidebarOpen,
    });
+   const [triggerRef, setTriggerRef] = useState<any>(null);
+   const [boxRef, setBoxRef] = useState<any>(null);
+   useOutside(boxRef, triggerRef, ()=> dispatch( layoutActions.closeContextMenu()))
+ 
 
    return (
       <>
+       <div className={classNames(`
+            fixed duration-300 bg-slate-50 border transition-all 
+            ease-in-out overflow-hidden min-w-[200px] max-w-fit max-h-fit
+            shadow-lg 
+            `, {
+            "hidden" : !layoutState.contextMenu?.show || false
+         })} style={{
+                    // display: contextMenu.show ? "block" : "none",
+                    left: layoutState.contextMenu?.x,
+                    top: layoutState.contextMenu?.y,
+                    zIndex: 999,
+                    // transition:"all 2s linear"
+                }}
+                    ref={(r) => setBoxRef(r)}
+                >
+                  <ul className="w-full">
+                     {
+                        (layoutState.contextMenu?.listMenu || []).map((menu, i) => (
+                           <li key={i} className="hover:bg-primary-400 hover:text-white border-b">
+                              <button className="block text-left w-full px-2 py-1 text-xs" style={menu.style} 
+                                 onClick={()=>{ 
+                                    dispatch(layoutActions.closeContextMenu())
+                                    menu.onClick()
+                                 }}
+                              >
+                                 {menu.name} </button>  
+                           </li>
+                        ))
+                     }
+                     <li className="hover:bg-primary-400 hover:text-white  border-b">
+                        <button className="block text-left  w-full px-2 pl-2 pr-0 text-xs"> Button 2 
+                        {/* <span className="float-right ml-4"> {">"} </span> */}
+                        </button>  
+                     </li>
+                     <li className="hover:bg-primary-400 hover:text-white  border-b">
+                        <button className="block text-left  w-full px-2 py-1 text-xs"> Button 3 </button>  
+                     </li>
+                  </ul>
+                </div>
          <div
             ref={ref}
             className="relative min-h-full max-h-full w-height overflow-hidden"

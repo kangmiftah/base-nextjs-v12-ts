@@ -19,10 +19,10 @@ export default function Card(props: CardProps): JSX.Element {
             ...props.style,
             width: getSize(),
          }}
-         className={`relative 
+         className={`relative
       duration-800 ease-in-out transform transition-all
       bg-white rounded 
-       overflow-auto min-h-[200px] w-[200px] shadow-md 
+       overflow-auto min-h-[200px] w-[200px] shadow-[0px_1px_3px_rgba(0,0,0,0.3)]
       max-w-full
       ${props.className}`}
       >

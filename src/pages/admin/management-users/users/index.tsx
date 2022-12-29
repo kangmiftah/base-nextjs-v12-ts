@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { AdminLayout } from "../../../../components"
+import { AdminLayout, Card, TableGrid } from "../../../../components"
 import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddleware";
 
 
@@ -7,7 +7,26 @@ import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddlew
 
 
 export default function Page() : JSX.Element{
-   return <>Users</>
+   return <>
+      <div className="">
+         <h2 className="text-xl font-bold">Users Management</h2>
+         <span className="text-sm"> List of user admin </span>
+      </div>
+
+      <div className="mt-2">
+         <Card>
+            <Card.Header>
+               List Users
+            </Card.Header>
+            <Card.Body>
+               <TableGrid 
+               
+               />
+            </Card.Body>
+            
+         </Card>
+      </div>
+   </>
 }
 
 
