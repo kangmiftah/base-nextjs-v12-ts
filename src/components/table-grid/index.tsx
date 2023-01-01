@@ -2,164 +2,166 @@ import classNames from "classnames";
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { contextMenuType, layoutStateType } from "../../@types/redux";
+import { layoutStateType } from "../../@types/redux";
 import { CgMoreVertical } from "react-icons/cg";
 import {
    layoutActions,
    layoutSelector,
 } from "../../redux/slices/layouts/layoutSlice";
 import { useOutside } from "../../_modules/hooks/useOutside";
-import style from './table.module.css'
+import style from "./table.module.css";
+import { actionType, TableGridProps } from "../../@types/components/table-grid";
 
-export default function (): JSX.Element {
+function getSize(size: number | string | undefined): string {
+   if (size === undefined) return "fit-content";
+   if (typeof size === "number") return `${size}px`;
+   if (typeof size === "string") return size;
+   else return "fit-content";
+}
+export default function (props: TableGridProps): JSX.Element {
    const disp = useDispatch();
    const layutState: layoutStateType = useSelector(layoutSelector);
    return (
       <>
-         <div className="relative overflow-x-auto overflow-y-auto max-h-[300px]">
-            <table className={`${style.tableFixHead}  w-full text-xs text-left`}>
+         <div className="relative overflow-x-auto overflow-y-auto min-h-[300px] max-h-[600px]">
+            <table
+               className={`${style.tableFixHead}  w-full text-xs text-left`}
+            >
                <thead className="  text-xs text-gray-700 font-bold capitalize bg-gray-300 ">
                   <tr className="">
-                     <th scope="col" className="py-3 px-2 bg-gray-300">
-                        Product name
-                     </th>
-                     <th scope="col" className="py-3 px-2 bg-gray-300">
-                        Color
-                     </th>
-                     <th scope="col" className="py-3 px-2 bg-gray-300">
-                        Category
-                     </th>
-                     <th scope="col" className="py-3 px-2 bg-gray-300">
-                        Price
-                     </th>
+                     {props.iterationNumber && (
+                        <th
+                           scope="col"
+                           className="py-3 px-2 bg-gray-300 min-w-fit"
+                        >
+                           #
+                        </th>
+                     )}
+                     {props.columns.map(
+                        ({ onRender, title, className, style, width }, i) => (
+                           <th
+                              key={i}
+                              scope="col"
+                              style={{
+                                 ...{ minWidth: getSize(width) },
+                                 ...style,
+                              }}
+                              className={`py-3 px-2 bg-gray-300 ${className}`}
+                           >
+                              {title}
+                           </th>
+                        )
+                     )}
                      {/* actions */}
-                     <th scope="col" className="py-3 px-2 bg-gray-300">
-                        &nbsp;
-                     </th>
+                     {props.withAction &&
+                        (props.actionMenuType || "DROPDOWN") === "DROPDOWN" && (
+                           <th scope="col" className="py-3 px-2 bg-gray-300">
+                              &nbsp;
+                           </th>
+                        )}
                   </tr>
                </thead>
                <tbody className="">
-                  <tr
-                     className="odd:bg-white shadow-xl border-b even:bg-gray-50 hover:bg-slate-200"
-                     onContextMenu={(e) => {
-                        let target = e.target as HTMLTableElement;
-                        e.preventDefault();
-                        disp(
-                           layoutActions.setContextMenu({
-                              indexSelected: null,
-                              show: true,
-                              x: e.pageX,
-                              y: e.pageY,
-                              listMenu: [],
-                           })
-                        );
-                     }}
-                  >
-                     <td className="py-2 px-2">Apple MacBook Pro 17"</td>
-                     <td className="py-2 px-2">Sliver</td>
-                     <td className="py-2 px-2">Laptop</td>
-                     <td className="py-2 px-2">$2999</td>
-                     <td className="py-2 px-2 text-right">
-                        <ActionMore
-                           listMenu={[
-                              {
-                                 name: "Test 1",
-                                 onClick() {
-                                    console.log("clicked");
-                                 },
-                              },
-                           ]}
-                        />
-                     </td>
-                  </tr>
-                  <tr className="odd:bg-white border-b even:bg-gray-50  hover:bg-slate-200">
-                     <td className="py-2 px-2">Microsoft Surface Pro</td>
-                     <td className="py-2 px-2">White</td>
-                     <td className="py-2 px-2">Laptop PC</td>
-                     <td className="py-2 px-2">$1999</td>
-                     <td className="py-2 px-2 text-right">
-                        <button className="float-right">
-                           <CgMoreVertical />
-                        </button>
-                     </td>
-                  </tr>
-                  <tr className="odd:bg-white  border-b even:bg-gray-50  hover:bg-slate-200">
-                     <td className="py-2 px-2">Magic Mouse 2</td>
-                     <td className="py-2 px-2">Black</td>
-                     <td className="py-2 px-2">Accessories</td>
-                     <td className="py-2 px-2">$99</td>
-                     <td className="py-2 px-2 text-right">
-                        <button className="float-right">
-                           <CgMoreVertical />
-                        </button>
-                     </td>
-                  </tr>
-                  <tr className="odd:bg-white  border-b even:bg-gray-50  hover:bg-slate-200">
-                     <td className="py-2 px-2">Magic Mouse 2</td>
-                     <td className="py-2 px-2">Black</td>
-                     <td className="py-2 px-2">Accessories</td>
-                     <td className="py-2 px-2">$99</td>
-                     <td className="py-2 px-2 text-right">
-                        <button className="float-right">
-                           <CgMoreVertical />
-                        </button>
-                     </td>
-                  </tr>
-                  <tr className="odd:bg-white  border-b even:bg-gray-50  hover:bg-slate-200">
-                     <td className="py-2 px-2">Magic Mouse 2</td>
-                     <td className="py-2 px-2">Black</td>
-                     <td className="py-2 px-2">Accessories</td>
-                     <td className="py-2 px-2">$99</td>
-                     <td className="py-2 px-2 text-right">
-                        <button className="float-right">
-                           <CgMoreVertical />
-                        </button>
-                     </td>
-                  </tr>
-                  <tr className="odd:bg-white  border-b even:bg-gray-50  hover:bg-slate-200">
-                     <td className="py-2 px-2">Magic Mouse 2</td>
-                     <td className="py-2 px-2">Black</td>
-                     <td className="py-2 px-2">Accessories</td>
-                     <td className="py-2 px-2">$99</td>
-                     <td className="py-2 px-2 text-right">
-                        <button className="float-right">
-                           <CgMoreVertical />
-                        </button>
-                     </td>
-                  </tr>
-                  <tr className="odd:bg-white  border-b even:bg-gray-50  hover:bg-slate-200">
-                     <td className="py-2 px-2">Magic Mouse 2</td>
-                     <td className="py-2 px-2">Black</td>
-                     <td className="py-2 px-2">Accessories</td>
-                     <td className="py-2 px-2">$99</td>
-                     <td className="py-2 px-2 text-right">
-                        <button className="float-right">
-                           <CgMoreVertical />
-                        </button>
-                     </td>
-                  </tr>
-                  <tr className="odd:bg-white  border-b even:bg-gray-50  hover:bg-slate-200">
-                     <td className="py-2 px-2">Magic Mouse 2</td>
-                     <td className="py-2 px-2">Black</td>
-                     <td className="py-2 px-2">Accessories</td>
-                     <td className="py-2 px-2">$99</td>
-                     <td className="py-2 px-2 text-right">
-                        <button className="float-right">
-                           <CgMoreVertical />
-                        </button>
-                     </td>
-                  </tr>
-                  <tr className="odd:bg-white  border-b even:bg-gray-50  hover:bg-slate-200">
-                     <td className="py-2 px-2">Magic Mouse 2</td>
-                     <td className="py-2 px-2">Black</td>
-                     <td className="py-2 px-2">Accessories</td>
-                     <td className="py-2 px-2">$99</td>
-                     <td className="py-2 px-2 text-right">
-                        <button className="float-right">
-                           <CgMoreVertical />
-                        </button>
-                     </td>
-                  </tr>
+                  {props.data.map((item, l) => (
+                     <tr
+                        key={l}
+                        className="odd:bg-white border-b even:bg-gray-50 hover:bg-slate-200"
+                        onContextMenu={(e) => {
+                           if (
+                              (props.actionMenuType || "DROPDOWN") ===
+                              "CONTEXTMENU"
+                           ) {
+                              e.preventDefault();
+                              disp(
+                                 layoutActions.setContextMenu({
+                                    indexSelected: null,
+                                    show: true,
+                                    x: e.pageX,
+                                    y: e.pageY,
+                                    listMenu: (props.actionsMenu || [])
+                                       .filter(({ onRender = () => true }) =>
+                                          onRender(item)
+                                       )
+                                       .map(
+                                          (
+                                             {
+                                                name,
+                                                onClick,
+                                                style,
+                                             },
+                                             iM
+                                          ) => ({
+                                             name,
+                                             onClick: ()=> onClick(
+                                                item,
+                                                { name, onClick },
+                                                iM
+                                             ),
+                                             style
+                                          })
+                                       ),
+                                 })
+                              );
+                           }
+                        }}
+                     >
+                        {props.iterationNumber && (
+                           <th
+                              scope="col"
+                              className="py-3 px-2 bg-gray-300 min-w-fit"
+                           >
+                              {l + 1}
+                           </th>
+                        )}
+                        {props.columns.map(
+                           (
+                              { onRender, className, style, width, field },
+                              i
+                           ) => (
+                              <td key={i} className={`py-2 px-2 ${className}`}
+                                 style={{
+                                    ...{ minWidth: getSize(width) },
+                                    ...style,
+                                 }}
+                              >
+                                 {  onRender? onRender(item) : item[field as keyof typeof item]}
+                              </td>
+                           )
+                        )}
+                        {props.withAction &&
+                           (props.actionMenuType || "DROPDOWN") ===
+                              "DROPDOWN" && (
+                              <td className="py-2 px-2 text-right">
+                                 <ActionMore
+                                    listMenu={(props.actionsMenu || [])
+                                       .filter(({ onRender = () => true }) =>
+                                          onRender(item)
+                                       )
+                                       .map(
+                                          (
+                                             {
+                                                name,
+                                                onClick,
+                                                onRender = () => true,
+                                                style
+                                             },
+                                             iM
+                                          ) => ({
+                                             name,
+                                             onClick: ()=> onClick(
+                                                item,
+                                                { name, onClick },
+                                                iM
+                                             ),
+                                             onRender,
+                                             style
+                                          })
+                                       )}
+                                 />
+                              </td>
+                           )}
+                     </tr>
+                  ))}
                </tbody>
             </table>
          </div>
@@ -167,16 +169,19 @@ export default function (): JSX.Element {
    );
 }
 
-function ActionMore(props: { listMenu: Array<contextMenuType> }): JSX.Element {
+function ActionMore(props: { listMenu: Array<actionType> }): JSX.Element {
    const [isOpen, setIsOpen] = useState<boolean>(false);
 
    // const [triggerRef, setTriggerRef] = useState<any>(null);
    // const [boxRef, setBoxRef] = useState<any>(null);
    // useOutside(boxRef, triggerRef, () => setIsOpen(false));
-   const reffDrop = useRef<HTMLDivElement>(null)
-   const onclickAnother = function (e : MouseEvent) {
-      if (reffDrop.current && !reffDrop.current?.contains((e.target as HTMLElement))) {
-         setIsOpen(false)
+   const reffDrop = useRef<HTMLDivElement>(null);
+   const onclickAnother = function (e: MouseEvent) {
+      if (
+         reffDrop.current &&
+         !reffDrop.current?.contains(e.target as HTMLElement)
+      ) {
+         setIsOpen(false);
       }
    };
    useEffect(() => {

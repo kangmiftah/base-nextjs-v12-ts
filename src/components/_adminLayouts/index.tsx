@@ -79,14 +79,6 @@ export default function Layout<FC>(page: React.ReactElement) {
                            </li>
                         ))
                      }
-                     <li className="hover:bg-primary-400 hover:text-white  border-b">
-                        <button className="block text-left  w-full px-2 pl-2 pr-0 text-xs"> Button 2 
-                        {/* <span className="float-right ml-4"> {">"} </span> */}
-                        </button>  
-                     </li>
-                     <li className="hover:bg-primary-400 hover:text-white  border-b">
-                        <button className="block text-left  w-full px-2 py-1 text-xs"> Button 3 </button>  
-                     </li>
                   </ul>
                 </div>
          <div

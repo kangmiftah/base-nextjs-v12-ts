@@ -1,9 +1,10 @@
-import { CSSProperties, StyleHTMLAttributes } from "react";
+import { CSSProperties, StyleHTMLAttributes, ClassAttributes } from "react";
 
 export type contextMenuType = {
    name : JSX.Element | string | undefined,
    style? : CSSProperties,
-   onClick : (data? : any, menu?: contextMenuType, indexMenu?: number ) => any
+   onClick : (data? : any, menu?: contextMenuType, indexMenu?: number ) => any,
+   className?: ClassAttributes;
 }
 export declare interface layoutStateType {
    sidebarOpen: boolean;
