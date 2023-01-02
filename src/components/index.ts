@@ -9,5 +9,6 @@ export { Form } from './input';
 export { default as Button } from './button';
 export { default as LoadingPage } from './loadingPage';
 export { default as Loader } from './loader';
-export { default as Card } from './card'
-export { default as TableGrid } from './table-grid'
+export { default as Card } from './card';
+export { default as TableGrid } from './table-grid';
+export { default as Pagination } from './pagination';

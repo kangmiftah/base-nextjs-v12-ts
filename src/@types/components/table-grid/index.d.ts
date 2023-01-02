@@ -23,4 +23,5 @@ export declare interface TableGridProps {
    iterationNumber: boolean;
    actionsMenu?: Array<actionType>;
    actionMenuType?: tyepOfAction;
+   pagination? : boolean
 }

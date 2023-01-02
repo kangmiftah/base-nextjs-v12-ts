@@ -11,6 +11,8 @@ import {
 import { useOutside } from "../../_modules/hooks/useOutside";
 import style from "./table.module.css";
 import { actionType, TableGridProps } from "../../@types/components/table-grid";
+import { Pagination } from '..'
+import { PaginationPropsType } from "../../@types/components/pagination";
 
 function getSize(size: number | string | undefined): string {
    if (size === undefined) return "fit-content";
@@ -18,7 +20,7 @@ function getSize(size: number | string | undefined): string {
    if (typeof size === "string") return size;
    else return "fit-content";
 }
-export default function (props: TableGridProps): JSX.Element {
+export default function (props: TableGridProps & PaginationPropsType): JSX.Element {
    const disp = useDispatch();
    const layutState: layoutStateType = useSelector(layoutSelector);
    return (
@@ -118,7 +120,7 @@ export default function (props: TableGridProps): JSX.Element {
                               { onRender, className, style, width, field },
                               i
                            ) => (
-                              <td key={i} className={`py-2 px-2 ${className}`}
+                              <td key={i} className={`py-2 px-2 min-h-max ${className}`}
                                  style={{
                                     ...{ minWidth: getSize(width) },
                                     ...style,
@@ -164,6 +166,16 @@ export default function (props: TableGridProps): JSX.Element {
                   ))}
                </tbody>
             </table>
+         </div>
+         <div className="mt-5">
+            { true && <Pagination
+               onChangePage={props.onChangePage}
+               onChangeShow={props.onChangeShow}
+               currentPage={props.currentPage}
+               currentShow={props.currentShow}
+               dataLength={props.data.length}
+               showList={props.showList}
+            />}
          </div>
       </>
    );
