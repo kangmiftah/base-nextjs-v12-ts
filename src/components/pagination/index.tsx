@@ -16,6 +16,7 @@ export default function (props: PaginationPropsPrivate): JSX.Element {
    },[props.currentPage, props.currentShow])
 
    const nextPage = useCallback(function(){
+      console.log( (props.dataLength || paginationDetail.page) < paginationDetail.show , props.dataLength, paginationDetail.show )
       let data = {
          ...paginationDetail,
          page: (props.dataLength || paginationDetail.page) < paginationDetail.show ?  paginationDetail.page : paginationDetail.page+1 
@@ -26,10 +27,21 @@ export default function (props: PaginationPropsPrivate): JSX.Element {
    const prevPage = useCallback(function(){
       let data = {
          ...paginationDetail,
-         page: paginationDetail.page-1 <= 0 ? paginationDetail.page : paginationDetail.page+1
+         page: paginationDetail.page-1 <= 0 ? paginationDetail.page : paginationDetail.page-1
       }
       props.onChangePage?.(data)
    },[paginationDetail])
+
+   useEffect(function(){
+      if(props.dataLength <= 0 && (props.currentPage || 1) > 1) {
+         let newData = {
+            page:  (props.currentPage || 2)-1,
+            show: paginationDetail.show
+         }
+         props.onChangePage?.(newData)
+         setPaginationDetail(newData)
+      }
+   },[props.dataLength])
 
    useEffect(function(){
       setPaginationDetail( v => ({ ...v, show: (showArr || [])[0]}))
@@ -72,14 +84,14 @@ export default function (props: PaginationPropsPrivate): JSX.Element {
                            xmlns="http://www.w3.org/2000/svg"
                         >
                            <path
-                              fill-rule="evenodd"
+                              fillRule="evenodd"
                               d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
-                              clip-rule="evenodd"
+                              clipRule="evenodd"
                            ></path>
                         </svg>
                         Previous
                      </button>
-                     <span className=" px-2 py-1 text-sm font-semibold">1</span>
+                     <span className=" px-2 py-1 text-sm font-semibold">{props.currentPage || 1}</span>
                      <button onClick={nextPage} className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-sm hover:bg-gray-100 hover:text-gray-700">
                         Next
                         <svg
@@ -90,9 +102,9 @@ export default function (props: PaginationPropsPrivate): JSX.Element {
                            xmlns="http://www.w3.org/2000/svg"
                         >
                            <path
-                              fill-rule="evenodd"
+                              fillRule="evenodd"
                               d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                              clip-rule="evenodd"
+                              clipRule="evenodd"
                            ></path>
                         </svg>
                      </button>

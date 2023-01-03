@@ -1,8 +1,29 @@
 import { GetServerSideProps } from "next";
+import { useState, useEffect } from "react";
 import { AdminLayout, Card, TableGrid } from "../../../../components";
+import { useGetAllUsersQuery, useLazyGetAllUsersQuery } from "../../../../redux/services/admin/users-management/usersPage";
 import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddleware";
 
 export default function Page(): JSX.Element {
+   const [filter, setFilter] = useState<{ search: string }>({
+      search: "",
+   });
+   const [pagination, setPagination] = useState<{
+      page: number;
+      show: number;
+   }>({
+      page: 1,
+      show: 10,
+   });
+   const [getAlluser, {
+      data = [],
+      status,
+   }] = useLazyGetAllUsersQuery();
+   useEffect(function(){
+      getAlluser({
+         filter, pagination
+      })
+   },[pagination])
    return (
       <>
          <div className="">
@@ -13,49 +34,41 @@ export default function Page(): JSX.Element {
          <div className="mt-2">
             <Card>
                <Card.Header>List Users</Card.Header>
-               <Card.Body
-                  className=""
-               >
+               <Card.Body className="">
                   <TableGrid
-                     data={[
-                        {
-                           name: "admin 1",
-                           email: "admin1@email.com",
-                           role : "1"
-                        },
-                        
-                        {
-                           name: "admin 2",
-                           email: "admin2@email.com",
-                           role: "2",
-                        }
-                     ]}
-                     isLoading={false}
+                     data={data || []}
+                     isLoading={status !== "fulfilled"}
+                     
                      withAction={true}
                      actionMenuType="DROPDOWN"
+                     onChangePage={setPagination}
+                     onChangeShow={setPagination}
+                     currentPage={pagination.page}
+                     currentShow={pagination.show}
                      actionsMenu={[
                         {
-                           name:"Detail",
+                           name: "Detail",
                            onClick(data, menu, indexMenu) {
-                              console.log(data)
+                              console.log(data);
                            },
                            onRender(item) {
-                              return true
+                              return true;
                            },
-                        },{
-                           name:"Delete",
-                           style:{
-                              color:"red"
+                        },
+                        {
+                           name: "Delete",
+                           style: {
+                              color: "red",
                            },
                            onClick(data, menu, indexMenu) {
-                              console.log(data)
+                              console.log(data);
                            },
                            onRender(item) {
-                              return item.name === "admin 1"
+                              return item.name === "admin 1";
                            },
                         },
                      ]}
-                     iterationNumber={false}
+                     iterationNumber={true}
                      columns={[
                         {
                            title: "Name",
@@ -69,9 +82,7 @@ export default function Page(): JSX.Element {
                            title: "Role",
                            field: "role",
                            onRender(item) {
-                              return item.role === "1" ? "Root Admin":
-                              item.role === "2" ? "Admin Pemasaran" :
-                              "Admin"
+                              return item.role?.name;
                            },
                         },
                      ]}

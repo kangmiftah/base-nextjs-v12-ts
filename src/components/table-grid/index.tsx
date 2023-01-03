@@ -11,7 +11,7 @@ import {
 import { useOutside } from "../../_modules/hooks/useOutside";
 import style from "./table.module.css";
 import { actionType, TableGridProps } from "../../@types/components/table-grid";
-import { Pagination } from '..'
+import { Pagination } from "..";
 import { PaginationPropsType } from "../../@types/components/pagination";
 
 function getSize(size: number | string | undefined): string {
@@ -20,9 +20,22 @@ function getSize(size: number | string | undefined): string {
    if (typeof size === "string") return size;
    else return "fit-content";
 }
-export default function (props: TableGridProps & PaginationPropsType): JSX.Element {
+
+function LoadingSkeleton(): JSX.Element {
+   return (
+      <div className="h-[25px] animate-pulse">
+         <div className="h-full bg-[#D9D9D9] rounded-md">
+            <div className="h-full bg-[#969696] rounded-md"></div>
+         </div>
+      </div>
+   );
+}
+export default function (
+   props: TableGridProps & PaginationPropsType
+): JSX.Element {
    const disp = useDispatch();
    const layutState: layoutStateType = useSelector(layoutSelector);
+   let loadingArray: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9];
    return (
       <>
          <div className="relative overflow-x-auto overflow-y-auto min-h-[300px] max-h-[600px]">
@@ -55,7 +68,7 @@ export default function (props: TableGridProps & PaginationPropsType): JSX.Eleme
                         )
                      )}
                      {/* actions */}
-                     {props.withAction &&
+                     {props.withAction && !props.isLoading &&
                         (props.actionMenuType || "DROPDOWN") === "DROPDOWN" && (
                            <th scope="col" className="py-3 px-2 bg-gray-300">
                               &nbsp;
@@ -64,118 +77,140 @@ export default function (props: TableGridProps & PaginationPropsType): JSX.Eleme
                   </tr>
                </thead>
                <tbody className="">
-                  {props.data.map((item, l) => (
-                     <tr
-                        key={l}
-                        className="odd:bg-white border-b even:bg-gray-50 hover:bg-slate-200"
-                        onContextMenu={(e) => {
-                           if (
-                              (props.actionMenuType || "DROPDOWN") ===
-                              "CONTEXTMENU"
-                           ) {
-                              e.preventDefault();
-                              disp(
-                                 layoutActions.setContextMenu({
-                                    indexSelected: null,
-                                    show: true,
-                                    x: e.pageX,
-                                    y: e.pageY,
-                                    listMenu: (props.actionsMenu || [])
-                                       .filter(({ onRender = () => true }) =>
-                                          onRender(item)
-                                       )
-                                       .map(
-                                          (
-                                             {
+                  {(props.isLoading ? loadingArray : props.data).map(
+                     (item, l) => (
+                        <tr
+                           key={l}
+                           className="odd:bg-white border-b even:bg-gray-50 hover:bg-slate-200"
+                           onContextMenu={(e) => {
+                              if (
+                                 (props.actionMenuType || "DROPDOWN") ===
+                                    "CONTEXTMENU" &&
+                                 !props.isLoading
+                              ) {
+                                 e.preventDefault();
+                                 disp(
+                                    layoutActions.setContextMenu({
+                                       indexSelected: null,
+                                       show: true,
+                                       x: e.pageX,
+                                       y: e.pageY,
+                                       listMenu: (props.actionsMenu || [])
+                                          .filter(({ onRender = () => true }) =>
+                                             onRender(item)
+                                          )
+                                          .map(
+                                             (
+                                                { name, onClick, style },
+                                                iM
+                                             ) => ({
                                                 name,
-                                                onClick,
+                                                onClick: () =>
+                                                   onClick(
+                                                      item,
+                                                      { name, onClick },
+                                                      iM
+                                                   ),
                                                 style,
-                                             },
-                                             iM
-                                          ) => ({
-                                             name,
-                                             onClick: ()=> onClick(
-                                                item,
-                                                { name, onClick },
-                                                iM
-                                             ),
-                                             style
-                                          })
-                                       ),
-                                 })
-                              );
-                           }
-                        }}
-                     >
-                        {props.iterationNumber && (
-                           <th
-                              scope="col"
-                              className="py-3 px-2 bg-gray-300 min-w-fit"
-                           >
-                              {l + 1}
-                           </th>
-                        )}
-                        {props.columns.map(
-                           (
-                              { onRender, className, style, width, field },
-                              i
-                           ) => (
-                              <td key={i} className={`py-2 px-2 min-h-max ${className}`}
-                                 style={{
-                                    ...{ minWidth: getSize(width) },
-                                    ...style,
-                                 }}
+                                             })
+                                          ),
+                                    })
+                                 );
+                              }
+                           }}
+                        >
+                           {props.iterationNumber &&  (
+                              <td
+                                 scope="col"
+                                 className="py-1 px-2 min-w-fit"
                               >
-                                 {  onRender? onRender(item) : item[field as keyof typeof item]}
-                              </td>
-                           )
-                        )}
-                        {props.withAction &&
-                           (props.actionMenuType || "DROPDOWN") ===
-                              "DROPDOWN" && (
-                              <td className="py-2 px-2 text-right">
-                                 <ActionMore
-                                    listMenu={(props.actionsMenu || [])
-                                       .filter(({ onRender = () => true }) =>
-                                          onRender(item)
-                                       )
-                                       .map(
-                                          (
-                                             {
-                                                name,
-                                                onClick,
-                                                onRender = () => true,
-                                                style
-                                             },
-                                             iM
-                                          ) => ({
-                                             name,
-                                             onClick: ()=> onClick(
-                                                item,
-                                                { name, onClick },
-                                                iM
-                                             ),
-                                             onRender,
-                                             style
-                                          })
-                                       )}
-                                 />
+                                 {props.isLoading ? (
+                                    <LoadingSkeleton />
+                                 ) : (
+                                    (props.currentShow || 10) *
+                                       ((props?.currentPage || 1) - 1) +
+                                    (l + 1)
+                                 )}
                               </td>
                            )}
-                     </tr>
-                  ))}
+                           {props.columns.map(
+                              (
+                                 { onRender, className, style, width, field },
+                                 i
+                              ) => (
+                                 <td
+                                    key={i}
+                                    className={`py-1 px-2 min-h-max ${className}`}
+                                    style={{
+                                       ...{ minWidth: getSize(width) },
+                                       ...style,
+                                    }}
+                                 >
+                                    {props.isLoading ? (
+                                       <LoadingSkeleton />
+                                    ) : onRender ? (
+                                       onRender(item)
+                                    ) : (
+                                       item[field as keyof typeof item]
+                                    )}
+                                 </td>
+                              )
+                           )}
+                           {props.withAction && !props.isLoading &&
+                              (props.actionMenuType || "DROPDOWN") ===
+                                 "DROPDOWN" && (
+                                 <td className="py-1 px-2 text-right">
+                                    {props.isLoading ? (
+                                       <LoadingSkeleton />
+                                    ) : (
+                                       <ActionMore
+                                          listMenu={(props.actionsMenu || [])
+                                             .filter(
+                                                ({ onRender = () => true }) =>
+                                                   onRender(item)
+                                             )
+                                             .map(
+                                                (
+                                                   {
+                                                      name,
+                                                      onClick,
+                                                      onRender = () => true,
+                                                      style,
+                                                   },
+                                                   iM
+                                                ) => ({
+                                                   name,
+                                                   onClick: () =>
+                                                      onClick(
+                                                         item,
+                                                         { name, onClick },
+                                                         iM
+                                                      ),
+                                                   onRender,
+                                                   style,
+                                                })
+                                             )}
+                                       />
+                                    )}
+                                 </td>
+                              )}
+                        </tr>
+                     )
+                  )}
                </tbody>
             </table>
          </div>
          <div className="mt-5">
-            { true && <Pagination
-               onChangePage={props.onChangePage}
-               onChangeShow={props.onChangeShow}
-               currentPage={props.currentPage}
-               currentShow={props.currentShow}
-               dataLength={props.data.length}
-               showList={props.showList}
-            />}
+            {true && (
+               <Pagination
+                  onChangePage={props.onChangePage}
+                  onChangeShow={props.onChangeShow}
+                  currentPage={props.currentPage}
+                  currentShow={props.currentShow}
+                  dataLength={props.data.length}
+                  showList={props.showList}
+               />
+            )}
          </div>
       </>
    );
