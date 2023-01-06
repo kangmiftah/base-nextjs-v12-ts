@@ -1,7 +1,12 @@
 import { GetServerSideProps } from "next";
 import { useState, useEffect } from "react";
-import { AdminLayout, Card, TableGrid } from "../../../../components";
-import { useGetAllUsersQuery, useLazyGetAllUsersQuery } from "../../../../redux/services/admin/users-management/usersPage";
+import { useDispatch } from "react-redux";
+import { AdminLayout, Card, TableGrid, Button } from "../../../../components";
+import {
+   useGetAllUsersQuery,
+   useLazyGetAllUsersQuery,
+} from "../../../../redux/services/admin/users-management/usersPage";
+import { layoutActions } from "../../../../redux/slices/layouts/layoutSlice";
 import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddleware";
 
 export default function Page(): JSX.Element {
@@ -15,30 +20,46 @@ export default function Page(): JSX.Element {
       page: 1,
       show: 10,
    });
-   const [getAlluser, {
-      data = [],
-      status,
-   }] = useLazyGetAllUsersQuery();
-   useEffect(function(){
-      getAlluser({
-         filter, pagination
-      })
-   },[pagination])
+   const [getAlluser, { data = [], status }] = useLazyGetAllUsersQuery();
+   useEffect(
+      function () {
+         getAlluser({
+            filter,
+            pagination,
+         });
+      },
+      [pagination]
+   );
+   const disp = useDispatch();
    return (
       <>
          <div className="">
-            <h2 className="text-xl font-bold">Users Management</h2>
+            <h2
+               className="text-xl font-bold"
+               // onClick={() => {
+               //    disp(
+               //       layoutActions.openAlert({
+               //          title: "Test of title",
+               //          message: "This is message",
+               //          type: "Success",
+               //       })
+               //    );
+               // }}
+            >
+               Users Management
+            </h2>
             <span className="text-sm"> List of user admin </span>
          </div>
 
          <div className="mt-2">
             <Card>
-               <Card.Header>List Users</Card.Header>
+               <Card.Header>
+                  <div className=" w-full">List Users</div>
+               </Card.Header>
                <Card.Body className="">
                   <TableGrid
                      data={data || []}
                      isLoading={status !== "fulfilled"}
-                     
                      withAction={true}
                      actionMenuType="DROPDOWN"
                      onChangePage={setPagination}

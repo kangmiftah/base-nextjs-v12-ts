@@ -8,7 +8,7 @@ import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
-import LoadingPage from "../components/loadingPage";
+import {LoadingPage, Alert} from "../components";
 import { layoutStateType } from "../@types/redux";
 import { useSelector } from "react-redux";
 import { layoutSelector } from "../redux/slices/layouts/layoutSlice";
@@ -35,6 +35,7 @@ function Page({
          <LoadingPage isLoading={layoutState.loading.isLoading}>
             {layoutState.loading.loadingText}
          </LoadingPage>
+         <Alert />
          {getLayout(<Component {...pageProps} />)};
       </>
    );

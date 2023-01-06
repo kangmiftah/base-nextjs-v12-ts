@@ -1,4 +1,5 @@
 import { CSSProperties, StyleHTMLAttributes, ClassAttributes } from "react";
+import { AlertComponentTypes } from "../../../components/alert";
 
 export type contextMenuType = {
    name : JSX.Element | string | undefined,
@@ -6,11 +7,13 @@ export type contextMenuType = {
    onClick : (data? : any, menu?: contextMenuType, indexMenu?: number ) => any,
    className?: ClassAttributes;
 }
+
 export declare interface layoutStateType {
    sidebarOpen: boolean;
    title?: string;
    isSticky?: boolean = false;
    screenSize?: { width:number, height:number };
+   alertList? : Array<AlertComponentTypes & { unique : number }>,
    contextMenu?: {
       show: boolean;
       x: number;

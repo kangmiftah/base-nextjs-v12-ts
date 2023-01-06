@@ -12,3 +12,4 @@ export { default as Loader } from './loader';
 export { default as Card } from './card';
 export { default as TableGrid } from './table-grid';
 export { default as Pagination } from './pagination';
+export { default as Alert } from './alert';
