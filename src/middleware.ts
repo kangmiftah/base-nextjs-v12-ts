@@ -2,13 +2,15 @@ import { NextURL } from "next/dist/server/web/next-url";
 import { NextRequest, NextResponse } from "next/server";
 import { env } from "process";
 import appconfig from "./app.config";
+import {getLogger} from "./_modules/helpers/logger";
 
 export function middleware(req: NextRequest): NextResponse | Response {
    const { pathname } = req.nextUrl;
-
+   const logger = getLogger("app");
    const hostname: string | null = req?.headers?.get("host");
    const subdomainadmin: string =
-      appconfig.SUB_DOMAIN_ADMIN.toLocaleLowerCase();
+   appconfig.SUB_DOMAIN_ADMIN.toLocaleLowerCase();
+   if (pathname.startsWith("/api"))  console.log(`${req.method} : ${req.nextUrl}`, {body : req.body} )
    if (hostname) {
       const subdomain: Array<string> = hostname?.split(".");
       const url: NextURL = req.nextUrl.clone();

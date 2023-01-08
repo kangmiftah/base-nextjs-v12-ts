@@ -7,7 +7,7 @@ import {
 import { layoutStateType } from "../../../@types/redux/slices/layouts/layoutSlice";
 import { HYDRATE } from "next-redux-wrapper";
 import { RootState } from "../../store";
-import { AlertComponentTypes } from "../../../@types/components/alert";
+import { AlertComponentTypes, ConfirmComponentTypes } from "../../../@types/components/alert";
 const initialState: layoutStateType = {
    sidebarOpen: true,
    title: "Aran Ui",
@@ -15,6 +15,7 @@ const initialState: layoutStateType = {
    screenSize: { width: 0, height: 0 },
    breadcrumbs: [],
    alertList: [],
+   confirmList: [],
    contextMenu: {
       show: false,
       x: 0,
@@ -106,14 +107,12 @@ const layoutSlice = createSlice({
       ) {
          let unique: number = 0;
          if((state.alertList || []).length > 0) unique = (state.alertList || [])[(state.alertList || []).length -1]?.unique + 1
-         console.log(unique)
          return {
             ...state,
             alertList: [...(state.alertList || []), { ...action.payload, unique}],
          };
       },
       closeAlert(state: layoutStateType, action: PayloadAction<number>) {
-         console.log(action)
          return {
             ...state,
             alertList: (state.alertList || []).filter(
@@ -123,6 +122,30 @@ const layoutSlice = createSlice({
       },
       clearAlert(state: layoutStateType) {
          return { ...state, alertList: [] };
+      },
+      openConfirm(
+         state: layoutStateType,
+         action: PayloadAction<ConfirmComponentTypes>
+      ){
+         
+         let unique: number = 0;
+         if((state.confirmList || []).length > 0) unique = (state.confirmList || [])[(state.confirmList || []).length -1]?.unique + 1
+         
+         return {
+            ...state, 
+            confirmList : [ ...(state.confirmList || []), { ...action.payload, unique }  ]
+         }
+      },
+      closeConfirm(state: layoutStateType, action: PayloadAction<number>) {
+         return {
+            ...state,
+            confirmList: (state.confirmList || []).filter(
+               (c, i) => c.unique !== action.payload
+            ),
+         };
+      },
+      clearConfirm(state: layoutStateType) {
+         return { ...state, confirmList: [] };
       },
    },
    extraReducers(builder) {

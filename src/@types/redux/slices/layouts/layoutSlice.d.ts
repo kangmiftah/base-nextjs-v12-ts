@@ -1,5 +1,5 @@
 import { CSSProperties, StyleHTMLAttributes, ClassAttributes } from "react";
-import { AlertComponentTypes } from "../../../components/alert";
+import { AlertComponentTypes, ConfirmComponentTypes } from "../../../components/alert";
 
 export type contextMenuType = {
    name : JSX.Element | string | undefined,
@@ -30,4 +30,5 @@ export declare interface layoutStateType {
       isLoading: boolean = false;
       loadingText: string = "Please Wait";
    };
+   confirmList? : Array<ConfirmComponentTypes & { unique : number }>
 }
