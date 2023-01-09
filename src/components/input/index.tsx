@@ -344,10 +344,11 @@ const Select = React.forwardRef<HTMLSelectElement, SelectOptionPorps>(function (
          autoComplete="off"
          autoCorrect="off"
          ref={ref}
+         onChange={(e: any) => props.onChange?.(e)}
          {...props}
       >
          <option
-            onChange={(e: any) => props.onChange?.(e)}
+          
             className="text-gray-300 text-sm"
             value={""}
          >

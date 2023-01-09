@@ -15,7 +15,6 @@ const initialState: layoutStateType = {
    screenSize: { width: 0, height: 0 },
    breadcrumbs: [],
    alertList: [],
-   confirmList: [],
    contextMenu: {
       show: false,
       x: 0,
@@ -122,31 +121,7 @@ const layoutSlice = createSlice({
       },
       clearAlert(state: layoutStateType) {
          return { ...state, alertList: [] };
-      },
-      openConfirm(
-         state: layoutStateType,
-         action: PayloadAction<ConfirmComponentTypes>
-      ){
-         
-         let unique: number = 0;
-         if((state.confirmList || []).length > 0) unique = (state.confirmList || [])[(state.confirmList || []).length -1]?.unique + 1
-         
-         return {
-            ...state, 
-            confirmList : [ ...(state.confirmList || []), { ...action.payload, unique }  ]
-         }
-      },
-      closeConfirm(state: layoutStateType, action: PayloadAction<number>) {
-         return {
-            ...state,
-            confirmList: (state.confirmList || []).filter(
-               (c, i) => c.unique !== action.payload
-            ),
-         };
-      },
-      clearConfirm(state: layoutStateType) {
-         return { ...state, confirmList: [] };
-      },
+      }
    },
    extraReducers(builder) {
       builder

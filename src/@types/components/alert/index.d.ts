@@ -7,16 +7,3 @@ export declare interface AlertComponentTypes {
    title : string,
    callback? : Function,
 }
-
-export declare interface ConfirmComponentTypes {
-   body : JSX.Element | string,
-   header? : string,
-   callback? : Function,
-   closeButton : boolean,
-   buttonFooter? : Array<{
-      title: string,
-      type: ButtonColourType
-      onClick: Function
-   }>
-
-}

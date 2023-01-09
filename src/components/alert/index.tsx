@@ -28,9 +28,6 @@ export default (): JSX.Element => {
                <AlertComponent key={i} {...item} />
             ))}
          </div>
-         {confirmList.map((item, i) => (
-            <ConfirmComponent key={i} {...item} />
-         ))}
       </>
    );
 };
@@ -112,9 +109,9 @@ function AlertComponent(
                      <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
                   </svg> */}
                </div>
-               <div>
+               <div className="mr-5">
                   <p className="font-bold">{props.title}</p>
-                  <p className="text-sm">{props.title}</p>
+                  <p className="text-sm">{props.message}</p>
                </div>
             </div>
          </div>
@@ -136,46 +133,3 @@ function AlertComponent(
    );
 }
 
-function ConfirmComponent(
-   props: ConfirmComponentTypes & { unique: number }
-): JSX.Element {
-   const disp = useDispatch();
-   const close = useCallback(
-      function () {
-         props.callback?.();
-         disp(layoutActions.closeConfirm(props.unique));
-      },
-      [disp, props]
-   );
-   return (
-      <Modal showModal={true}>
-         <Modal.Header closeBtn={false}>
-            {props.header || "Confirmation"}
-         </Modal.Header>
-         <Modal.Body>{props.body}</Modal.Body>
-         <Modal.Footer>
-            <div className="w-full flex items-end justify-end">
-               {(props.buttonFooter || []).map(function (btn, i) {
-                  return (
-                     <Button key={i}
-                        type={"button"}
-                        color={btn.type}
-                        onClick={() => {
-                           console.log("clicked")
-                           disp(layoutActions.closeConfirm(props.unique));
-                           btn.onClick();
-                        }}
-                     >
-                        {" "}
-                        {btn.title}{" "}
-                     </Button>
-                  );
-               })}
-               { props.closeButton && <Button size="sm" onClick={close} type="button" color={"secondary"}>
-                  Close
-               </Button>}
-            </div>
-         </Modal.Footer>
-      </Modal>
-   );
-}

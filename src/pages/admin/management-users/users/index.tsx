@@ -1,26 +1,26 @@
-import {  Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { bodyUser } from "../../../../@types/backend/admin/users-management";
 import prisma from "../../../../backend/_modules/prisma";
-import {
-   AdminLayout,
-   Card,
-   TableGrid,
-   Button,
-} from "../../../../components";
+import { AdminLayout, Card, TableGrid, Button } from "../../../../components";
 import {
    useGetAllUsersQuery,
    useLazyGetAllUsersQuery,
+   useAddUserMutation,
 } from "../../../../redux/services/admin/users-management/usersPage";
+import { layoutActions } from "../../../../redux/slices/layouts/layoutSlice";
 import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddleware";
 import ModalAddUser from "./_components/modalAddUser";
+import Swal from "sweetalert2";
 
 export default function Page(props: {
-   session: any, 
+   session: any;
    roles: Array<{
-      id: number, name: string
-   }>
+      id: number;
+      name: string;
+   }>;
 }): JSX.Element {
    const [filter, setFilter] = useState<{ search: string }>({
       search: "",
@@ -32,7 +32,14 @@ export default function Page(props: {
       page: 1,
       show: 10,
    });
-   const [getAlluser, { data = [], status }] = useLazyGetAllUsersQuery();
+   const [getAlluser, { data = [], status }] = useLazyGetAllUsersQuery({
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+   });
+   const [
+      addUser,
+      { isUninitialized, isError, isSuccess, isLoading, reset, requestId },
+   ] = useAddUserMutation();
    const [openModalAdd, setModalAdd] = useState<boolean>(false);
    useEffect(
       function () {
@@ -44,22 +51,87 @@ export default function Page(props: {
       [pagination]
    );
    const disp = useDispatch();
+   const modalRef = useRef<HTMLFormElement>(null)
    return (
       <>
-        <ModalAddUser 
-         onSubmit={(valueForm)=>{
-            console.log(valueForm)
-         }}
-         setModalAdd={setModalAdd}
-         openModalAdd= {openModalAdd}
-         roles={props.roles}
-        />
+         <ModalAddUser ref={modalRef}
+            onSubmit={(valueForm: bodyUser) => {
+               Swal.fire({
+                  title: "Are you sure, add a new user?",
+                  text: "Add New User",
+                  icon: "question",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes",
+               }).then(async (result) => {
+                  if (result.isConfirmed) {
+                     disp(
+                        layoutActions.setLoading({
+                           isLoading: true,
+                           loadingText: "Creating user. Please wait...",
+                        })
+                     );
+                     try {
+                        let rsp: any = await addUser(valueForm);
+                        console.log({rsp, isSuccess, isError, isLoading})
+                        if (rsp.error) {
+                           let { data = {} } = rsp.error || {};
+                           disp(
+                              layoutActions.openAlert({
+                                 title: "Error create user",
+                                 type: "Warning",
+                                 message: data.message,
+                              })
+                           );
+                        } else {
+                           let { data = {} } = rsp || {};
+                           let { code = "01", message = "" } = data;
+                           if (code !== "00")
+                              disp(
+                                 layoutActions.openAlert({
+                                    title: "Create user",
+                                    type: "Warning",
+                                    message: message,
+                                 })
+                              );
+                           else {
+                              disp(
+                                 layoutActions.openAlert({
+                                    title: "Create user",
+                                    type: "Success",
+                                    message: message,
+                                 })
+                              );
+                              getAlluser({ filter, pagination})
+                              setModalAdd(false)
+                              modalRef.current?.reset()
+                           }
+                        }
+                     } catch (error: any) {
+                        disp(
+                           layoutActions.openAlert({
+                              title: "Error create user",
+                              type: "Error",
+                              message: error.toString(),
+                           })
+                        );
+                     }
+                     disp(
+                        layoutActions.setLoading({
+                           isLoading: false,
+                           loadingText: "Loading. Please wait...",
+                        })
+                     );
+                  }
+               });
+            }}
+            setModalAdd={setModalAdd}
+            openModalAdd={openModalAdd}
+            roles={props.roles}
+         />
          <div className="">
-            <h2
-               className="text-xl font-bold"
-            >
-               Users Management
-            </h2>
+            <h2 className="text-xl font-bold">Users Management</h2>
             <span className="text-sm"> List of user admin </span>
          </div>
 
@@ -140,17 +212,19 @@ export default function Page(props: {
 
 export const getServerSideProps: GetServerSideProps = (context) =>
    authAdminMiddleware(context, async function (session) {
-      let roles : Array<{
-         id: number, name: string
+      let roles: Array<{
+         id: number;
+         name: string;
       }> = await prisma.role.findMany({
          select: {
-            id: true, name: true
-         }
-      })
+            id: true,
+            name: true,
+         },
+      });
       return {
          props: {
             session,
-            roles
+            roles,
          },
       };
    });

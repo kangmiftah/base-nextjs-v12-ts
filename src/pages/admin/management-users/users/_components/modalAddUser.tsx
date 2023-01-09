@@ -2,31 +2,27 @@ import { Role } from "@prisma/client";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Modal, Form, Input, Button } from "../../../../../components";
-type OnSubmitFn = (data: object) => any
+type OnSubmitFn = (data: object | any) => any | Promise<object | any>
 
-export default function ModalAddUser({
-   setModalAdd,
-   openModalAdd,
-   onSubmit,
-   roles= []
-}: {
+export default React.forwardRef<HTMLFormElement, {
    setModalAdd: Function;
    openModalAdd: boolean;
    onSubmit: OnSubmitFn;
+   ref?: React.RefObject<HTMLFormElement>,
    roles: Array<{
       id: number, name: string
    }>
-}) {
+}>(function ModalAddUser({
+   setModalAdd,
+   openModalAdd,
+   onSubmit,
+   roles= [],
+}, ref) {
    const disp = useDispatch();
    return (
       <Form
+         ref={ref}
          onSubmit={onSubmit}
-         formData={
-            {
-               name: "test masuk"
-            }
-         }
-         passingDataMode={true}
       >
          <Modal
             backdrop="static"
@@ -38,7 +34,7 @@ export default function ModalAddUser({
                <div className="flex-box py-1 px-2">
                   <div className="mb-3">
                      <Input.Label htmlFor="name">Name</Input.Label>
-                     <Input.Text type="email" name="name" required={true} />
+                     <Input.Text type="text" name="name" required={true} />
                   </div>
 
                   <div className="mb-3">
@@ -49,6 +45,11 @@ export default function ModalAddUser({
                   <div className="mb-3">
                      <Input.Label htmlFor="password">Password</Input.Label>
                      <Input.Text name="password" required={true} type="password" />
+                  </div>
+
+                  <div className="mb-3">
+                     <Input.Label htmlFor="re_password">Re-Type Password</Input.Label>
+                     <Input.Text name="re_password" required={true} type="password" />
                   </div>
 
                   <div className="mb-3">
@@ -85,4 +86,4 @@ export default function ModalAddUser({
          </Modal>
       </Form>
    );
-}
+})

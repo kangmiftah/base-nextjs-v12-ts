@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import "../components/_adminLayouts/assets/css/index.css";
+import 'sweetalert2/src/sweetalert2.scss'
 import type { AppProps } from "next/app";
 // import store from "../_modules/redux/store";
 import { Provider } from "react-redux";
