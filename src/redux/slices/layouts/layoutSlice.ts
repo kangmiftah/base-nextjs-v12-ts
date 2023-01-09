@@ -7,7 +7,7 @@ import {
 import { layoutStateType } from "../../../@types/redux/slices/layouts/layoutSlice";
 import { HYDRATE } from "next-redux-wrapper";
 import { RootState } from "../../store";
-import { AlertComponentTypes, ConfirmComponentTypes } from "../../../@types/components/alert";
+import { AlertComponentTypes } from "../../../@types/components/alert";
 const initialState: layoutStateType = {
    sidebarOpen: true,
    title: "Aran Ui",
