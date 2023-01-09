@@ -6,7 +6,6 @@ import { bodyUser } from "../../../../@types/backend/admin/users-management";
 import prisma from "../../../../backend/_modules/prisma";
 import { AdminLayout, Card, TableGrid, Button } from "../../../../components";
 import {
-   useGetAllUsersQuery,
    useLazyGetAllUsersQuery,
    useAddOrUserMutation,
    useDeleteUserMutation,
@@ -15,6 +14,7 @@ import { layoutActions } from "../../../../redux/slices/layouts/layoutSlice";
 import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddleware";
 import ModalAddUser from "./_components/modalAddUser";
 import Swal from "sweetalert2";
+import { useSession } from "next-auth/react";
 
 export default function Page(props: {
    session: any;
@@ -42,6 +42,9 @@ export default function Page(props: {
    const [openModalAdd, setModalAdd] = useState<boolean>(false);
    const [editMode, setEditMode] = useState<boolean>(false);
    const [dataEdit, setDataEdit] = useState<object>({});
+   const { data: {
+      user={}, userDetail={}
+   } } : any = useSession();
    useEffect(
       function () {
          getAlluser({
@@ -197,6 +200,9 @@ export default function Page(props: {
                         },
                         {
                            name: "Edit User",
+                           onRender(item) {
+                              return user.email !== item.email
+                           },
                            onClick(data, menu, indexMenu) {
                               setModalAdd(true);
                               setDataEdit({
@@ -210,6 +216,9 @@ export default function Page(props: {
                         },
                         {
                            name: "Delete User",
+                           onRender(item) {
+                              return user.email !== item.email
+                           },
                            style: {
                               color: "red",
                            },
@@ -320,6 +329,7 @@ export default function Page(props: {
 
 export const getServerSideProps: GetServerSideProps = (context) =>
    authAdminMiddleware(context, async function (session) {
+      let dataSession = session
       let roles: Array<{
          id: number;
          name: string;
@@ -331,7 +341,7 @@ export const getServerSideProps: GetServerSideProps = (context) =>
       });
       return {
          props: {
-            session,
+            session: dataSession,
             roles,
          },
       };
