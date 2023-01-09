@@ -36,28 +36,33 @@ const usersPageService = createApi({
             else return [];
          },
       }),
-      addUser: builder.mutation({
+      addOrUser: builder.mutation({
          query(data: bodyUser) {
             return {
-               url:"",
-               method: "POST",
+               url: "",
+               method: data.id ? "PUT" : "POST",
                data,
             };
-         },
-        async onQueryStarted(
-        arg,
-        { dispatch, getState, queryFulfilled, requestId, extra, getCacheEntry }
-      ) {
-         let { data } = await queryFulfilled
-         
-      },
-      // Th
+         }
       }),
+      deleteUser: builder.mutation({
+         query(data: any){
+            return {
+               url: "",
+               method:"DELETE",
+               data,
+            };
+         }
+      })
    }),
 });
 
-export const { useGetAllUsersQuery, useLazyGetAllUsersQuery, useAddUserMutation } =
-   usersPageService;
+export const {
+   useGetAllUsersQuery,
+   useLazyGetAllUsersQuery,
+   useAddOrUserMutation,
+   useDeleteUserMutation
+} = usersPageService;
 
 export const { getAllUsers } = usersPageService.endpoints;
 

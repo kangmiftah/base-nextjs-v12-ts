@@ -8,6 +8,6 @@ declare interface baseBodyUser {
 }
 
 export declare interface bodyUser extends baseBodyUser {
-   password : string,
-   re_password : string,
+   password? : string,
+   re_password? : string,
 }

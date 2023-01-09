@@ -8,7 +8,8 @@ import { AdminLayout, Card, TableGrid, Button } from "../../../../components";
 import {
    useGetAllUsersQuery,
    useLazyGetAllUsersQuery,
-   useAddUserMutation,
+   useAddOrUserMutation,
+   useDeleteUserMutation,
 } from "../../../../redux/services/admin/users-management/usersPage";
 import { layoutActions } from "../../../../redux/slices/layouts/layoutSlice";
 import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddleware";
@@ -36,11 +37,11 @@ export default function Page(props: {
       refetchOnFocus: true,
       refetchOnReconnect: true,
    });
-   const [
-      addUser,
-      { isUninitialized, isError, isSuccess, isLoading, reset, requestId },
-   ] = useAddUserMutation();
+   const [addOrUser] = useAddOrUserMutation();
+   const [deleteUser] = useDeleteUserMutation();
    const [openModalAdd, setModalAdd] = useState<boolean>(false);
+   const [editMode, setEditMode] = useState<boolean>(false);
+   const [dataEdit, setDataEdit] = useState<object>({});
    useEffect(
       function () {
          getAlluser({
@@ -51,14 +52,26 @@ export default function Page(props: {
       [pagination]
    );
    const disp = useDispatch();
-   const modalRef = useRef<HTMLFormElement>(null)
+   const modalRef = useRef<HTMLFormElement>(null);
+   useEffect(
+      function () {
+         if (!openModalAdd) {
+            setEditMode(false);
+            setDataEdit({});
+         }
+      },
+      [openModalAdd]
+   );
    return (
       <>
-         <ModalAddUser ref={modalRef}
+         <ModalAddUser
+            ref={modalRef}
             onSubmit={(valueForm: bodyUser) => {
                Swal.fire({
-                  title: "Are you sure, add a new user?",
-                  text: "Add New User",
+                  title: `Are you sure, ${
+                     editMode ? "update a" : "add a new"
+                  } user?`,
+                  text: "confirmation",
                   icon: "question",
                   showCancelButton: true,
                   confirmButtonColor: "#3085d6",
@@ -69,17 +82,20 @@ export default function Page(props: {
                      disp(
                         layoutActions.setLoading({
                            isLoading: true,
-                           loadingText: "Creating user. Please wait...",
+                           loadingText: ` ${
+                              editMode ? "Updating" : "Creating"
+                           } user. Please wait...`,
                         })
                      );
                      try {
-                        let rsp: any = await addUser(valueForm);
-                        console.log({rsp, isSuccess, isError, isLoading})
+                        let rsp: any = await addOrUser(valueForm);
                         if (rsp.error) {
                            let { data = {} } = rsp.error || {};
                            disp(
                               layoutActions.openAlert({
-                                 title: "Error create user",
+                                 title: `Error ${
+                                    editMode ? "update" : "create"
+                                 } user`,
                                  type: "Warning",
                                  message: data.message,
                               })
@@ -90,7 +106,9 @@ export default function Page(props: {
                            if (code !== "00")
                               disp(
                                  layoutActions.openAlert({
-                                    title: "Create user",
+                                    title: `${
+                                       editMode ? "Update" : "Create"
+                                    } user`,
                                     type: "Warning",
                                     message: message,
                                  })
@@ -98,20 +116,24 @@ export default function Page(props: {
                            else {
                               disp(
                                  layoutActions.openAlert({
-                                    title: "Create user",
+                                    title: `${
+                                       editMode ? "Update" : "Create"
+                                    } user`,
                                     type: "Success",
                                     message: message,
                                  })
                               );
-                              getAlluser({ filter, pagination})
-                              setModalAdd(false)
-                              modalRef.current?.reset()
+                              getAlluser({ filter, pagination });
+                              setModalAdd(false);
+                              modalRef.current?.reset();
                            }
                         }
                      } catch (error: any) {
                         disp(
                            layoutActions.openAlert({
-                              title: "Error create user",
+                              title: `Error ${
+                                 editMode ? "update" : "create"
+                              } user`,
                               type: "Error",
                               message: error.toString(),
                            })
@@ -129,6 +151,8 @@ export default function Page(props: {
             setModalAdd={setModalAdd}
             openModalAdd={openModalAdd}
             roles={props.roles}
+            dataEdit={dataEdit}
+            editMode={editMode}
          />
          <div className="">
             <h2 className="text-xl font-bold">Users Management</h2>
@@ -172,15 +196,99 @@ export default function Page(props: {
                            },
                         },
                         {
-                           name: "Delete",
+                           name: "Edit User",
+                           onClick(data, menu, indexMenu) {
+                              setModalAdd(true);
+                              setDataEdit({
+                                 id: data.id,
+                                 name: data.name,
+                                 email: data.email,
+                                 role_id: data.role_id,
+                              });
+                              setEditMode(true);
+                           },
+                        },
+                        {
+                           name: "Delete User",
                            style: {
                               color: "red",
                            },
                            onClick(data, menu, indexMenu) {
-                              console.log(data);
-                           },
-                           onRender(item) {
-                              return item.name === "admin 1";
+                              Swal.fire({
+                                 title: `Are you sure, delete user?`,
+                                 text: "confirmation",
+                                 icon: "question",
+                                 showCancelButton: true,
+                                 confirmButtonColor: "#3085d6",
+                                 cancelButtonColor: "#d33",
+                                 confirmButtonText: "Yes, delete it",
+                              }).then(async (result) => {
+                                 if (result.isConfirmed) {
+                                    disp(
+                                       layoutActions.setLoading({
+                                          isLoading: true,
+                                          loadingText:
+                                             "Deleting user. Please wait...",
+                                       })
+                                    );
+                                    try {
+                                       let rsp: any = await deleteUser(
+                                          {
+                                             id: data.id
+                                          }
+                                       );
+                                       if (rsp.error) {
+                                          let { data = {} } = rsp.error || {};
+                                          disp(
+                                             layoutActions.openAlert({
+                                                title: `Error delete user`,
+                                                type: "Warning",
+                                                message: data.message,
+                                             })
+                                          );
+                                       } else {
+                                          let { data = {} } = rsp || {};
+                                          let { code = "01", message = "" } =
+                                             data;
+                                          if (code !== "00")
+                                             disp(
+                                                layoutActions.openAlert({
+                                                   title: `delete user`,
+                                                   type: "Warning",
+                                                   message: message,
+                                                })
+                                             );
+                                          else {
+                                             disp(
+                                                layoutActions.openAlert({
+                                                   title: `Delete user`,
+                                                   type: "Success",
+                                                   message: message,
+                                                })
+                                             );
+                                             getAlluser({ filter, pagination });
+                                             setModalAdd(false);
+                                             modalRef.current?.reset();
+                                          }
+                                       }
+                                    } catch (error: any) {
+                                       disp(
+                                          layoutActions.openAlert({
+                                             title: `Error Delete user`,
+                                             type: "Error",
+                                             message: error.toString(),
+                                          })
+                                       );
+                                    }
+                                    disp(
+                                       layoutActions.setLoading({
+                                          isLoading: false,
+                                          loadingText:
+                                             "Loading. Please wait...",
+                                       })
+                                    );
+                                 }
+                              });
                            },
                         },
                      ]}

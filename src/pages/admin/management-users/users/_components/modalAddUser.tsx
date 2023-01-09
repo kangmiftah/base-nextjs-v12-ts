@@ -8,6 +8,8 @@ export default React.forwardRef<HTMLFormElement, {
    setModalAdd: Function;
    openModalAdd: boolean;
    onSubmit: OnSubmitFn;
+   editMode?: boolean,
+   dataEdit?: object,
    ref?: React.RefObject<HTMLFormElement>,
    roles: Array<{
       id: number, name: string
@@ -17,17 +19,23 @@ export default React.forwardRef<HTMLFormElement, {
    openModalAdd,
    onSubmit,
    roles= [],
+   editMode,
+   dataEdit
 }, ref) {
    const disp = useDispatch();
    return (
       <Form
          ref={ref}
          onSubmit={onSubmit}
+         passingDataMode={editMode}
+         formData={dataEdit}
       >
          <Modal
             backdrop="static"
             onHide={() => setModalAdd(false)}
             showModal={openModalAdd}
+            
+
          >
             <Modal.Header closeBtn>Create New user</Modal.Header>
             <Modal.Body >
@@ -42,15 +50,15 @@ export default React.forwardRef<HTMLFormElement, {
                      <Input.Text type="email" name="email" required={true} />
                   </div>
 
-                  <div className="mb-3">
+                  {!editMode && <div className="mb-3">
                      <Input.Label htmlFor="password">Password</Input.Label>
                      <Input.Text name="password" required={true} type="password" />
-                  </div>
+                  </div>}
 
-                  <div className="mb-3">
+                 { !editMode && <div className="mb-3">
                      <Input.Label htmlFor="re_password">Re-Type Password</Input.Label>
                      <Input.Text name="re_password" required={true} type="password" />
-                  </div>
+                  </div>}
 
                   <div className="mb-3">
                      <Input.Label htmlFor="role_id">Role</Input.Label>
