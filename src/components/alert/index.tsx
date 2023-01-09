@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
    AlertComponentTypes,
-   ConfirmComponentTypes,
 } from "../../@types/components/alert";
 import { layoutStateType } from "../../@types/redux";
 import {
@@ -18,7 +17,7 @@ import { GrCircleAlert } from "react-icons/gr";
 import { Modal, Button } from "..";
 
 export default (): JSX.Element => {
-   let { alertList = [], confirmList = [] }: layoutStateType =
+   let { alertList = [], }: layoutStateType =
       useSelector(layoutSelector);
 
    return (
