@@ -15,6 +15,7 @@ import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddlew
 import ModalAddUser from "./_components/modalAddUser";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
+import ModalDetilUser from "./_components/modalDetilUser";
 
 export default function Page(props: {
    session: any;
@@ -42,6 +43,7 @@ export default function Page(props: {
    const [openModalAdd, setModalAdd] = useState<boolean>(false);
    const [editMode, setEditMode] = useState<boolean>(false);
    const [dataEdit, setDataEdit] = useState<object>({});
+   const [idDetail, setIdDetail] = useState(undefined)
    const { data: {
       user={}, userDetail={}
    } } : any = useSession();
@@ -65,8 +67,12 @@ export default function Page(props: {
       },
       [openModalAdd]
    );
+   const [modalDetil, setModalDetil] = useState<boolean>(false)
    return (
       <>
+         <ModalDetilUser user_id={idDetail} show={modalDetil}  onClose={()=>{
+            setModalDetil(false)
+         }} />
          <ModalAddUser
             ref={modalRef}
             onSubmit={(valueForm: bodyUser) => {
@@ -192,7 +198,8 @@ export default function Page(props: {
                         {
                            name: "Detail",
                            onClick(data, menu, indexMenu) {
-                              console.log(data);
+                              setModalDetil(true)
+                              setIdDetail(data.id)
                            },
                            onRender(item) {
                               return true;
@@ -319,6 +326,7 @@ export default function Page(props: {
                            },
                         },
                      ]}
+                     pagination={true}
                   />
                </Card.Body>
             </Card>

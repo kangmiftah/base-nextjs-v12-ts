@@ -4,20 +4,20 @@ import { bodyUser } from "../../../../@types/backend/admin/users-management";
 import { BaseResponseAPI } from "../../../../@types/backend/response";
 import { axiosBaseQuery } from "../../../../_modules/api";
 
-const usersPageService = createApi({
+const rolePageService = createApi({
    baseQuery: axiosBaseQuery({
-      baseUrl: "/api/users-management/users",
+      baseUrl: "/api/users-management/roles",
    }),
-   reducerPath: "usersPageServices",
+   reducerPath: "rolePageServices",
    extractRehydrationInfo(action, { reducerPath }) {
       if (action.type === HYDRATE) {
          return action.payload[reducerPath];
       }
    },
 
-   tagTypes: ["Get All Users"],
+   tagTypes: ["Management Users/Roles"],
    endpoints: (builder) => ({
-      getAllUsers: builder.query({
+      getAllRoles: builder.query({
          query: ({
             filter,
             pagination,
@@ -36,7 +36,7 @@ const usersPageService = createApi({
             else return [];
          },
       }),
-      addOrUser: builder.mutation({
+      addOrUpdateRoles: builder.mutation({
          query(data: bodyUser) {
             return {
                url: "",
@@ -45,35 +45,25 @@ const usersPageService = createApi({
             };
          }
       }),
-      deleteUser: builder.mutation({
+      deleteRoles: builder.mutation({
          query(data: any){
             return {
                url: "",
                method:"DELETE",
                data,
             };
-         },
-      }),
-      getDetil: builder.mutation({
-         query(arg: object) {
-            return {
-               url:"",
-               queryParam: arg,
-               method:"GET"
-            }
          }
       })
    }),
 });
 
 export const {
-   useGetAllUsersQuery,
-   useLazyGetAllUsersQuery,
-   useAddOrUserMutation,
-   useDeleteUserMutation,
-   useGetDetilMutation
-} = usersPageService;
+   useAddOrUpdateRolesMutation,
+   useDeleteRolesMutation,
+   useGetAllRolesQuery,
+   useLazyGetAllRolesQuery
+} = rolePageService;
 
-export const { getAllUsers } = usersPageService.endpoints;
+export const { getAllRoles } = rolePageService.endpoints;
 
-export default usersPageService;
+export default rolePageService;

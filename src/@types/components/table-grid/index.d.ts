@@ -15,7 +15,6 @@ export declare type actionType = {
 } & contextMenuType
 
 export declare interface TableGridProps {
-
    columns: Array<columnType>;
    isLoading: boolean;
    data: Array<object>;
@@ -23,5 +22,12 @@ export declare interface TableGridProps {
    iterationNumber: boolean;
    actionsMenu?: Array<actionType>;
    actionMenuType?: tyepOfAction;
-   pagination? : boolean
+   pagination? : boolean;
+   maxHeight? : string | number;
+   minHeight? : string | number;
+   withChild? : boolean;
+   renderChild? : (item: any) => JSX.Element;
+   onOpenChild? : (item: any) => any
+   loadingChild? : boolean;
+   headerSize? : "default" | "small"
 }

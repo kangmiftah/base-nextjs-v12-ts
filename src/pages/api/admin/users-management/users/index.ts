@@ -15,9 +15,11 @@ type Data = {
 
 export default (req: NextApiRequest, res: NextApiResponse<BaseResponseAPI>) =>
    authApiAdmin(res, req, async function (session: any) {
+      let {detil=undefined} = req.query;
       if (req.method === "POST") return await addUser(req, res, session);
       if (req.method === "PUT") return await updateUser(req, res, session);
-      if (req.method === "GET") return await getAllUsers(req, res, session);
+      if (req.method === "GET" && !detil) return await getAllUsers(req, res, session);
+      if (req.method === "GET" && detil) return await getDetilUser(req, res, session);
       if (req.method === "DELETE") return await deleteUser(req, res, session);
       else
          return res.status(405).json({
@@ -34,6 +36,7 @@ async function getAllUsers(
    let query = req.query;
    let show: number = parseInt((query.show as string) || "0");
    let skip: number = (parseInt((query.page as string) || "01") - 1) * show;
+
    console.log({ query });
    let users = await prisma.users.findMany({
       select: {
@@ -220,6 +223,82 @@ async function deleteUser(
          code: "00",
          message: "User successfully deleted",
       });
+   } catch (error: any) {
+      return res.status(500).json({
+         code: "99",
+         message: error.toString(),
+      });
+   }
+}
+async function getDetilUser(
+   req: NextApiRequest,
+   res: NextApiResponse<BaseResponseAPI>,
+   session: any
+) {
+   let {detil = "0"} = req.query;
+   console.log({ query : req.query });
+   try {
+      let user = await prisma.users.findFirst({
+         include:{
+            role:{
+               include:{
+                  menuList: {
+                     where:{
+                       menuList:{
+                        parent_id:null
+                       } 
+                     },
+                     include: {
+                        menuList: {
+                           include:{
+                              childs: true
+                           }
+                        }
+                     },
+                     orderBy: {
+                        menu_id:"asc"
+                     }
+                  }
+               }
+            }
+         },
+         where: {
+            AND: {
+               id: parseInt(detil as string),
+               is_public: false,
+            },
+         },
+      });
+      // let role = await prisma.roleMenu.findMany({
+      //    where: {
+      //       role_id:1,
+      //       menuList:{
+      //          parent_id: null
+      //       }
+      //    },
+      //    include:{
+      //       menuList:{
+      //          include:{
+      //             childs: true
+      //          }
+      //       }
+      //    },orderBy: {
+      //       menu_id: "asc"
+      //    }
+      // })
+
+      //  let menu = role.map(v => ({ ...v.menuList}) )
+      if (!user) return res.status(404).json({
+         code: "04",
+         message: "User didn't match",
+         data: {}
+      })
+      return res.json({
+         code: "00",
+         message: "Success",
+         data: user,
+      });
+      
    } catch (error: any) {
       return res.status(500).json({
          code: "99",

@@ -29,17 +29,24 @@ export const optionsAuth: NextAuthOptions = {
                   role_id: true,
                },
             })
-            let menuList = await prisma.menu.findMany({
+            let menuList =await prisma.roleMenu.findMany({
                where: {
-                  AND : {
-                     parent_id : null
+                  role_id:1,
+                  menuList:{
+                     parent_id: null
                   }
                },
-               include : {
-                  childs: true
+               include:{
+                  menuList:{
+                     include:{
+                        childs: true
+                     }
+                  }
+               },orderBy: {
+                  menu_id: "asc"
                }
             })
-            return { ...session, userDetail : { ... newUser}, menuList}
+            return { ...session, userDetail : { ... newUser}, menuList : menuList.map(v => ({ ...v.menuList}) )}
       },
       
    },
