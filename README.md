@@ -32,6 +32,46 @@ npx prisma db seed
 ```
 
 
+# UPDATE MENU
+if your add menu in your app, please add in src/backend/db/menu/update-menu.ts
+
+example 
+```ts
+    const menus = await prisma.menu.createMany({
+      data : [
+         //  ....
+         {
+            id: 5,
+            name : "Menu",
+            url : "/management-users/menu",
+            hash_child: false,
+            parent_id : 2,
+            order_no: 5
+         },
+         // ADD Menu HERE OR CUSTOM
+      ]
+   })
+
+   // add your role menu accessed role
+    const roleMenu = await prisma.roleMenu.createMany({
+      data: [
+         //  ....
+         {
+            menu_id :5,
+            role_id: 1
+         }
+         // ... add your access menu role here
+      ]
+   })
+
+```
+then run command on command prompt
+```bash
+npm run update-menu
+# or
+yarn update-menu
+```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

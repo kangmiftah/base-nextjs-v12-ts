@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update-menu" : "ts-node --compiler-options {\"\"\"module\"\"\":\"\"\"commonjs\"\"\"} src/backend/db/menu/update-menu.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.7.0",
@@ -53,6 +54,7 @@
   },
   "prisma": {
     "schema": "src/backend/db/schema.prisma",
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} src/backend/db/seeds.ts"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} src/backend/db/seeds.ts",
+    "update-menu" : ""
   }
 }

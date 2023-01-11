@@ -6,7 +6,7 @@ import { axiosBaseQuery } from "../../../../_modules/api";
 
 const menuPageService = createApi({
    baseQuery: axiosBaseQuery({
-      baseUrl: "/api/users-management/menus",
+      baseUrl: "/api/users-management/menu",
    }),
    reducerPath: "menuPageServices",
    extractRehydrationInfo(action, { reducerPath }) {
@@ -45,6 +45,15 @@ const menuPageService = createApi({
             };
          }
       }),
+      getDetilMenu: builder.mutation({
+         query(arg: object) {
+            return {
+               url:"",
+               queryParam: arg,
+               method:"GET"
+            }
+         }
+      }),
       deleteMenus: builder.mutation({
          query(data: any){
             return {
@@ -61,7 +70,8 @@ export const {
    useAddOrUpdateMenusMutation,
    useDeleteMenusMutation,
    useGetAllMenusQuery,
-   useLazyGetAllMenusQuery
+   useLazyGetAllMenusQuery,
+   useGetDetilMenuMutation
 } = menuPageService;
 
 export const { getAllMenus } = menuPageService.endpoints;

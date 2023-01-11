@@ -43,7 +43,9 @@ export const optionsAuth: NextAuthOptions = {
                      }
                   }
                },orderBy: {
-                  menu_id: "asc"
+                  menuList: {
+                     order_no: "asc"
+                  }
                }
             })
             return { ...session, userDetail : { ... newUser}, menuList : menuList.map(v => ({ ...v.menuList}) )}

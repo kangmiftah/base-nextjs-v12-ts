@@ -2,20 +2,19 @@ import { Role } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { bodyUser } from "../../../../@types/backend/admin/users-management";
 import prisma from "../../../../backend/_modules/prisma";
 import { AdminLayout, Card, TableGrid, Button } from "../../../../components";
 import {
-   useLazyGetAllUsersQuery,
-   useAddOrUserMutation,
-   useDeleteUserMutation,
-} from "../../../../redux/services/admin/users-management/usersPage";
+   useLazyGetAllMenusQuery,
+   useAddOrUpdateMenusMutation,
+   useDeleteMenusMutation
+} from "../../../../redux/services/admin/users-management/menuPage";
 import { layoutActions } from "../../../../redux/slices/layouts/layoutSlice";
 import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddleware";
-import ModalAddUser from "./_components/modalAddUser";
+import ModalAddMenu from "./_components/modalAddMenu";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
-import ModalDetilUser from "./_components/modalDetilUser";
+import ModalDetilMenu from "./_components/modalDetilMenu";
 
 export default function Page(props: {
    session: any;
@@ -34,22 +33,22 @@ export default function Page(props: {
       page: 1,
       show: 10,
    });
-   const [getAlluser, { data = [], status }] = useLazyGetAllUsersQuery({
+   const [getAllMenu, { data = [], status }] = useLazyGetAllMenusQuery({
       refetchOnFocus: true,
       refetchOnReconnect: true,
    });
-   const [addOrUser] = useAddOrUserMutation();
-   const [deleteUser] = useDeleteUserMutation();
+   const [addOrMenu] = useAddOrUpdateMenusMutation();
+   const [deleteMenu] = useDeleteMenusMutation();
    const [openModalAdd, setModalAdd] = useState<boolean>(false);
    const [editMode, setEditMode] = useState<boolean>(false);
    const [dataEdit, setDataEdit] = useState<object>({});
    const [idDetail, setIdDetail] = useState(undefined)
    const { data: {
-      user={}, userDetail={}
+      Menu={}, MenuDetail={}
    } } : any = useSession();
    useEffect(
       function () {
-         getAlluser({
+         getAllMenu({
             filter,
             pagination,
          });
@@ -70,16 +69,16 @@ export default function Page(props: {
    const [modalDetil, setModalDetil] = useState<boolean>(false)
    return (
       <>
-         <ModalDetilUser user_id={idDetail} show={modalDetil}  onClose={()=>{
+         <ModalDetilMenu menu_id={idDetail} show={modalDetil}  onClose={()=>{
             setModalDetil(false)
          }} />
-         <ModalAddUser
+         <ModalAddMenu
             ref={modalRef}
-            onSubmit={(valueForm: bodyUser) => {
+            onSubmit={(valueForm: any) => {
                Swal.fire({
                   title: `Are you sure, ${
                      editMode ? "update a" : "add a new"
-                  } user?`,
+                  } Menu?`,
                   text: "confirmation",
                   icon: "question",
                   showCancelButton: true,
@@ -93,18 +92,18 @@ export default function Page(props: {
                            isLoading: true,
                            loadingText: ` ${
                               editMode ? "Updating" : "Creating"
-                           } user. Please wait...`,
+                           } Menu. Please wait...`,
                         })
                      );
                      try {
-                        let rsp: any = await addOrUser(valueForm);
+                        let rsp: any = await addOrMenu(valueForm);
                         if (rsp.error) {
                            let { data = {} } = rsp.error || {};
                            disp(
                               layoutActions.openAlert({
                                  title: `Error ${
                                     editMode ? "update" : "create"
-                                 } user`,
+                                 } Menu`,
                                  type: "Warning",
                                  message: data.message,
                               })
@@ -117,7 +116,7 @@ export default function Page(props: {
                                  layoutActions.openAlert({
                                     title: `${
                                        editMode ? "Update" : "Create"
-                                    } user`,
+                                    } Menu`,
                                     type: "Warning",
                                     message: message,
                                  })
@@ -127,12 +126,12 @@ export default function Page(props: {
                                  layoutActions.openAlert({
                                     title: `${
                                        editMode ? "Update" : "Create"
-                                    } user`,
+                                    } Menu`,
                                     type: "Success",
                                     message: message,
                                  })
                               );
-                              getAlluser({ filter, pagination });
+                              getAllMenu({ filter, pagination });
                               setModalAdd(false);
                               modalRef.current?.reset();
                            }
@@ -142,7 +141,7 @@ export default function Page(props: {
                            layoutActions.openAlert({
                               title: `Error ${
                                  editMode ? "update" : "create"
-                              } user`,
+                              } Menu`,
                               type: "Error",
                               message: error.toString(),
                            })
@@ -164,15 +163,15 @@ export default function Page(props: {
             editMode={editMode}
          />
          <div className="">
-            <h2 className="text-xl font-bold">Users Management</h2>
-            <span className="text-sm"> List of user admin </span>
+            <h2 className="text-xl font-bold">Menu Management</h2>
+            <span className="text-sm"> List of Menu App </span>
          </div>
 
          <div className="mt-2">
             <Card>
                <Card.Header>
                   <div className=" w-full">
-                     List Users
+                     List Menu
                      <Button
                         className="float-right"
                         size={"sm"}
@@ -180,7 +179,7 @@ export default function Page(props: {
                         color="primary"
                         onClick={() => setModalAdd(true)}
                      >
-                        + Add User
+                        + Add Menu
                      </Button>
                   </div>
                </Card.Header>
@@ -206,10 +205,7 @@ export default function Page(props: {
                            },
                         },
                         {
-                           name: "Edit User",
-                           onRender(item) {
-                              return user.email !== item.email
-                           },
+                           name: "Edit Menu",
                            onClick(data, menu, indexMenu) {
                               setModalAdd(true);
                               setDataEdit({
@@ -222,16 +218,15 @@ export default function Page(props: {
                            },
                         },
                         {
-                           name: "Delete User",
-                           onRender(item) {
-                              return user.email !== item.email
-                           },
+                           name: "Delete Menu",
                            style: {
                               color: "red",
+                           }, onRender(item) {
+                              return false
                            },
                            onClick(data, menu, indexMenu) {
                               Swal.fire({
-                                 title: `Are you sure, delete user?`,
+                                 title: `Are you sure, delete Menu?`,
                                  text: "confirmation",
                                  icon: "question",
                                  showCancelButton: true,
@@ -244,11 +239,11 @@ export default function Page(props: {
                                        layoutActions.setLoading({
                                           isLoading: true,
                                           loadingText:
-                                             "Deleting user. Please wait...",
+                                             "Deleting Menu. Please wait...",
                                        })
                                     );
                                     try {
-                                       let rsp: any = await deleteUser(
+                                       let rsp: any = await deleteMenu(
                                           {
                                              id: data.id
                                           }
@@ -257,7 +252,7 @@ export default function Page(props: {
                                           let { data = {} } = rsp.error || {};
                                           disp(
                                              layoutActions.openAlert({
-                                                title: `Error delete user`,
+                                                title: `Error delete Menu`,
                                                 type: "Warning",
                                                 message: data.message,
                                              })
@@ -269,7 +264,7 @@ export default function Page(props: {
                                           if (code !== "00")
                                              disp(
                                                 layoutActions.openAlert({
-                                                   title: `delete user`,
+                                                   title: `delete Menu`,
                                                    type: "Warning",
                                                    message: message,
                                                 })
@@ -277,12 +272,12 @@ export default function Page(props: {
                                           else {
                                              disp(
                                                 layoutActions.openAlert({
-                                                   title: `Delete user`,
+                                                   title: `Delete Menu`,
                                                    type: "Success",
                                                    message: message,
                                                 })
                                              );
-                                             getAlluser({ filter, pagination });
+                                             getAllMenu({ filter, pagination });
                                              setModalAdd(false);
                                              modalRef.current?.reset();
                                           }
@@ -290,7 +285,7 @@ export default function Page(props: {
                                     } catch (error: any) {
                                        disp(
                                           layoutActions.openAlert({
-                                             title: `Error Delete user`,
+                                             title: `Error Delete Menu`,
                                              type: "Error",
                                              message: error.toString(),
                                           })
@@ -315,15 +310,24 @@ export default function Page(props: {
                            field: "name",
                         },
                         {
-                           title: "Email",
-                           field: "email",
+                           title: "URL",
+                           field: "url",
                         },
                         {
-                           title: "Role",
-                           field: "role",
-                           onRender(item) {
-                              return item.role?.name;
-                           },
+                           title: "Have Child",
+                           field: "hash_child",
+                           onRender(item){
+                              return String(item.hash_child).toLocaleUpperCase()
+                           } 
+                        },
+                        {
+                           title: "Icon Type",
+                           field: "icon_type",
+                        },
+                        
+                        {
+                           title: "Icon",
+                           field: "icon",
                         },
                      ]}
                      pagination={true}

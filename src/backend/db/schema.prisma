@@ -54,6 +54,7 @@ model Menu {
   parent     Menu?         @relation("ParentChild", fields: [parent_id], references: [id])
   childs     Menu[]        @relation("ParentChild")
   roleList   RoleMenu[]
+  order_no   Int?
 
   @@map("menu")
 }

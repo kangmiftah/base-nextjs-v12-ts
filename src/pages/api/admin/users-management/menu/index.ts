@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { Role } from "@prisma/client";
+import { Menu } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { BaseResponseAPI } from "../../../../../@types/backend/response";
 import { authApiAdmin } from "../../../../../backend/_modules/middleware";
@@ -15,11 +15,11 @@ type Data = {
 export default (req: NextApiRequest, res: NextApiResponse<BaseResponseAPI>) =>
    authApiAdmin(res, req, async function (session: any) {
       let {detil=undefined} = req.query;
-      if (req.method === "POST") return await addRole(req, res, session);
-      if (req.method === "PUT") return await updateRole(req, res, session);
-      if (req.method === "GET" && !detil) return await getAllRoles(req, res, session);
-      if (req.method === "GET" && detil) return await getDetilRole(req, res, session);
-      if (req.method === "DELETE") return await deleteRole(req, res, session);
+      if (req.method === "POST") return await addMenu(req, res, session);
+      if (req.method === "PUT") return await updateMenu(req, res, session);
+      if (req.method === "GET" && !detil) return await getAllMenus(req, res, session);
+      if (req.method === "GET" && detil) return await getDetilMenu(req, res, session);
+      if (req.method === "DELETE") return await deleteMenu(req, res, session);
       else
          return res.status(405).json({
             code: "05",
@@ -27,7 +27,7 @@ export default (req: NextApiRequest, res: NextApiResponse<BaseResponseAPI>) =>
          });
    });
 
-async function getAllRoles(
+async function getAllMenus(
    req: NextApiRequest,
    res: NextApiResponse<BaseResponseAPI>,
    session: any
@@ -37,7 +37,7 @@ async function getAllRoles(
    let skip: number = (parseInt((query.page as string) || "01") - 1) * show;
 
    console.log({ query });
-   let Roles = await prisma.role.findMany({
+   let Menus = await prisma.menu.findMany({
       take: show,
       skip,
       where: {
@@ -55,18 +55,18 @@ async function getAllRoles(
    return res.json({
       code: "00",
       message: "Success",
-      data: Roles,
+      data: Menus,
    });
 }
-async function addRole(
+async function addMenu(
    req: NextApiRequest,
    res: NextApiResponse<BaseResponseAPI>,
    session: any
 ) {
    let body = req.body;
-   let response: BaseResponseAPI<Role> = {
+   let response: BaseResponseAPI<Menu> = {
       code: "00",
-      message: "Role berhasil di tambahkan",
+      message: "Menu berhasil di tambahkan",
    };
 
    try {
@@ -77,17 +77,22 @@ async function addRole(
             message: "Name is field required",
          });
 
-      let data = await prisma.role.create({
+      let data = await prisma.menu.create({
          data: {
             name: body.name,
-            description: body.description,
+            icon_type: body.icon_type,
+            icon: body.icon,
+            parent_id: body.hash_child ? null : body.parent_id,
+            hash_child: body.jash_child,
+            url: body.url,
+            created_by: session.userDetail.id
          },
       });
 
-      if (!data) throw new Error("Failed to create Roles");
+      if (!data) throw new Error("Failed to create Menus");
       return res.status(201).json({
          code: "00",
-         message: "Role successfully u",
+         message: "Menu successfully u",
          data,
       });
    } catch (error: any) {
@@ -98,15 +103,15 @@ async function addRole(
    }
 }
 
-async function updateRole(
+async function updateMenu(
    req: NextApiRequest,
    res: NextApiResponse<BaseResponseAPI>,
    session: any
 ) {
    let body = req.body;
-   let response: BaseResponseAPI<Role> = {
+   let response: BaseResponseAPI<Menu> = {
       code: "00",
-      message: "Role berhasil di tambahkan",
+      message: "Menu berhasil di tambahkan",
    };
 
    try {
@@ -116,21 +121,25 @@ async function updateRole(
             message: "Name is field required",
          });
 
-      let data = await prisma.role.update({
+      let data = await prisma.menu.update({
          where: {
             id: body.id,
          },
          data: {
             name: body.name,
-            description: body.description,
+            icon_type: body.icon_type,
+            icon: body.icon,
+            parent_id: body.hash_child ? null : body.parent_id,
+            hash_child: body.jash_child,
+            url: body.url,
             updated_at: moment(Date.now()).format(),
          },
       });
 
-      if (!data) throw new Error("Failed to update Roles");
+      if (!data) throw new Error("Failed to update Menus");
       return res.status(201).json({
          code: "00",
-         message: "Role successfully updated",
+         message: "Menu successfully updated",
          data,
       });
    } catch (error: any) {
@@ -141,7 +150,7 @@ async function updateRole(
    }
 }
 
-async function deleteRole(
+async function deleteMenu(
    req: NextApiRequest,
    res: NextApiResponse<BaseResponseAPI>,
    session: any
@@ -153,15 +162,15 @@ async function deleteRole(
          message: "Id is field required",
       });
    try {
-      let deleted = await prisma.role.delete({
+      let deleted = await prisma.menu.delete({
          where: {
             id: parseInt(body.id),
          },
       });
-      if (!deleted) throw new Error("Failed to delete Roles");
+      if (!deleted) throw new Error("Failed to delete Menu");
       return res.status(201).json({
          code: "00",
-         message: "Role successfully deleted",
+         message: "Menu successfully deleted",
       });
    } catch (error: any) {
       return res.status(500).json({
@@ -170,7 +179,7 @@ async function deleteRole(
       });
    }
 }
-async function getDetilRole(
+async function getDetilMenu(
    req: NextApiRequest,
    res: NextApiResponse<BaseResponseAPI>,
    session: any
@@ -178,25 +187,9 @@ async function getDetilRole(
    let {detil = "0"} = req.query;
    console.log({ query : req.query });
    try {
-      let Role = await prisma.role.findFirst({
+      let Menu = await prisma.menu.findFirst({
          include:{
-            menuList: {
-               where:{
-                 menuList:{
-                  parent_id:null
-                 } 
-               },
-               include: {
-                  menuList: {
-                     include:{
-                        childs: true
-                     }
-                  }
-               },
-               orderBy: {
-                  menu_id:"asc"
-               }
-            }
+           childs: true
          },
          where: {
             AND: {
@@ -204,15 +197,15 @@ async function getDetilRole(
             },
          },
       });
-      if (!Role) return res.status(404).json({
+      if (!Menu) return res.status(404).json({
          code: "04",
-         message: "Role didn't match",
+         message: "Menu didn't match",
          data: {}
       })
       return res.json({
          code: "00",
          message: "Success",
-         data: Role,
+         data: Menu,
       });
       
    } catch (error: any) {
