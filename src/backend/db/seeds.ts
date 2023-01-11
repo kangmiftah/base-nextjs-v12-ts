@@ -1,7 +1,8 @@
-import { Users } from "@prisma/client";
+import { PrismaClient, Users } from "@prisma/client";
 import * as bcrypt from "bcrypt";
-import prisma from "../_modules/prisma";
+// import prisma from "../_modules/prisma";
 
+let prisma = new PrismaClient();
 async function main() {
    // let datauser : Array<Users> = [].map((val : Users) => {
    //    let pass = "";

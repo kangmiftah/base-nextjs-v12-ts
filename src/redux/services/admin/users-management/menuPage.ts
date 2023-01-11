@@ -4,20 +4,20 @@ import { bodyUser } from "../../../../@types/backend/admin/users-management";
 import { BaseResponseAPI } from "../../../../@types/backend/response";
 import { axiosBaseQuery } from "../../../../_modules/api";
 
-const rolePageService = createApi({
+const menuPageService = createApi({
    baseQuery: axiosBaseQuery({
-      baseUrl: "/api/users-management/roles",
+      baseUrl: "/api/users-management/menus",
    }),
-   reducerPath: "rolePageServices",
+   reducerPath: "menuPageServices",
    extractRehydrationInfo(action, { reducerPath }) {
       if (action.type === HYDRATE) {
          return action.payload[reducerPath];
       }
    },
 
-   tagTypes: ["Management Users/Roles"],
+   tagTypes: ["Management Users/menu"],
    endpoints: (builder) => ({
-      getAllRoles: builder.query({
+      getAllMenus: builder.query({
          query: ({
             filter,
             pagination,
@@ -36,8 +36,8 @@ const rolePageService = createApi({
             else return [];
          },
       }),
-      addOrUpdateRoles: builder.mutation({
-         query(data: any) {
+      addOrUpdateMenus: builder.mutation({
+         query(data: bodyUser) {
             return {
                url: "",
                method: data.id ? "PUT" : "POST",
@@ -45,16 +45,7 @@ const rolePageService = createApi({
             };
          }
       }),
-      getDetil: builder.mutation({
-         query(arg: object) {
-            return {
-               url:"",
-               queryParam: arg,
-               method:"GET"
-            }
-         }
-      }),
-      deleteRoles: builder.mutation({
+      deleteMenus: builder.mutation({
          query(data: any){
             return {
                url: "",
@@ -67,13 +58,12 @@ const rolePageService = createApi({
 });
 
 export const {
-   useAddOrUpdateRolesMutation,
-   useDeleteRolesMutation,
-   useGetAllRolesQuery,
-   useLazyGetAllRolesQuery,
-   useGetDetilMutation
-} = rolePageService;
+   useAddOrUpdateMenusMutation,
+   useDeleteMenusMutation,
+   useGetAllMenusQuery,
+   useLazyGetAllMenusQuery
+} = menuPageService;
 
-export const { getAllRoles } = rolePageService.endpoints;
+export const { getAllMenus } = menuPageService.endpoints;
 
-export default rolePageService;
+export default menuPageService;

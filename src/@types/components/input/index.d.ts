@@ -13,6 +13,10 @@ export declare interface InputTextProps extends HTMLProps<HTMLInputElement> {
 
 }
 
+export declare interface TextAreaProps extends HTMLProps<HTMLTextAreaElement>{
+   ref?: RefObject<HTMLTextAreaElement>;
+}
+
 export declare interface InputNumberProps extends HTMLProps<HTMLInputElement> {
    ref?: RefObject<HTMLInputElement>;
    sizeInput?: InputSize ="sm";

@@ -16,6 +16,7 @@ import {
    InputSize,
    InputTextProps,
    SelectOptionPorps,
+   TextAreaProps,
 } from "../../@types/components/input";
 import { thousandSparator, removeNumbering } from "../../_modules/helpers";
 
@@ -359,6 +360,70 @@ const Select = React.forwardRef<HTMLSelectElement, SelectOptionPorps>(function (
    );
 });
 
+const TextArea =  React.forwardRef<HTMLTextAreaElement, TextAreaProps>(function (
+   _props,
+   _ref
+) {
+   let props = { ..._props };
+   let ref: ForwardedRef<HTMLTextAreaElement> = _ref;
+   if (!ref) ref = useRef<HTMLTextAreaElement>(null);
+   props.className = `
+      appearance-none shadow
+      border rounded w-full py-1 px-3 
+      text-gray-700 leading-tight focus:border-primary-500
+      focus:outline-none focus:shadow-outline] ${props.className}
+      focus:invalid:border-danger
+   `;
+   if (props.type === undefined) props.type = "text";
+
+   const {
+      state,
+      actions: { initRefInput = () => null, changeForm },
+      providerInitialized,
+   } = useForm();
+
+   useEffect(
+      function () {
+         if (providerInitialized)
+            changeForm(props.name || "", ref?.current?.value || "");
+      },
+      [providerInitialized]
+   );
+   props.onChange = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
+      let target = e.target as HTMLTextAreaElement;
+      if (providerInitialized) {
+         changeForm(target.name, target.value);
+      }
+      if (typeof _props.onChange == "function") _props.onChange(e);
+   };
+   if (providerInitialized) {
+      props.value = (state.formData || {})[
+         props.name as keyof typeof state.formData
+      ];
+      if (props.name === undefined)
+         throw new Error(
+            "<Input.Text name='' /> name attributte is required for data name"
+         );
+      useEffect(
+         function () {
+            initRefInput(props.name || "", ref);
+         },
+         [props.name]
+      );
+   }
+   return (
+      <textarea
+         onChange={(e: any) => props.onChange?.(e)}
+         defaultValue={props.value || ""}
+         value={props.value || ""}
+         autoComplete="off"
+         autoCorrect="off"
+         ref={ref}
+         {...props}
+      />
+   );
+});
+
 function Label({ children, ..._props }: {} & HTMLProps<HTMLLabelElement>) {
    let props = { ..._props };
    const {
@@ -388,4 +453,5 @@ export default {
    Label,
    Select,
    Number,
+   TextArea
 };

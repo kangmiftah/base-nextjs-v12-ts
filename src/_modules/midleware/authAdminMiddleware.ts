@@ -1,14 +1,16 @@
 import { GetServerSidePropsContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
+import prisma from "../../backend/_modules/prisma";
 
 export default async function (
    context: GetServerSidePropsContext,
-   callback: (session: Session | null) => any
+   callback: (session: any | object) => any,
+   type? : "ACTION" | "MAIN_PAGE" | "SUB_PAGE"
 ) {
-
+   if (!type) type = "MAIN_PAGE";
    let session: Session | null= await getSession(context);
-   console.log("session admin : ",session)
+   let dataSession: any = { ...session}
    if (!session) {
       return {
          redirect: {
@@ -18,5 +20,35 @@ export default async function (
          props: {},
       };
    }
-   return callback(session);
+   if (type === "MAIN_PAGE"){
+      
+      let detilUser : any = (session as any).userDetail || {}
+      let check_ = await prisma.menu.findFirst({
+         where: {
+            AND: {
+               hash_child: false,
+               url: "/dashboard",
+               roleList: {
+                  some: {
+                     roleList: {
+                        
+                        userList: {
+                           some: {
+                              id: detilUser.id || "",
+                              is_public: false
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      })
+      if(!check_) return {
+         notFound: true,
+         props: {},
+      }
+   }
+
+   return callback(dataSession);
 }
