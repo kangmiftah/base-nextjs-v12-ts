@@ -80,6 +80,8 @@ model ActionMenu {
   created_by    Int?
   menu          Menu             @relation("ActionList", fields: [menu_id], references: [id])
   roleList      RoleActionMenu[]
+
+  @@map("action_menu")
 }
 
 model RoleActionMenu {

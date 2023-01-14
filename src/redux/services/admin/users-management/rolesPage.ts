@@ -54,6 +54,15 @@ const rolePageService = createApi({
             }
          }
       }),
+      getAccessMenu: builder.mutation({
+         query(arg: object) {
+            return {
+               url :"/access-menu",
+               queryParam : arg,
+               method : "GET"
+            }
+         }
+         }),
       deleteRoles: builder.mutation({
          query(data: any){
             return {
@@ -71,7 +80,8 @@ export const {
    useDeleteRolesMutation,
    useGetAllRolesQuery,
    useLazyGetAllRolesQuery,
-   useGetDetilMutation
+   useGetDetilMutation,
+   useGetAccessMenuMutation
 } = rolePageService;
 
 export const { getAllRoles } = rolePageService.endpoints;

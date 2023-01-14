@@ -4,6 +4,7 @@ import * as bcrypt from "bcrypt";
 
 let prisma = new PrismaClient();
 async function main() {
+   await prisma.actionMenu.deleteMany();
    await prisma.roleMenu.deleteMany();
    await prisma.menu.deleteMany();
    const menus = await prisma.menu.createMany({
@@ -24,7 +25,8 @@ async function main() {
             icon :"FiUsers",
             url : "/management-users",
             hash_child: true,
-            order_no: 2
+            order_no: 2,
+            
          },
          {
             id: 3,
@@ -42,14 +44,14 @@ async function main() {
             parent_id : 2,
             order_no: 4
          },
-         {
-            id: 5,
-            name : "Menu",
-            url : "/management-users/menu",
-            hash_child: false,
-            parent_id : 2,
-            order_no: 5
-         },
+         // {
+         //    id: 5,
+         //    name : "Menu",
+         //    url : "/management-users/menu",
+         //    hash_child: false,
+         //    parent_id : 2,
+         //    order_no: 5
+         // },
          
          // add new menu here or custom here
       ]
@@ -73,11 +75,35 @@ async function main() {
             menu_id :4,
             role_id: 1
          },
-         {
-            menu_id :5,
-            role_id: 1
-         },
          // add role access menu here
+      ]
+   })
+
+   const actionMenu = await prisma.actionMenu.createMany({
+      data: [
+         {
+            function_name : "view",
+            menu_id: 3,
+            name: "View Detail",
+            type : "DROPDOWN_IN_LIST"
+         },
+         {
+            function_name : "edit",
+            menu_id: 3,
+            name: "Edit Users",
+            type : "DROPDOWN_IN_LIST"
+         },
+         {
+            function_name : "delete",
+            menu_id: 3,
+            name: "Delete Users",
+            type : "DROPDOWN_IN_LIST"
+         }, {
+            function_name : "view",
+            menu_id: 1,
+            name: "View Detail",
+            type : "DROPDOWN_IN_LIST"
+         },
       ]
    })
 

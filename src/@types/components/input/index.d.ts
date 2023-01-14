@@ -8,7 +8,7 @@ import React, {
 export type InputSize = "sm" | "lg" | undefined
 export declare interface InputTextProps extends HTMLProps<HTMLInputElement> {
    ref?: RefObject<HTMLInputElement>;
-   sizeInput?: InputSize ="sm";
+   sizeinput?: InputSize ="sm";
    type?: "text" | "alphabet" | "password" | "email";
 
 }
@@ -19,7 +19,7 @@ export declare interface TextAreaProps extends HTMLProps<HTMLTextAreaElement>{
 
 export declare interface InputNumberProps extends HTMLProps<HTMLInputElement> {
    ref?: RefObject<HTMLInputElement>;
-   sizeInput?: InputSize ="sm";
+   sizeinput?: InputSize ="sm";
    typeInput?: "currency" | "int" | "float";
    
 }
@@ -28,5 +28,5 @@ export declare interface InputNumberProps extends HTMLProps<HTMLInputElement> {
 
 export declare interface SelectOptionPorps extends HTMLProps<HTMLSelectElement> {
    ref?: RefObject<HTMLSelectElement>;
-   sizeInput?: InputSize ="sm";
+   sizeinput?: InputSize ="sm";
 }

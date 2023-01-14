@@ -147,7 +147,7 @@ const Text = React.forwardRef<HTMLInputElement, InputTextProps>(function (
    if (!ref) ref = useRef<HTMLInputElement>(null);
    props.className = `
       appearance-none shadow
-      border rounded w-full ${getSize(props.sizeInput)} px-3 
+      border rounded w-full ${getSize(props.sizeinput)} px-3 
       text-gray-700 leading-tight focus:border-primary-500
       focus:outline-none focus:shadow-outline] ${props.className}
       focus:invalid:border-danger
@@ -220,7 +220,7 @@ const Number = React.forwardRef<HTMLInputElement, InputNumberProps>(function (
    };
    props.className = `
       appearance-none shadow
-      border rounded w-full ${getSize(props.sizeInput)} px-3 
+      border rounded w-full ${getSize(props.sizeinput)} px-3 
       text-gray-700 leading-tight focus:border-primary-500
       focus:outline-none focus:shadow-outline] ${props.className}
       focus:invalid:border-danger
@@ -298,7 +298,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectOptionPorps>(function (
    if (!ref) ref = useRef<HTMLSelectElement>(null);
    props.className = `
       appearance-none shadow
-      border rounded w-full ${getSize(props.sizeInput)} px-3 
+      border rounded w-full ${getSize(props.sizeinput)} px-3 
       text-gray-700 leading-tight focus:border-primary-500
       focus:outline-none focus:shadow-outline] ${props.className}
       focus:invalid:border-danger

@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import ModalDetilRole from "./_components/modalDetilRole";
 import { useAddOrUpdateRolesMutation, useDeleteRolesMutation, useLazyGetAllRolesQuery } from "../../../../redux/services/admin/users-management/rolesPage";
+import ModalAccessMenu from "./_components/modalAccessMenu";
 
 export default function Page(props: {
    session: any;
@@ -34,6 +35,7 @@ export default function Page(props: {
    const [deleteRole] = useDeleteRolesMutation();
    const [openModalAdd, setModalAdd] = useState<boolean>(false);
    const [editMode, setEditMode] = useState<boolean>(false);
+   const [accessMenu, setAccessMenu] = useState<boolean>(false);
    const [dataEdit, setDataEdit] = useState<object>({});
    const [idDetail, setIdDetail] = useState(undefined)
    const { data: {
@@ -63,6 +65,9 @@ export default function Page(props: {
    const [modalDetil, setModalDetil] = useState<boolean>(false)
    return (
       <>
+         <ModalAccessMenu role_id={idDetail} show={accessMenu} onClose={()=> {
+            setAccessMenu(false)
+         }} />
          <ModalDetilRole role_id={idDetail} show={modalDetil}  onClose={()=>{
             setModalDetil(false)
          }} />
@@ -292,6 +297,13 @@ export default function Page(props: {
                               });
                            },
                         },
+                        {
+                           name: "Role Access Menu",
+                           onClick(data, menu, indexMenu) {
+                              setAccessMenu(true);
+                              setIdDetail(data.id)
+                           },
+                        }
                      ]}
                      iterationNumber={true}
                      columns={[
