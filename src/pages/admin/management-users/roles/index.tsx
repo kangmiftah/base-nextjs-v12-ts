@@ -212,9 +212,16 @@ export default function Page(props: {
                            },
                         },
                         {
+                           name: "Role Access Menu",
+                           onClick(data, menu, indexMenu) {
+                              setAccessMenu(true);
+                              setIdDetail(data.id)
+                           },
+                        },
+                        {
                            name: "Delete Role",
                            onRender(item) {
-                              return userDetail.role_id !== item.id
+                              return userDetail?.role_id !== item.id
                            },
                            style: {
                               color: "red",
@@ -295,13 +302,6 @@ export default function Page(props: {
                                     );
                                  }
                               });
-                           },
-                        },
-                        {
-                           name: "Role Access Menu",
-                           onClick(data, menu, indexMenu) {
-                              setAccessMenu(true);
-                              setIdDetail(data.id)
                            },
                         }
                      ]}

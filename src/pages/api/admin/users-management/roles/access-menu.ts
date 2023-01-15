@@ -15,10 +15,9 @@ export default (req: NextApiRequest, res: NextApiResponse<BaseResponseAPI>) =>
    authApiAdmin(res, req, async function (session: any) {
       let { detil = undefined } = req.query;
       // if (req.method === "POST") return await addRole(req, res, session);
-      // if (req.method === "PUT") return await updateRole(req, res, session);
+      if (req.method === "PUT") return await setAccessMenu(req, res, session);
       // if (req.method === "GET" && !detil) return await getAllRoles(req, res, session);
-      if (req.method === "GET")
-         return await getAccessMenu(req, res, session);
+      if (req.method === "GET") return await getAccessMenu(req, res, session);
       // if (req.method === "DELETE") return await deleteRole(req, res, session);
       else
          return res.status(405).json({
@@ -35,7 +34,8 @@ async function getAccessMenu(
    let { role_id = "0", search = "" } = req.query;
    console.log({ query: req.query });
    let where_clause: string = "";
-   if (search !== "") where_clause = ` and (LOWER(m.name) like LOWER('%${search}%') )`
+   if (search !== "")
+      where_clause = ` and (LOWER(m.name) like LOWER('%${search}%') )`;
    try {
       let query = `
          with main as (
@@ -73,13 +73,84 @@ async function getAccessMenu(
          ) select * from mainmenu;
          `;
 
-      console.log(query)
+      console.log(query);
       let access_menu = await prisma.$queryRawUnsafe<Array<any>>(query);
-      if (!access_menu) access_menu = []
+      if (!access_menu) access_menu = [];
       return res.json({
          code: "00",
          message: "Success",
          data: access_menu,
+      });
+   } catch (error: any) {
+      return res.status(500).json({
+         code: "99",
+         message: error.toString(),
+      });
+   }
+}
+
+async function setAccessMenu(
+   req: NextApiRequest,
+   res: NextApiResponse<BaseResponseAPI>,
+   session: any
+) {
+   let body: any = req.body;
+   console.log({ body });
+   const {
+      role_id = 0,
+      menu_id = 0,
+      accessed = false,
+      type,
+      action_id = 0,
+   } = body;
+   try {
+      let accessing: any;
+      if (type === "MENU") {
+         if (accessed)
+            accessing = await prisma.roleMenu.create({
+               data: {
+                  assign_by: session?.userDetail?.id,
+                  menu_id: menu_id,
+                  role_id: role_id,
+               },
+            });
+         else{
+            accessing = await prisma.roleMenu.delete({
+               where: {
+                  menu_id_role_id: { menu_id: menu_id, role_id: role_id },
+               },
+            });
+            await prisma.roleActionMenu.deleteMany({
+               where: {
+                  role_id: role_id
+               }
+            })
+         }
+      }
+      if (type === "ACTION") {
+         if (accessed)
+            accessing = await prisma.roleActionMenu.create({
+               data: {
+                  assign_by: session?.userDetail?.id,
+                  action_menu_id: action_id,
+                  role_id: role_id,
+               },
+            });
+         else
+            accessing = await prisma.roleActionMenu.delete({
+               where: {
+                  role_id_action_menu_id: { action_menu_id: action_id, role_id: role_id },
+               },
+            });
+      }
+      if (!accessing)
+         return res.status(400).json({
+            code: "04",
+            message: "Failed assign menu",
+         });
+      return res.json({
+         code: "00",
+         message: "Success",
       });
    } catch (error: any) {
       return res.status(500).json({

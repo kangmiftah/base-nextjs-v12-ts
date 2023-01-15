@@ -85,7 +85,7 @@ async function addMenu(
             parent_id: body.hash_child ? null : body.parent_id,
             hash_child: body.jash_child,
             url: body.url,
-            created_by: session.userDetail.id
+            created_by: session?.userDetail?.id
          },
       });
 

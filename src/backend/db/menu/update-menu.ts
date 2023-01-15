@@ -4,8 +4,8 @@ import * as bcrypt from "bcrypt";
 
 let prisma = new PrismaClient();
 async function main() {
-   await prisma.actionMenu.deleteMany();
    await prisma.roleMenu.deleteMany();
+   await prisma.actionMenu.deleteMany();
    await prisma.menu.deleteMany();
    const menus = await prisma.menu.createMany({
       data : [

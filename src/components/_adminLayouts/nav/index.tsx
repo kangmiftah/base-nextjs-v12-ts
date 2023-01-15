@@ -93,7 +93,7 @@ function DropdownUser() {
          await signOut({redirect:false})
          disp(layoutActions.setLoading({
             isLoading: true,
-            loadingText:"Clearing session. Please wait ..."
+            loadingText:"Clearing session?. Please wait ..."
          }))
          setTimeout(function(){
             router.reload();

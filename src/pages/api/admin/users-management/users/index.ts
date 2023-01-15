@@ -127,7 +127,7 @@ async function addUser(
             email: body.email,
             password: bcrypt.hashSync(body.password, bcrypt.genSaltSync()),
             role_id: parseInt(body.role_id) || null,
-            created_by: session.userDetail?.id || null,
+            created_by: session?.userDetail?.id || null,
             is_public: false,
          },
       });

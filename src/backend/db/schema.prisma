@@ -64,8 +64,8 @@ model RoleMenu {
   role_id     Int
   assigned_at DateTime @default(now())
   assign_by   Int?
-  menuList    Menu     @relation(fields: [menu_id], references: [id])
-  roleList    Role     @relation(fields: [role_id], references: [id])
+  menuList    Menu     @relation(fields: [menu_id], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+  roleList    Role     @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([menu_id, role_id])
   @@map("role_menu")
@@ -89,8 +89,8 @@ model RoleActionMenu {
   action_menu_id Int
   assigned_at    DateTime   @default(now())
   assign_by      Int?
-  role           Role       @relation(fields: [role_id], references: [id])
-  actionMenu     ActionMenu @relation(fields: [action_menu_id], references: [id])
+  role           Role       @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  actionMenu     ActionMenu @relation(fields: [action_menu_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([role_id, action_menu_id])
   @@map("role_action_menu")

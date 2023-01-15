@@ -81,7 +81,11 @@ async function addRole(
          data: {
             name: body.name,
             description: body.description,
+            menuList:{
+               connect: { menu_id_role_id: {menu_id: 1, role_id: 1} }
+            }
          },
+         
       });
 
       if (!data) throw new Error("Failed to create Roles");

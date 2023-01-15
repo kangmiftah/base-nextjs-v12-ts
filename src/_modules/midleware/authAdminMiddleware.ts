@@ -2,6 +2,7 @@ import { GetServerSidePropsContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import prisma from "../../backend/_modules/prisma";
+import cfg  from '../../app.config';
 
 export default async function (
    context: GetServerSidePropsContext,
@@ -23,11 +24,12 @@ export default async function (
    if (type === "MAIN_PAGE"){
       
       let detilUser : any = (session as any).userDetail || {}
+      let url = context.resolvedUrl.replace(`/${cfg.SUB_DOMAIN_ADMIN}`, "");
       let check_ = await prisma.menu.findFirst({
          where: {
             AND: {
                hash_child: false,
-               url: "/dashboard",
+               url: url,
                roleList: {
                   some: {
                      roleList: {
@@ -44,6 +46,7 @@ export default async function (
             }
          }
       })
+      console.log({url, check_})
       if(!check_) return {
          notFound: true,
          props: {},
