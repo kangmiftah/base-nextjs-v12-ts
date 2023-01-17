@@ -111,7 +111,7 @@ async function main() {
             on_render: "onRenderDelete",
             class_name:"text-danger"
          },
-         
+
          {
             id:5,
             function_name : "detailRole",
@@ -147,7 +147,7 @@ async function main() {
             function_name : "addRole",
             menu_id: 4,
             name: "+ Add Role",
-            type : "DROPDOWN_IN_LIST"
+            type : "BUTTON_TOOLS"
          },
          
       ]

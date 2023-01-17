@@ -20,6 +20,7 @@ import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import ModalDetilUser from "./_components/modalDetilUser";
 import { useSelector } from "react-redux";
+import { generateActionListFunction } from "../../../../_modules/helpers/generateAction";
 
 export default function Page(props: {
    session: any;
@@ -310,19 +311,7 @@ export default function Page(props: {
                      onChangeShow={setPagination}
                      currentPage={pagination.page}
                      currentShow={pagination.show}
-                     actionsMenu={((actionSelected || []).filter(v => { console.log(v); return v.type ==="DROPDOWN_IN_LIST" }).map((act, inAct)=> {
-                        let onRender: (item?: any)=> boolean = () => true;
-                        if(act.on_render){
-                           onRender = onRenderActions[act.on_render as keyof typeof onRenderActions]
-                        }
-                        return {
-                           name: act.name,
-                           onClick: actions[act.function_name as keyof typeof actions],
-                           onRender,
-                           className: act.class_name
-
-                        }
-                     }))}
+                     actionsMenu={generateActionListFunction(actionSelected, actions, onRenderActions)}
                      iterationNumber={true}
                      columns={[
                         {
