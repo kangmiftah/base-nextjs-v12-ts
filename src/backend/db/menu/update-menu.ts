@@ -82,28 +82,117 @@ async function main() {
    const actionMenu = await prisma.actionMenu.createMany({
       data: [
          {
+            id:1,
             function_name : "view",
             menu_id: 3,
             name: "View Detail",
             type : "DROPDOWN_IN_LIST"
          },
          {
+            id:2,
             function_name : "edit",
             menu_id: 3,
             name: "Edit Users",
             type : "DROPDOWN_IN_LIST"
          },
          {
+            id:3,
+            function_name : "add",
+            menu_id: 3,
+            name: "+ Add Users",
+            type : "BUTTON_TOOLS"
+         },
+         {
+            id:4,
             function_name : "delete",
             menu_id: 3,
             name: "Delete Users",
-            type : "DROPDOWN_IN_LIST"
-         }, {
-            function_name : "view",
-            menu_id: 1,
-            name: "View Detail",
+            type : "DROPDOWN_IN_LIST",
+            on_render: "onRenderDelete",
+            class_name:"text-danger"
+         },
+         
+         {
+            id:5,
+            function_name : "detailRole",
+            menu_id: 4,
+            name: "Detail",
             type : "DROPDOWN_IN_LIST"
          },
+         {
+            id:6,
+            function_name : "updateRole",
+            menu_id: 4,
+            name: "Update Role",
+            type : "DROPDOWN_IN_LIST"
+         },
+         {
+            id:7,
+            function_name : "accessMenu",
+            menu_id: 4,
+            name: "Access Menu Role",
+            type : "DROPDOWN_IN_LIST"
+         },
+         {
+            id:8,
+            function_name : "deleteRole",
+            menu_id: 4,
+            name: "Delete Role",
+            type : "DROPDOWN_IN_LIST",
+            on_render: "onRenderDelete",
+            class_name:"text-danger"
+         },
+         {
+            id:9,
+            function_name : "addRole",
+            menu_id: 4,
+            name: "+ Add Role",
+            type : "DROPDOWN_IN_LIST"
+         },
+         
+      ]
+   })
+
+   await prisma.roleActionMenu.createMany({
+      data: [
+         {
+            role_id: 1,
+            action_menu_id:1,
+         },
+         {
+            role_id: 1,
+            action_menu_id:2,
+         },
+         {
+            role_id: 1,
+            action_menu_id:3,
+         },
+         {
+            role_id: 1,
+            action_menu_id:4,
+         },
+         {
+            role_id: 1,
+            action_menu_id:5,
+         },
+         {
+            role_id: 1,
+            action_menu_id:6,
+         },
+         {
+            role_id: 1,
+            action_menu_id:7,
+         },
+         {
+            role_id: 1,
+            action_menu_id:8,
+         },
+         {
+            role_id: 1,
+            action_menu_id:9,
+         },
+
+         
       ]
    })
 

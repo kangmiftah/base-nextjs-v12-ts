@@ -10,12 +10,16 @@ import {
    useAddOrUserMutation,
    useDeleteUserMutation,
 } from "../../../../redux/services/admin/users-management/usersPage";
-import { layoutActions } from "../../../../redux/slices/layouts/layoutSlice";
+import {
+   layoutActions,
+   layoutSelector,
+} from "../../../../redux/slices/layouts/layoutSlice";
 import authAdminMiddleware from "../../../../_modules/midleware/authAdminMiddleware";
 import ModalAddUser from "./_components/modalAddUser";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import ModalDetilUser from "./_components/modalDetilUser";
+import { useSelector } from "react-redux";
 
 export default function Page(props: {
    session: any;
@@ -43,10 +47,11 @@ export default function Page(props: {
    const [openModalAdd, setModalAdd] = useState<boolean>(false);
    const [editMode, setEditMode] = useState<boolean>(false);
    const [dataEdit, setDataEdit] = useState<object>({});
-   const [idDetail, setIdDetail] = useState(undefined)
-   const { data: {
-      user={}, userDetail={}
-   } } : any = useSession();
+   const [idDetail, setIdDetail] = useState(undefined);
+   const { actionSelected } = useSelector(layoutSelector);
+   const {
+      data: { user = {}, userDetail = {} },
+   }: any = useSession();
    useEffect(
       function () {
          getAlluser({
@@ -67,12 +72,118 @@ export default function Page(props: {
       },
       [openModalAdd]
    );
-   const [modalDetil, setModalDetil] = useState<boolean>(false)
+   let onRenderActions = {
+      onRenderDelete(item: any){
+         return user.email !== item.email;
+      }
+   };
+   let actions = {
+      async add(){
+         setModalAdd(true)
+      },
+      async view(data: any) {
+         setModalAdd(true);
+         setDataEdit({
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            role_id: data.role_id,
+         });
+         setEditMode(true);
+      },
+      async edit(data: any) {
+         setModalAdd(true);
+         setDataEdit({
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            role_id: data.role_id,
+         });
+         setEditMode(true);
+      },
+      async delete(data: any) {
+         Swal.fire({
+            title: `Are you sure, delete user?`,
+            text: "confirmation",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it",
+         }).then(async (result) => {
+            if (result.isConfirmed) {
+               disp(
+                  layoutActions.setLoading({
+                     isLoading: true,
+                     loadingText: "Deleting user. Please wait...",
+                  })
+               );
+               try {
+                  let rsp: any = await deleteUser({
+                     id: data.id,
+                  });
+                  if (rsp.error) {
+                     let { data = {} } = rsp.error || {};
+                     disp(
+                        layoutActions.openAlert({
+                           title: `Error delete user`,
+                           type: "Warning",
+                           message: data.message,
+                        })
+                     );
+                  } else {
+                     let { data = {} } = rsp || {};
+                     let { code = "01", message = "" } = data;
+                     if (code !== "00")
+                        disp(
+                           layoutActions.openAlert({
+                              title: `delete user`,
+                              type: "Warning",
+                              message: message,
+                           })
+                        );
+                     else {
+                        disp(
+                           layoutActions.openAlert({
+                              title: `Delete user`,
+                              type: "Success",
+                              message: message,
+                           })
+                        );
+                        getAlluser({ filter, pagination });
+                        setModalAdd(false);
+                        modalRef.current?.reset();
+                     }
+                  }
+               } catch (error: any) {
+                  disp(
+                     layoutActions.openAlert({
+                        title: `Error Delete user`,
+                        type: "Error",
+                        message: error.toString(),
+                     })
+                  );
+               }
+               disp(
+                  layoutActions.setLoading({
+                     isLoading: false,
+                     loadingText: "Loading. Please wait...",
+                  })
+               );
+            }
+         });
+      },
+   };
+   const [modalDetil, setModalDetil] = useState<boolean>(false);
    return (
       <>
-         <ModalDetilUser user_id={idDetail} show={modalDetil}  onClose={()=>{
-            setModalDetil(false)
-         }} />
+         <ModalDetilUser
+            user_id={idDetail}
+            show={modalDetil}
+            onClose={() => {
+               setModalDetil(false);
+            }}
+         />
          <ModalAddUser
             ref={modalRef}
             onSubmit={(valueForm: bodyUser) => {
@@ -173,15 +284,20 @@ export default function Page(props: {
                <Card.Header>
                   <div className=" w-full">
                      List Users
-                     <Button
-                        className="float-right"
-                        size={"sm"}
-                        type="button"
-                        color="primary"
-                        onClick={() => setModalAdd(true)}
-                     >
-                        + Add User
-                     </Button>
+                     {
+                        actionSelected.filter(v => v.type === "BUTTON_TOOLS").map(( act, iac ) =>(
+                           <Button
+                              key={iac}
+                              className="float-right"
+                              size={"sm"}
+                              type="button"
+                              color="primary"
+                              onClick={actions[act.function_name as keyof typeof actions]}
+                           >
+                              {act.name}
+                           </Button>
+                        ))
+                     }
                   </div>
                </Card.Header>
                <Card.Body className="">
@@ -194,120 +310,19 @@ export default function Page(props: {
                      onChangeShow={setPagination}
                      currentPage={pagination.page}
                      currentShow={pagination.show}
-                     actionsMenu={[
-                        {
-                           name: "Detail",
-                           onClick(data, menu, indexMenu) {
-                              setModalDetil(true)
-                              setIdDetail(data.id)
-                           },
-                           onRender(item) {
-                              return true;
-                           },
-                        },
-                        {
-                           name: "Edit User",
-                           onRender(item) {
-                              return user.email !== item.email
-                           },
-                           onClick(data, menu, indexMenu) {
-                              setModalAdd(true);
-                              setDataEdit({
-                                 id: data.id,
-                                 name: data.name,
-                                 email: data.email,
-                                 role_id: data.role_id,
-                              });
-                              setEditMode(true);
-                           },
-                        },
-                        {
-                           name: "Delete User",
-                           onRender(item) {
-                              return user.email !== item.email
-                           },
-                           style: {
-                              color: "red",
-                           },
-                           onClick(data, menu, indexMenu) {
-                              Swal.fire({
-                                 title: `Are you sure, delete user?`,
-                                 text: "confirmation",
-                                 icon: "question",
-                                 showCancelButton: true,
-                                 confirmButtonColor: "#3085d6",
-                                 cancelButtonColor: "#d33",
-                                 confirmButtonText: "Yes, delete it",
-                              }).then(async (result) => {
-                                 if (result.isConfirmed) {
-                                    disp(
-                                       layoutActions.setLoading({
-                                          isLoading: true,
-                                          loadingText:
-                                             "Deleting user. Please wait...",
-                                       })
-                                    );
-                                    try {
-                                       let rsp: any = await deleteUser(
-                                          {
-                                             id: data.id
-                                          }
-                                       );
-                                       if (rsp.error) {
-                                          let { data = {} } = rsp.error || {};
-                                          disp(
-                                             layoutActions.openAlert({
-                                                title: `Error delete user`,
-                                                type: "Warning",
-                                                message: data.message,
-                                             })
-                                          );
-                                       } else {
-                                          let { data = {} } = rsp || {};
-                                          let { code = "01", message = "" } =
-                                             data;
-                                          if (code !== "00")
-                                             disp(
-                                                layoutActions.openAlert({
-                                                   title: `delete user`,
-                                                   type: "Warning",
-                                                   message: message,
-                                                })
-                                             );
-                                          else {
-                                             disp(
-                                                layoutActions.openAlert({
-                                                   title: `Delete user`,
-                                                   type: "Success",
-                                                   message: message,
-                                                })
-                                             );
-                                             getAlluser({ filter, pagination });
-                                             setModalAdd(false);
-                                             modalRef.current?.reset();
-                                          }
-                                       }
-                                    } catch (error: any) {
-                                       disp(
-                                          layoutActions.openAlert({
-                                             title: `Error Delete user`,
-                                             type: "Error",
-                                             message: error.toString(),
-                                          })
-                                       );
-                                    }
-                                    disp(
-                                       layoutActions.setLoading({
-                                          isLoading: false,
-                                          loadingText:
-                                             "Loading. Please wait...",
-                                       })
-                                    );
-                                 }
-                              });
-                           },
-                        },
-                     ]}
+                     actionsMenu={((actionSelected || []).filter(v => { console.log(v); return v.type ==="DROPDOWN_IN_LIST" }).map((act, inAct)=> {
+                        let onRender: (item?: any)=> boolean = () => true;
+                        if(act.on_render){
+                           onRender = onRenderActions[act.on_render as keyof typeof onRenderActions]
+                        }
+                        return {
+                           name: act.name,
+                           onClick: actions[act.function_name as keyof typeof actions],
+                           onRender,
+                           className: act.class_name
+
+                        }
+                     }))}
                      iterationNumber={true}
                      columns={[
                         {
@@ -337,7 +352,7 @@ export default function Page(props: {
 
 export const getServerSideProps: GetServerSideProps = (context) =>
    authAdminMiddleware(context, async function (session) {
-      let dataSession = session
+      let dataSession = session;
       let roles: Array<{
          id: number;
          name: string;

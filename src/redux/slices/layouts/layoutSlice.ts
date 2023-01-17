@@ -15,6 +15,7 @@ const initialState: layoutStateType = {
    screenSize: { width: 0, height: 0 },
    breadcrumbs: [],
    alertList: [],
+   actionSelected: [],
    contextMenu: {
       show: false,
       x: 0,
@@ -121,6 +122,9 @@ const layoutSlice = createSlice({
       },
       clearAlert(state: layoutStateType) {
          return { ...state, alertList: [] };
+      },
+      setActionSelected(state:layoutStateType, action: PayloadAction<layoutStateType["actionSelected"]>) {
+         return { ...state, actionSelected: action.payload}
       }
    },
    extraReducers(builder) {

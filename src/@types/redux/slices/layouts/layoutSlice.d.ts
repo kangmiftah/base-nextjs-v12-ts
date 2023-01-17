@@ -1,3 +1,4 @@
+import { ActionTypeEnum, ActionMenu } from "@prisma/client";
 import { CSSProperties, StyleHTMLAttributes, ClassAttributes } from "react";
 import { AlertComponentTypes } from "../../../components/alert";
 
@@ -8,12 +9,20 @@ export type contextMenuType = {
    className?: ClassAttributes;
 }
 
+export type actionSelectedType= {
+   id: number,
+   function_name: string,
+   type: ActionTypeEnum,
+   name: string
+} & ActionMenu
+
 export declare interface layoutStateType {
    sidebarOpen: boolean;
    title?: string;
    isSticky?: boolean = false;
    screenSize?: { width:number, height:number };
    alertList? : Array<AlertComponentTypes & { unique : number }>,
+   actionSelected: Array<actionSelectedType>,
    contextMenu?: {
       show: boolean;
       x: number;

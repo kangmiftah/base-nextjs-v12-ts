@@ -63,7 +63,23 @@ export const optionsAuth: NextAuthOptions = {
                   }
                },
                include: {
+                  actionList : {
+                     where: {
+                        roleList: {
+                           some: { role_id:(newUser?.role_id || 0)  }
+                        }
+                     }
+                  },
                   childs: {
+                     include:{
+                        actionList: {
+                           where: {
+                              roleList: {
+                                 some: { role_id:(newUser?.role_id || 0)  }
+                              }
+                           }
+                        }
+                     },
                      where: {
                         roleList: {
                            some: {

@@ -78,6 +78,8 @@ model ActionMenu {
   function_name String
   menu_id       Int
   created_by    Int?
+  on_render     String?
+  class_name    String?
   menu          Menu             @relation("ActionList", fields: [menu_id], references: [id])
   roleList      RoleActionMenu[]
 

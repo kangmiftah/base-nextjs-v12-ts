@@ -89,7 +89,7 @@ export default function (
                         ({ onRender, title, className, style, width }, i) => {
                            return (
                               <th
-                                 key={i}
+                                 key={`col-${i}`}
                                  scope="col"
                                  style={{
                                     ...{ minWidth: getSize(width) },
@@ -128,7 +128,7 @@ export default function (
                      (item, l) => (
                         <>
                            <tr
-                              key={l}
+                              key={`d-${l}`}
                               className="odd:bg-white border-b even:bg-gray-50 hover:bg-slate-200"
                               onContextMenu={(e) => {
                                  if (
@@ -213,10 +213,10 @@ export default function (
                                        width,
                                        field,
                                     },
-                                    i
+                                    ix
                                  ) => (
                                     <td
-                                       key={i}
+                                       key={`col-x-${ix}`}
                                        className={`py-1 px-2 min-h-fit ${className}`}
                                        style={{
                                           ...{ minWidth: getSize(width) },
@@ -255,6 +255,7 @@ export default function (
                                                          onClick,
                                                          onRender = () => true,
                                                          style,
+                                                         className
                                                       },
                                                       iM
                                                    ) => ({
@@ -266,6 +267,7 @@ export default function (
                                                             iM
                                                          ),
                                                       onRender,
+                                                      className,
                                                       style,
                                                    })
                                                 )}
@@ -357,11 +359,11 @@ function ActionMore(props: { listMenu: Array<actionType> }): JSX.Element {
             <ul className="w-full">
                {(props.listMenu || []).map((menu, i) => (
                   <li
-                     key={i}
+                     key={`drp-${i}`}
                      className="hover:bg-primary-400 hover:text-white border-b"
                   >
                      <button
-                        className="block text-left w-full px-2 py-1 text-xs"
+                        className={`block text-left w-full px-2 py-1 text-xs ${menu.className}`}
                         style={menu.style}
                         onClick={() => {
                            setIsOpen(false);

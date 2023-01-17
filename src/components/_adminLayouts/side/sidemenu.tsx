@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { layoutActions } from "../../../redux/slices/layouts/layoutSlice";
+import { actionSelectedType } from "../../../@types/redux";
 
 const ComponentIconMenu = {
    ...Fi,
@@ -68,7 +69,7 @@ export default function (props: SideMenuProps): JSX.Element {
    });
    const [isOpen, setIsOpen] = useState<number | null>(null);
    const { data, status }: { data: any; status: string } = useSession();
-   const menuList: Array<Menu & { childs: Array<Menu> }> | [] =
+   const menuList: Array<Menu & { childs: Array<Menu & {actionList : Array<actionSelectedType>}>, actionList : Array<actionSelectedType> }> | [] =
       data?.menuList || [];
    let router = useRouter();
    const disp = useDispatch();
@@ -78,9 +79,11 @@ export default function (props: SideMenuProps): JSX.Element {
    }
    useEffect(
       function () {
+         // console.log(menuList)
          let menu = undefined;
          let childKey: undefined | number = undefined;
          let key: number = -1;
+         let actionSelected : Array<actionSelectedType> = [];
          menuList.forEach((v, i) => {
             if (v.childs)
                v.childs.forEach((x, ic) => {
@@ -92,6 +95,7 @@ export default function (props: SideMenuProps): JSX.Element {
                         url: x.url,
                         isActive: true,
                      };
+                     actionSelected = x.actionList || []
                   }
                });
             if (v.url === getPath()) {
@@ -102,14 +106,16 @@ export default function (props: SideMenuProps): JSX.Element {
                   url: v.url,
                   isActive: true,
                };
+               actionSelected = v.actionList|| []
             }
          });
          if (menu) disp(layoutActions.setBreadcrumbs([menu]));
+         if (actionSelected) disp(layoutActions.setActionSelected(actionSelected))
          setIsActive({
             childKey, key
          })
       },
-      [router.asPath]
+      [router.pathname, data]
    );
    return (
       <>
