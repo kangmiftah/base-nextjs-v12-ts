@@ -6,6 +6,7 @@ interface PropsType {
 }
 
 export default function (props: PropsType): JSX.Element {
+   if(!props.id) throw new Error("id is required for identifier chart rendering")
    useEffect(function () {
       // Create chart instance
       let chart = am4core.create(props.id, am4charts.PieChart);
