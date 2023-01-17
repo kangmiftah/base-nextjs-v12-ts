@@ -25,7 +25,7 @@ async function main() {
             icon :"FiUsers",
             url : "/management-users",
             hash_child: true,
-            order_no: 2,
+            order_no: 4,
             
          },
          {
@@ -34,7 +34,7 @@ async function main() {
             url : "/management-users/users",
             hash_child: false,
             parent_id : 2,
-            order_no: 3
+            order_no: 1
          },
          {
             id: 4,
@@ -42,17 +42,60 @@ async function main() {
             url : "/management-users/roles",
             hash_child: false,
             parent_id : 2,
-            order_no: 4
+            order_no: 2
          },
-         // {
-         //    id: 5,
-         //    name : "Menu",
-         //    url : "/management-users/menu",
-         //    hash_child: false,
-         //    parent_id : 2,
-         //    order_no: 5
-         // },
-         
+         // Menu Content management
+         {
+            id: 5,
+            name: "Content Management",
+            url: "/content-management",
+            hash_child: true,
+            icon_type : "COMPONENT",
+            icon :"FiFilm",
+            order_no: 2
+         },
+            {
+               id: 6,
+               name: "Banner",
+               url: "/content-management/banner",
+               hash_child: false,
+               parent_id: 5, 
+               order_no: 1,
+            },
+            {
+               id: 7,
+               name: "Article",
+               url: "/content-management/article",
+               hash_child: false,
+               parent_id: 5, 
+               order_no: 2,
+            },
+          // Product Management
+          {
+            id: 8,
+            name: "Product Management",
+            url: "/product-management",
+            hash_child: true,
+            icon_type : "COMPONENT",
+            icon :"FiShoppingBag",
+            order_no: 3
+         }, 
+            {
+               id: 9,
+               name: "Category",
+               url: "/product-management/category",
+               hash_child: false,
+               parent_id: 8, 
+               order_no: 1,
+            },
+            {
+               id: 10,
+               name: "Product",
+               url: "/product-management/product",
+               hash_child: false,
+               parent_id: 8, 
+               order_no: 2,
+            },
          // add new menu here or custom here
       ]
    })
@@ -75,6 +118,37 @@ async function main() {
             menu_id :4,
             role_id: 1
          },
+         
+         {
+            menu_id :5,
+            role_id: 1
+         },
+         
+         {
+            menu_id :6,
+            role_id: 1
+         },
+         
+         {
+            menu_id :7,
+            role_id: 1
+         },
+         
+         {
+            menu_id :8,
+            role_id: 1
+         },
+         
+         {
+            menu_id :9,
+            role_id: 1
+         },
+         
+         {
+            menu_id :10,
+            role_id: 1
+         },
+
          // add role access menu here
       ]
    })

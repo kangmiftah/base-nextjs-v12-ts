@@ -88,6 +88,9 @@ export const optionsAuth: NextAuthOptions = {
                         }
                      }
                   }
+               },
+               orderBy: {
+                  order_no:"asc"
                }
             })
             // console.log({newmenuList})

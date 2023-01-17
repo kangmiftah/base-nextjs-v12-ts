@@ -178,11 +178,11 @@ export default function (props: SideMenuProps): JSX.Element {
                         }}
                      >
                         {/* <div className=""> */}
-                        <span className="group-hover:font-bold ml-2 mr-5 text-2xl absolute left-0">
+                        <span className="group-hover:font-bold ml-2 mr-5 text-lg absolute left-0">
                            {getComponentIcon(icon_type, icon)}
                         </span>
                         <span
-                           className={classNames(" group-hover:font-bold", {
+                           className={classNames(" group-hover:font-bold text-xs", {
                               "font-bold":
                                  isActive.key === x || url === getPath(),
                            })}
@@ -233,7 +233,7 @@ export default function (props: SideMenuProps): JSX.Element {
                                        `
                                  mx-2 hover:font-bold 
                                  cursor-pointer rounded-md 
-                                 py-1 pl-10 
+                                 py-1 pl-10  text-xs
                                  hover:bg-sidebar-600`,
                                        {
                                           "bg-sidebar-600":
