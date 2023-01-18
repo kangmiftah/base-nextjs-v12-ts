@@ -119,10 +119,40 @@ async function setAccessMenu(
                where: {
                   menu_id_role_id: { menu_id: menu_id, role_id: role_id },
                },
+               
+            });
+            await prisma.roleMenu.deleteMany({
+               where: {
+                  OR : {
+                     AND : {
+                        menuList: {
+                           parent_id : menu_id
+                        },
+                        role_id: role_id
+                     }
+                  }
+               }
             });
             await prisma.roleActionMenu.deleteMany({
                where: {
-                  role_id: role_id
+                 role_id: role_id,
+                 actionMenu: {
+                  menu:{
+                     AND: {
+                        parent_id : menu_id
+                     }
+                  }
+                 }
+               }
+            })
+            await prisma.roleActionMenu.deleteMany({
+               where: {
+                  role_id: role_id,
+                  actionMenu: {
+                     AND : {
+                        menu_id: menu_id
+                     }
+                  }
                }
             })
          }
