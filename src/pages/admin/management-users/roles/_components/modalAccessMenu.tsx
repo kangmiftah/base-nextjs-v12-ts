@@ -138,7 +138,7 @@ export default function ModalAccessMenu(props: {
                                  onClick={() =>
                                     !loading &&
                                     (itm.actions || []).length > 0 &&
-                                    changeActiveAction(String(i))
+                                    changeActiveAction(String(itm.id)+String(i))
                                  }
                                  className="p-1 "
                               >
@@ -148,7 +148,7 @@ export default function ModalAccessMenu(props: {
                                        "mr-1  duration-300 transform transition-all ease-in-out",
                                        {
                                           "-rotate-90":
-                                             actionActive === String(i),
+                                             actionActive === String(itm.id)+String(i),
                                        }
                                     )}
                                  />{" "}
@@ -213,7 +213,7 @@ export default function ModalAccessMenu(props: {
                                                       (ch.actions || [])
                                                          .length > 0 &&
                                                       changeActiveAction(
-                                                         `ic-${ic}`
+                                                         `ic-${ch.id}${ic}`
                                                       )
                                                    }
                                                    className="p-1 focus:ring-0 "
@@ -225,7 +225,7 @@ export default function ModalAccessMenu(props: {
                                                          {
                                                             "-rotate-90":
                                                                actionActive ===
-                                                               `ic-${ic}`,
+                                                               `ic-${ch.id}${ic}`,
                                                          }
                                                       )}
                                                    />{" "}
@@ -237,7 +237,7 @@ export default function ModalAccessMenu(props: {
                                        return (
                                           <div
                                              className="col-span-3 "
-                                             key={`ic-${ic}`}
+                                             key={`ic-${ch.id}${ic}`}
                                           >
                                              <div
                                                 className={classNames(
@@ -291,7 +291,7 @@ export default function ModalAccessMenu(props: {
                                              {!loading &&
                                                 (ch.actions || []).length >
                                                    0 && (
-                                                   // actionActive === `ic-${ic}` &&
+                                                   // actionActive === `ic-${ch.id}${ic}` &&
                                                    <div
                                                       className={classNames(
                                                          "pl-3 ml-5 duration-300 transform transition-all ease-linear",
@@ -299,11 +299,11 @@ export default function ModalAccessMenu(props: {
                                                             "h-0 p-0  overflow-hidden":
                                                                !(
                                                                   actionActive ===
-                                                                  `ic-${ic}`
+                                                                  `ic-${ch.id}${ic}`
                                                                ),
                                                             "h-max mb-4 ":
                                                                actionActive ===
-                                                               `ic-${ic}`,
+                                                               `ic-${ch.id}${ic}`,
                                                          }
                                                       )}
                                                    >
@@ -373,10 +373,10 @@ export default function ModalAccessMenu(props: {
                                     "pl-3 ml-5 duration-300 transform transition-all ease-in-out",
                                     {
                                        "h-0 p-0 overflow-hidden": !(
-                                          actionActive === String(i)
+                                          actionActive === String(itm.id)+String(i)
                                        ),
                                        "h-fit mb-4 ":
-                                          actionActive === String(i),
+                                          actionActive === String(itm.id)+String(i),
                                     }
                                  )}
                               >
