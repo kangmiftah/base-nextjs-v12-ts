@@ -458,17 +458,17 @@ const CheckBox =  React.forwardRef<HTMLInputElement, InputCheckBoxProps>(functio
       if (typeof _props.onChange == "function") _props.onChange(e);
    };
    if (providerInitialized) {
-      props.checked = (state.formData || {})[
-         props.name as keyof typeof state.formData
-      ];
       if (props.name === undefined)
          throw new Error(
             "<Input.Text name='' /> name attributte is required for data name"
          );
+      props.checked = (state.formData || {})[
+         props.name as keyof typeof state.formData
+      ];
       useEffect(
          function () {
             initRefInput(props.name || "", ref);
-         },
+         }, 
          [props.name]
       );
    }
@@ -479,7 +479,7 @@ const CheckBox =  React.forwardRef<HTMLInputElement, InputCheckBoxProps>(functio
             defaultValue={props.value || ""}
             value={props.value || ""}
             ref={ref}
-            checked={props.checked}
+            // checked={props.checked}
             {...props}
          /> 
          // {props.children}

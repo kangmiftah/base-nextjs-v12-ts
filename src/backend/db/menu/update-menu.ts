@@ -223,6 +223,58 @@ async function main() {
             name: "+ Add Role",
             type : "BUTTON_TOOLS"
          },
+         {
+            id:10,
+            function_name: "addCategory",
+            menu_id:9,
+            name:"+ Add Category",
+            type: "BUTTON_TOOLS"
+         },
+         {
+            id:11,
+            function_name: "updateCategory",
+            menu_id:9,
+            name:"Update Category",
+            type: "DROPDOWN_IN_LIST"
+         },
+         {
+            id:12,
+            function_name: "deleteCategory",
+            menu_id:9,
+            name:"Delete Category",
+            type: "DROPDOWN_IN_LIST",
+            class_name:"text-danger"
+         },
+         {
+            id:13,
+            function_name: "addProduct",
+            menu_id:10,
+            name:"+ Add Product",
+            type: "BUTTON_TOOLS"
+         },
+         
+         {
+            id:14,
+            function_name: "viewProduct",
+            menu_id:10,
+            name:"View Product",
+            type: "DROPDOWN_IN_LIST"
+         },
+         {
+            id:15,
+            function_name: "updateProduct",
+            menu_id:10,
+            name:"Update Product",
+            type: "DROPDOWN_IN_LIST"
+         },
+         {
+            id:16,
+            function_name: "deleteCategory",
+            menu_id:10,
+            name:"Delete Product",
+            type: "DROPDOWN_IN_LIST",
+            class_name:"text-danger"
+         },
          
       ]
    })
@@ -265,6 +317,34 @@ async function main() {
             role_id: 1,
             action_menu_id:9,
          },
+         {
+            role_id: 1,
+            action_menu_id:10,
+         },
+         {
+            role_id: 1,
+            action_menu_id:11,
+         },
+         {
+            role_id: 1,
+            action_menu_id:12,
+         },
+         {
+            role_id: 1,
+            action_menu_id:13,
+         },
+         {
+            role_id: 1,
+            action_menu_id:14,
+         },
+         {
+            role_id: 1,
+            action_menu_id:15,
+         },
+         {
+            role_id: 1,
+            action_menu_id:16,
+         }
 
          
       ]

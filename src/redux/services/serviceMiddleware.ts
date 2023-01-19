@@ -1,4 +1,5 @@
 import { CurriedGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
+import categoryPageService from "./admin/product-management/categoryPage";
 import menuPageService from "./admin/users-management/menuPage";
 import rolePageService from "./admin/users-management/rolesPage";
 import usersPageService from "./admin/users-management/usersPage";
@@ -14,5 +15,6 @@ export default (getDefaultMiddleware: CurriedGetDefaultMiddleware) =>
       authService.middleware,
       usersPageService.middleware,
       rolePageService.middleware,
-      menuPageService.middleware
+      menuPageService.middleware,
+      categoryPageService.middleware
    )

@@ -1,3 +1,4 @@
+import categoryPageService from './admin/product-management/categoryPage';
 import menuPageService from './admin/users-management/menuPage';
 import rolePageService from './admin/users-management/rolesPage';
 import usersPageService from './admin/users-management/usersPage';
@@ -11,5 +12,6 @@ export default {
    [authService.reducerPath] : authService.reducer,
    [usersPageService.reducerPath] : usersPageService.reducer,
    [rolePageService.reducerPath] : rolePageService.reducer,
-   [menuPageService.reducerPath] : menuPageService.reducer
+   [menuPageService.reducerPath] : menuPageService.reducer,
+   [categoryPageService.reducerPath] : categoryPageService.reducer
 }
