@@ -12,6 +12,7 @@ import React, {
    useState,
 } from "react";
 import {
+   InputCheckBoxProps,
    InputNumberProps,
    InputSize,
    InputTextProps,
@@ -424,6 +425,70 @@ const TextArea =  React.forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
    );
 });
 
+
+const CheckBox =  React.forwardRef<HTMLInputElement, InputCheckBoxProps>(function (
+   _props,
+   _ref
+) {
+   let props = { ..._props };
+   let ref: ForwardedRef<HTMLInputElement> = _ref;
+   if (!ref) ref = useRef<HTMLInputElement>(null);
+   props.className = `
+   w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer
+    ${props.className} mr-3
+   `;
+   const {
+      state,
+      actions: { initRefInput = () => null, changeForm },
+      providerInitialized,
+   } = useForm();
+
+   useEffect(
+      function () {
+         if (providerInitialized)
+            changeForm(props.name || "", ref?.current?.value || "");
+      },
+      [providerInitialized]
+   );
+   props.onChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
+      let target = e.target as HTMLInputElement;
+      if (providerInitialized) {
+         changeForm(target.name, target.checked);
+      }
+      if (typeof _props.onChange == "function") _props.onChange(e);
+   };
+   if (providerInitialized) {
+      props.checked = (state.formData || {})[
+         props.name as keyof typeof state.formData
+      ];
+      if (props.name === undefined)
+         throw new Error(
+            "<Input.Text name='' /> name attributte is required for data name"
+         );
+      useEffect(
+         function () {
+            initRefInput(props.name || "", ref);
+         },
+         [props.name]
+      );
+   }
+   return (
+      // <div className="flex items-center">
+         <input type={"checkbox"}
+            onChange={(e: any) => props.onChange?.(e)}
+            defaultValue={props.value || ""}
+            value={props.value || ""}
+            ref={ref}
+            checked={props.checked}
+            {...props}
+         /> 
+         // {props.children}
+      // </div>
+   );
+});
+
+
+
 function Label({ children, ..._props }: {} & HTMLProps<HTMLLabelElement>) {
    let props = { ..._props };
    const {
@@ -453,5 +518,6 @@ export default {
    Label,
    Select,
    Number,
-   TextArea
+   TextArea,
+   CheckBox
 };

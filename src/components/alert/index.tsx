@@ -36,20 +36,33 @@ function AlertComponent(
 ): JSX.Element {
    const [loading, setLoading] = useState<number>(100);
    const [hide, setHide] = useState<boolean>(true);
+   const [onMouse, setOnmouse] = useState<boolean>(false)
    let disp = useDispatch();
 
    function close() {
       props.callback?.();
       disp(layoutActions.closeAlert(props.unique));
    }
-   useEffect(function () {
-      setTimeout(() => close(), 3000);
+   useEffect(function(){
+
       setTimeout(() => setHide(false), 300);
-      const interVal = setInterval(() => setLoading((v) => v - 100 / 30), 100);
+   },[])
+
+   useEffect(function(){
+      if(loading <= 0 ) {
+         close()
+      }
+   }, [loading])
+   useEffect(function () {
+      const interVal = setInterval(() => {
+       
+         setLoading((v) => v - 100 / 30)
+      }, 100);
+      if(onMouse) clearInterval(interVal)
       return () => {
          clearInterval(interVal);
       };
-   }, []);
+   }, [onMouse]);
 
    function Icon(): JSX.Element {
       switch (props.type) {
@@ -65,10 +78,14 @@ function AlertComponent(
    }
    return (
       <div
+         onMouseEnter={()=> setOnmouse(true)}
+         onMouseLeave={()=> setOnmouse(false)}
          className={classNames(
-            `mb-2  border-t-4  bg-opacity-60 rounded-b  px-0 py-0 shadow-md transition-all ease-in-out transform  duration-300`,
+            `mb-2  border-t-4   rounded-b  px-0 py-0 shadow-md transition-all ease-in-out transform  duration-300`,
             {
                hidden: hide,
+               
+               "bg-opacity-60": !onMouse,
                "bg-success-200": props.type === "Success",
                "border-success-500": props.type === "Success",
                "text-success-700": props.type === "Success",
@@ -119,12 +136,12 @@ function AlertComponent(
                width: `${loading}%`,
             }}
             className={classNames(
-               `flexh-1 mt-3 mb-0 mx-0 transition-all ease-linear transform`,
+               `flex-1 h-1 mt-3 mb-0 mx-0 transition-all ease-linear transform`,
                {
-                  "bg-success-500": props.type === "Success",
-                  "bg-info-500": props.type === "Info",
-                  "bg-danger-500": props.type === "Error",
-                  "bg-warning-500": props.type === "Warning",
+                  "bg-success-400": props.type === "Success",
+                  "bg-info-400": props.type === "Info",
+                  "bg-danger-400": props.type === "Error",
+                  "bg-warning-400": props.type === "Warning",
                }
             )}
          ></div>

@@ -1,6 +1,7 @@
 import React, {
    HTMLProps,
    InputHTMLAttributes,
+   PropsWithChildren,
    PropsWithRef,
    RefObject,
 } from "react";
@@ -24,7 +25,9 @@ export declare interface InputNumberProps extends HTMLProps<HTMLInputElement> {
    
 }
 
+export declare interface InputCheckBoxProps extends PropsWithChildren, HTMLProps<HTMLInputElement> {
 
+}
 
 export declare interface SelectOptionPorps extends HTMLProps<HTMLSelectElement> {
    ref?: RefObject<HTMLSelectElement>;

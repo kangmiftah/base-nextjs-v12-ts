@@ -77,10 +77,12 @@ export default function (
                      {props.iterationNumber && (
                         <th
                            scope="col"
-                           className={ classNames(" bg-gray-300 min-w-fit  px-2",{
-                              "py-3":
-                                          props.headerSize !== "small",
-                           })}
+                           className={classNames(
+                              " bg-gray-300 min-w-fit  px-2",
+                              {
+                                 "py-3": props.headerSize !== "small",
+                              }
+                           )}
                         >
                            #
                         </th>
@@ -98,8 +100,7 @@ export default function (
                                  className={classNames(
                                     `bg-gray-300  px-2 ${className}`,
                                     {
-                                       "py-3":
-                                          props.headerSize !== "small",
+                                       "py-3": props.headerSize !== "small",
                                     }
                                  )}
                               >
@@ -110,6 +111,7 @@ export default function (
                      )}
                      {/* actions */}
                      {props.withAction &&
+                        (props.actionsMenu || [])?.length > 0 &&
                         !props.isLoading &&
                         (props.actionMenuType || "DROPDOWN") === "DROPDOWN" && (
                            <th
@@ -124,125 +126,44 @@ export default function (
                   </tr>
                </thead>
                <tbody className="duration-300 ease-in-out transition-all transform">
-                  {(props.isLoading ? loadingArray : props.data).map(
-                     (item, l) => (
-                        <>
-                           <tr
-                              key={`d-${l}`}
-                              className="odd:bg-white border-b even:bg-gray-50 hover:bg-slate-200"
-                              onContextMenu={(e) => {
-                                 if (
-                                    (props.actionMenuType || "DROPDOWN") ===
-                                       "CONTEXTMENU" &&
-                                    !props.isLoading
-                                 ) {
-                                    e.preventDefault();
-                                    disp(
-                                       layoutActions.setContextMenu({
-                                          indexSelected: null,
-                                          show: true,
-                                          x: e.pageX,
-                                          y: e.pageY,
-                                          listMenu: (props.actionsMenu || [])
-                                             .filter(
-                                                ({ onRender = () => true }) =>
-                                                   onRender(item)
-                                             )
-                                             .map(
-                                                (
-                                                   { name, onClick, style },
-                                                   iM
-                                                ) => ({
-                                                   name,
-                                                   onClick: () =>
-                                                      onClick(
-                                                         item,
-                                                         { name, onClick },
-                                                         iM
-                                                      ),
-                                                   style,
-                                                })
-                                             ),
-                                       })
-                                    );
-                                 }
-                              }}
-                           >
-                              {props.withChild && (
-                                 <td className="py-1 px-1 text-left max-w-[10px] ">
-                                    <button
-                                       onClick={() => {
-                                          setChildActive((v) =>
-                                             v === l ? undefined : l
-                                          );
-                                          props.onOpenChild?.(item);
-                                       }}
-                                       type="button"
-                                       className={classNames(
-                                          " mt-1  duration-300 ease-in-out transition-all transform",
-                                          {
-                                             "-rotate-90": l === childActive,
-                                          }
-                                       )}
-                                       color="secondary"
-                                    >
-                                       <FiChevronLeft />
-                                    </button>
-                                 </td>
-                              )}
-                              {props.iterationNumber && (
-                                 <td
-                                    scope="col"
-                                    className="py-1 px-2 min-w-fit"
-                                 >
-                                    {props.isLoading ? (
-                                       <LoadingSkeleton />
-                                    ) : (
-                                       (props.currentShow || 10) *
-                                          ((props?.currentPage || 1) - 1) +
-                                       (l + 1)
-                                    )}
-                                 </td>
-                              )}
-                              {props.columns.map(
-                                 (
-                                    {
-                                       onRender,
-                                       className,
-                                       style,
-                                       width,
-                                       field,
-                                    },
-                                    ix
-                                 ) => (
-                                    <td
-                                       key={`col-x-${ix}`}
-                                       className={`py-1 px-2 min-h-fit ${className}`}
-                                       style={{
-                                          ...{ minWidth: getSize(width) },
-                                          ...style,
-                                       }}
-                                    >
-                                       {props.isLoading ? (
-                                          <LoadingSkeleton />
-                                       ) : onRender ? (
-                                          onRender(item)
-                                       ) : (
-                                          item[field as keyof typeof item]
-                                       )}
-                                    </td>
-                                 )
-                              )}
-                              {props.withAction &&
-                                 !props.isLoading &&
-                                 (props.actionMenuType || "DROPDOWN") ===
-                                    "DROPDOWN" && (
-                                    <td className="py-1 px-2 text-right">
-                                       {props.isLoading ? (
-                                          <LoadingSkeleton />
-                                       ) : (
-                                          <ActionMore
-                                             listMenu={(props.actionsMenu || [])
+                  {!props.isLoading && props.data.length <= 0 ? (
+                     <tr>
+                        <td
+                           className="odd:bg-white border-b even:bg-gray-50 hover:bg-slate-200 pl-5"
+                           colSpan={
+                              props.columns.length +
+                              1 +
+                              (props.iterationNumber ? 1 : 0) +
+                              (props.actionMenuType === "DROPDOWN" &&
+                              props.withAction
+                                 ? 1
+                                 : 0)
+                           }
+                        >
+                           No Data Records...
+                        </td>
+                     </tr>
+                  ) : (
+                     (props.isLoading ? loadingArray : props.data).map(
+                        (item, l) => (
+                           <>
+                              <tr
+                                 key={`d-${l}`}
+                                 className="odd:bg-white border-b even:bg-gray-50 hover:bg-slate-200"
+                                 onContextMenu={(e) => {
+                                    if (
+                                       (props.actionMenuType || "DROPDOWN") ===
+                                          "CONTEXTMENU" &&
+                                       !props.isLoading
+                                    ) {
+                                       e.preventDefault();
+                                       disp(
+                                          layoutActions.setContextMenu({
+                                             indexSelected: null,
+                                             show: true,
+                                             x: e.pageX,
+                                             y: e.pageY,
+                                             listMenu: (props.actionsMenu || [])
                                                 .filter(
                                                    ({
                                                       onRender = () => true,
@@ -250,13 +171,7 @@ export default function (
                                                 )
                                                 .map(
                                                    (
-                                                      {
-                                                         name,
-                                                         onClick,
-                                                         onRender = () => true,
-                                                         style,
-                                                         className
-                                                      },
+                                                      { name, onClick, style },
                                                       iM
                                                    ) => ({
                                                       name,
@@ -266,41 +181,155 @@ export default function (
                                                             { name, onClick },
                                                             iM
                                                          ),
-                                                      onRender,
-                                                      className,
                                                       style,
                                                    })
-                                                )}
-                                          />
+                                                ),
+                                          })
+                                       );
+                                    }
+                                 }}
+                              >
+                                 {props.withChild && (
+                                    <td className="py-1 px-1 text-left max-w-[10px] ">
+                                       <button
+                                          onClick={() => {
+                                             setChildActive((v) =>
+                                                v === l ? undefined : l
+                                             );
+                                             props.onOpenChild?.(item);
+                                          }}
+                                          type="button"
+                                          className={classNames(
+                                             " mt-1  duration-300 ease-in-out transition-all transform",
+                                             {
+                                                "-rotate-90": l === childActive,
+                                             }
+                                          )}
+                                          color="secondary"
+                                       >
+                                          <FiChevronLeft />
+                                       </button>
+                                    </td>
+                                 )}
+                                 {props.iterationNumber && (
+                                    <td
+                                       scope="col"
+                                       className="py-1 px-2 min-w-fit"
+                                    >
+                                       {props.isLoading ? (
+                                          <LoadingSkeleton />
+                                       ) : (
+                                          (props.currentShow || 10) *
+                                             ((props?.currentPage || 1) - 1) +
+                                          (l + 1)
                                        )}
                                     </td>
                                  )}
-                           </tr>
-                           {props.withChild && l === childActive && (
-                              <tr>
-                                 <td
-                                    colSpan={
-                                       props.columns.length +
-                                       1 +
-                                       (props.iterationNumber ? 1 : 0) +
-                                       (props.actionMenuType === "DROPDOWN" &&
-                                       props.withAction
-                                          ? 1
-                                          : 0)
-                                    }
-                                 >
-                                    <div className="min-h-[50px] w-full">
-                                       {props.loadingChild ? (
-                                          <LoadingSkeleton />
-                                       ) : (
-                                          childActive === l &&
-                                          renderChild?.(item)
-                                       )}
-                                    </div>
-                                 </td>
+                                 {props.columns.map(
+                                    (
+                                       {
+                                          onRender,
+                                          className,
+                                          style,
+                                          width,
+                                          field,
+                                       },
+                                       ix
+                                    ) => (
+                                       <td
+                                          key={`col-x-${ix}`}
+                                          className={`py-1 px-2 min-h-fit ${className}`}
+                                          style={{
+                                             ...{ minWidth: getSize(width) },
+                                             ...style,
+                                          }}
+                                       >
+                                          {props.isLoading ? (
+                                             <LoadingSkeleton />
+                                          ) : onRender ? (
+                                             onRender(item)
+                                          ) : (
+                                             item[field as keyof typeof item]
+                                          )}
+                                       </td>
+                                    )
+                                 )}
+                                 {props.withAction &&
+                                    (props.actionsMenu || [])?.length > 0 &&
+                                    !props.isLoading &&
+                                    (props.actionMenuType || "DROPDOWN") ===
+                                       "DROPDOWN" && (
+                                       <td className="py-1 px-2 text-right">
+                                          {props.isLoading ? (
+                                             <LoadingSkeleton />
+                                          ) : (
+                                             <ActionMore
+                                                listMenu={(
+                                                   props.actionsMenu || []
+                                                )
+                                                   .filter(
+                                                      ({
+                                                         onRender = () => true,
+                                                      }) => onRender(item)
+                                                   )
+                                                   .map(
+                                                      (
+                                                         {
+                                                            name,
+                                                            onClick,
+                                                            onRender = () =>
+                                                               true,
+                                                            style,
+                                                            className,
+                                                         },
+                                                         iM
+                                                      ) => ({
+                                                         name,
+                                                         onClick: () =>
+                                                            onClick(
+                                                               item,
+                                                               {
+                                                                  name,
+                                                                  onClick,
+                                                               },
+                                                               iM
+                                                            ),
+                                                         onRender,
+                                                         className,
+                                                         style,
+                                                      })
+                                                   )}
+                                             />
+                                          )}
+                                       </td>
+                                    )}
                               </tr>
-                           )}
-                        </>
+                              {props.withChild && l === childActive && (
+                                 <tr>
+                                    <td
+                                       colSpan={
+                                          props.columns.length +
+                                          1 +
+                                          (props.iterationNumber ? 1 : 0) +
+                                          (props.actionMenuType ===
+                                             "DROPDOWN" && props.withAction
+                                             ? 1
+                                             : 0)
+                                       }
+                                    >
+                                       <div className="min-h-[50px] w-full">
+                                          {props.loadingChild ? (
+                                             <LoadingSkeleton />
+                                          ) : (
+                                             childActive === l &&
+                                             renderChild?.(item)
+                                          )}
+                                       </div>
+                                    </td>
+                                 </tr>
+                              )}
+                           </>
+                        )
                      )
                   )}
                </tbody>
