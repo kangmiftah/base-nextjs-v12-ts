@@ -96,31 +96,31 @@ export default function ModalAccessMenu(props: {
                   getData({ role_id: props.role_id, search })
                }
             > */}
-            <div className="flex border-b pb-4 pt-2">
-               <Input.Text
-                  placeholder="search menu"
-                  name="search"
-                  onKeyUp={(e) => e.keyCode === 13 && getData()}
-                  className="mr-2"
-                  sizeinput="sm"
-                  value={search}
-                  onChange={(e: React.SyntheticEvent) => {
-                     let target = e.target as HTMLInputElement;
-                     setSearch(target.value);
-                  }}
-               />
-               <Button
-                  type="button"
-                  onClick={() => getData()}
-                  size={"sm"}
-                  className=""
-               >
-                  <BiSearchAlt />
-               </Button>
-            </div>
-            <div className="">
+            <div className="fixed z-[999] left-0 top-[45px] px-5 pb-2 w-[100%] bg-white ">
+               <div className="flex border-b pb-4 pt-2">
+                  <Input.Text
+                     placeholder="search menu"
+                     name="search"
+                     onKeyUp={(e) => e.keyCode === 13 && getData()}
+                     className="mr-2"
+                     sizeinput="sm"
+                     value={search}
+                     onChange={(e: React.SyntheticEvent) => {
+                        let target = e.target as HTMLInputElement;
+                        setSearch(target.value);
+                     }}
+                  />
+                  <Button
+                     type="button"
+                     onClick={() => getData()}
+                     size={"sm"}
+                     className=""
+                  >
+                     <BiSearchAlt />
+                  </Button>
+               </div>
                <dl>
-                  <div
+               <div
                      className={classNames(
                         "px-2 py-2 grid grid-cols-3 sm:gap-4 bg-gray-200 font-bold"
                      )}
@@ -129,6 +129,11 @@ export default function ModalAccessMenu(props: {
                      <dt>URL </dt>
                      <dt className="text-right">Access Role </dt>
                   </div>
+               </dl>
+            </div>
+            <div className="mt-[90px]">
+               <dl>
+                  
                   {(loading ? [1, 2, 3, 4, 5] : dataAccess).map((itm, i) => {
                      let mainName = itm.name;
                      if ((itm.actions || []).length > 0) {
