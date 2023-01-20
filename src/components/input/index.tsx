@@ -118,10 +118,6 @@ export const Form = React.forwardRef<
       name: "", 
       message: ""
    }>>([])
-   useEffect(function(){
-      console.log(err)
-   },[err])
-
    function cekValidasi() { 
       let keys = Object.keys(refInput);
       let invalid  = false;
