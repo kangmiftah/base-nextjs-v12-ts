@@ -1,11 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { Role } from "@prisma/client";
+import { Category, Product } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { BaseResponseAPI } from "../../../../../@types/backend/response";
 import { authApiAdmin } from "../../../../../backend/_modules/middleware";
 import prisma from "../../../../../backend/_modules/prisma";
-import exclude from "../../../../../backend/_modules/prisma/excludeFields";
-import * as bcrypt from "bcrypt";
 import moment from "moment";
 
 type Data = {
@@ -29,7 +27,7 @@ export default (req: NextApiRequest, res: NextApiResponse<BaseResponseAPI>) =>
 
 async function getAll(
    req: NextApiRequest,
-   res: NextApiResponse<BaseResponseAPI>,
+   res: NextApiResponse<BaseResponseAPI<Array<Product>>>,
    session: any
 ) {
    let query = req.query;
@@ -37,13 +35,13 @@ async function getAll(
    let skip: number = (parseInt((query.page as string) || "01") - 1) * show;
 
    console.log({ query });
-   let Roles = await prisma.role.findMany({
+   let Categories = await prisma.product.findMany({
       take: show,
       skip,
       where: {
          OR: [
             {
-               name: {
+               name_product: {
                   endsWith: query.search as string,
                   startsWith: query.search as string,
                   mode: "insensitive",
@@ -55,7 +53,7 @@ async function getAll(
    return res.json({
       code: "00",
       message: "Success",
-      data: Roles,
+      data: Categories,
    });
 }
 async function add(
@@ -64,9 +62,9 @@ async function add(
    session: any
 ) {
    let body = req.body;
-   let response: BaseResponseAPI<Role> = {
+   let response: BaseResponseAPI<Product> = {
       code: "00",
-      message: "Role berhasil di tambahkan",
+      message: "Produk berhasil di tambahkan",
    };
 
    try {
@@ -77,21 +75,24 @@ async function add(
             message: "Name is field required",
          });
 
-      let data = await prisma.role.create({
+      let data = await prisma.product.create({
          data: {
-            name: body.name,
+            name_product: body.name,
             description: body.description,
-            menuList:{
-               connect: { menu_id_role_id: {menu_id: 1, role_id: 1} }
-            }
+            created_by: session?.userDetail?.id ,
+            price: body.price,
+            discount: body.discount,
+            stock: body.stock,
+            rate: 0,
+            category_id: body.category_id,
+            is_active: false
          },
-         
       });
 
-      if (!data) throw new Error("Failed to create Roles");
+      if (!data) throw new Error("Failed to create product");
       return res.status(201).json({
          code: "00",
-         message: "Role successfully u",
+         message: "Product successfully created",
          data,
       });
    } catch (error: any) {
@@ -108,9 +109,9 @@ async function update(
    session: any
 ) {
    let body = req.body;
-   let response: BaseResponseAPI<Role> = {
+   let response: BaseResponseAPI<Product> = {
       code: "00",
-      message: "Role berhasil di tambahkan",
+      message: "Product berhasil di tambahkan",
    };
 
    try {
@@ -120,21 +121,27 @@ async function update(
             message: "Name is field required",
          });
 
-      let data = await prisma.role.update({
+      let data = await prisma.product.update({
          where: {
             id: body.id,
          },
          data: {
-            name: body.name,
+            name_product: body.name,
             description: body.description,
-            updated_at: moment(Date.now()).format(),
+            price: body.price,
+            discount: body.discount,
+            stock: body.stock,
+            rate: 0,
+            category_id: body.category_id,
+            
+            is_active: false
          },
       });
 
-      if (!data) throw new Error("Failed to update Roles");
+      if (!data) throw new Error("Failed to update Product");
       return res.status(201).json({
          code: "00",
-         message: "Role successfully updated",
+         message: "Product successfully updated",
          data,
       });
    } catch (error: any) {
@@ -157,15 +164,15 @@ async function delete_(
          message: "Id is field required",
       });
    try {
-      let deleted = await prisma.role.delete({
+      let deleted = await prisma.product.delete({
          where: {
             id: parseInt(body.id),
          },
       });
-      if (!deleted) throw new Error("Failed to delete Roles");
+      if (!deleted) throw new Error("Failed to delete product");
       return res.status(201).json({
          code: "00",
-         message: "Role successfully deleted",
+         message: "Product successfully deleted",
       });
    } catch (error: any) {
       return res.status(500).json({
@@ -176,47 +183,28 @@ async function delete_(
 }
 async function getDetil(
    req: NextApiRequest,
-   res: NextApiResponse<BaseResponseAPI>,
+   res: NextApiResponse<BaseResponseAPI<Product | {}>>,
    session: any
 ) {
    let {detil = "0"} = req.query;
    console.log({ query : req.query });
    try {
-      let Role = await prisma.role.findFirst({
-         include:{
-            menuList: {
-               where:{
-                 menuList:{
-                  parent_id:null
-                 } 
-               },
-               include: {
-                  menuList: {
-                     include:{
-                        childs: true
-                     }
-                  }
-               },
-               orderBy: {
-                  menu_id:"asc"
-               }
-            }
-         },
+      let Product = await prisma.product.findFirst({
          where: {
             AND: {
                id: parseInt(detil as string),
             },
          },
       });
-      if (!Role) return res.status(404).json({
+      if (!Product) return res.status(404).json({
          code: "04",
-         message: "Role didn't match",
+         message: "Product didn't match",
          data: {}
       })
       return res.json({
          code: "00",
          message: "Success",
-         data: Role,
+         data: Product,
       });
       
    } catch (error: any) {
