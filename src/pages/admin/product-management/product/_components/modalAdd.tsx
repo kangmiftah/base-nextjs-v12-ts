@@ -2,6 +2,8 @@ import { Role } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Modal, Form, Input, Button } from "../../../../../components";
+import { useLazyGetAllQuery } from "../../../../../redux/services/admin/product-management/categoryPage";
+// import {}  from '';
 type OnSubmitFn = (data: object | any) => any | Promise<object | any>;
 
 export default React.forwardRef<
@@ -18,6 +20,21 @@ export default React.forwardRef<
    { setModalAdd, openModalAdd, onSubmit, editMode, dataEdit },
    ref
 ) {
+   const [ getListCategory ] = useLazyGetAllQuery()
+   const getCategoryDropdown = async function (search: string | undefined = ""){
+      try {
+         let {data = [], error} = await getListCategory({ filter: { search }, pagination: { page:1, show:15 }})
+         
+
+         if(error) throw new Error(JSON.stringify(error))
+         return data.map((v : any) => ({
+            value: v.id, 
+            label: v.name_category
+         }))
+      } catch (error) {
+         return []  
+      }
+   }
    return (
       <Form
          ref={ref}
@@ -41,13 +58,7 @@ export default React.forwardRef<
                         withCallApi={true} 
                         name="category_id" 
                         required={true}
-                        asyncDataSelect={(src ="") => [
-                           {
-                             "label" : "Kategori 1",
-                             "value" : "1",
-     
-                           }  
-                        ]} 
+                        asyncLoadData={(s)=> getCategoryDropdown(s)} 
                      />
                   </div>
                   <div className="mb-3">
@@ -84,7 +95,7 @@ export default React.forwardRef<
                      <Input.Label htmlFor="stock">Stock</Input.Label>
                      <Input.Number
                         typeInput="int"
-                        name="stoc"
+                        name="stock"
                         required={true}
                      />
                   </div>

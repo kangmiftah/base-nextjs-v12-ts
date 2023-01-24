@@ -76,6 +76,7 @@ export default function Page(props: {
    let actions = {
       async addProduct(){
          setModalAdd(true)
+         setDataEdit({})
       },
       async view(data: any) {
          setModalAdd(true);
@@ -83,6 +84,9 @@ export default function Page(props: {
             id: data.id,
             name: data.name_product,
             description: data.description,
+            category_id: data.category_id,
+            price: data.price,
+            stock: data.stock,
             is_active: data.is_active === true,
          });
          setEditMode(true);
@@ -93,6 +97,10 @@ export default function Page(props: {
             id: data.id,
             name: data.name_product,
             description: data.description,
+            category_id: data.category_id,
+            price: data.price,
+            stock: data.stock,
+            discount: data.discount,
             is_active: data.is_active === true,
          });
          setEditMode(true);

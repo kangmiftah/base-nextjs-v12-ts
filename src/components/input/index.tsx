@@ -21,7 +21,7 @@ import {
    TextAreaProps,
 } from "../../@types/components/input";
 import { thousandSparator, removeNumbering } from "../../_modules/helpers";
-import AsyncSelect from "react-select/async";
+import AsyncSelect from "react-select";
 
 type FormState = {
    actions: {
@@ -104,6 +104,7 @@ export const Form = React.forwardRef<
       function () {
          if (props.formData && props.passingDataMode)
             setFormData(props.formData);
+         else setFormData({})
       },
       [props.passingDataMode]
    );
@@ -295,6 +296,17 @@ const Number = React.forwardRef<HTMLInputElement, InputNumberProps>(function (
       },
       [providerInitialized]
    );
+
+   useEffect(
+      function(){
+         if(!isFocus){
+            let val = ref?.current?.value
+            if(props.type === "int")
+               changeForm(props.name || "", parseInt(val))
+            else changeForm(props.name || "", parseFloat(removeNumbering(val)))
+         }
+      }, [isFocus]
+   )
    // if(props.)
    props.onChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
       let target = e.target as HTMLInputElement;
@@ -314,7 +326,7 @@ const Number = React.forwardRef<HTMLInputElement, InputNumberProps>(function (
       }
       if (props.name === undefined)
          throw new Error(
-            "<Input.Text name='' /> name attributte is required for data name"
+            "<Input.Number name='' /> name attributte is required for data name"
          );
       useEffect(
          function () {
@@ -509,8 +521,8 @@ const CheckBox = React.forwardRef<HTMLInputElement, InputCheckBoxProps>(
       
       useEffect(
          function () {
-            if (providerInitialized)
-               changeForm(props.name || "", props.checked || "");
+            // if (providerInitialized)
+               // changeForm(props.name || "", props.checked || "");
          },
          [providerInitialized]
       );
@@ -568,7 +580,8 @@ const AsyncSelect2 = React.forwardRef<AsyncSelect, AsyncSelect2Props>(function (
       actions: { initRefInput = () => null, changeForm },
       providerInitialized,
    } = useForm();
-   
+   const [options, setDataOptions] = useState<Array<{ value: string; label: string }>>([])
+
    let errorMsg = (state?.err || []).find(v => v.name === props.name)?.message
    useEffect(
       function () {
@@ -615,58 +628,78 @@ const AsyncSelect2 = React.forwardRef<AsyncSelect, AsyncSelect2Props>(function (
 
        }  
    ]
-   const filter = (inputValue: string) => {
-      let fnData: (s: string) => Array<{ value: string; label: string }> = (inputValue) => place ;
-      if(props.withCallApi) {
-         if(props.asyncDataSelect !== undefined && props.withCallApi) fnData = props.asyncDataSelect
-         return  [ ...place, ...fnData(inputValue)]
-      }
-
-      else return [ ...place, ...opt.filter(
+   const filter = async (inputValue: string) => {
+      return [ ...place, ...opt.filter(
          (i) =>
             i.label.toLowerCase().includes(String(inputValue || "").toLowerCase()) ||
             i.value.toLocaleLowerCase().includes(String(inputValue || "").toLocaleLowerCase())
       )];
    };
-
-   const loadOptions = (
-      inputValue: string,
-      callback: (options: Array<any>) => any
-   ) => {
-      let fnData: (s: string) => Array<{ value: string; label: string }> =
-         filter;
-      if (props.asyncDataSelect !== undefined && props.withCallApi) {
-         fnData = props.asyncDataSelect;
+      if (props.value ){
+         let data = options;
+         props.value = data?.find(v => v.value === props.value)
+         props.defaultInputValue = props.value?.label
+      } else {
+         props.value = place[0]
       }
-      setTimeout(() => {
-         callback(filter(inputValue || ""));
-      }, 100);
-   };
-   let defaultInputValue = "";
-   // useEffect(function(){
-   if (props.value ){
-      let data = filter(props.value || "");
-      props.value = data?.find(v => v.value === props.value)
-      defaultInputValue = props.value?.label
-   } else {
-      props.value = place[0]
-   }
    // },[])
    props.styles = { 
       ...props.styles, 
       menu(base, props) { return { ...base, zIndex: 999}  },
       menuPortal(base, props) { return { ...base, zIndex: 999} },
    }
+
+   const [src, setSrc] = useState("")
+   const [optionLoaded, setOptLoaded] = useState(false)
+   const [loading, setLoading] = useState(false)
+   async function search(withSearch: boolean = true){
+      setLoading(true)
+      if (props.asyncLoadData && props.withCallApi){
+         let data = await props.asyncLoadData?.(withSearch? src : '')
+         setDataOptions([...place,...data]);
+         
+      }else {
+         let data = await filter(src)
+         setDataOptions(data);
+      }
+      setSrc("")
+      setOptLoaded(true)
+      setLoading(false)
+   }
+
+   useEffect(function(){
+      if((props.value !=="" && props.value !== undefined && props.value !== null) && !optionLoaded){
+         search()
+         // console.log("hit")
+      }
+      return () => setOptLoaded(false)
+   },[])
+
+   props.onFocus = function(e){
+      if ( typeof _props.onFocus ==="function") _props.onFocus?.(e)
+      if (props.withCallApi && !optionLoaded) search()
+   }
+
    return (
       <>
          <AsyncSelect
+            filterOption={(opt, input)=>true}
             defaultValue={props.value}
-            defaultInputValue={defaultInputValue}
-            cacheOptions
+            escapeClearsValue
+            onKeyDown={(e) => {
+               if(e.keyCode ===13){ 
+                  e.preventDefault();
+                  search()
+               }
+            }}
+            isSearchable = {true}
+            inputValue={src}
+            onInputChange = {(e) =>setSrc(e)}
             placeholder={` -- Select ${props.placeholder || "" } --`}
-            loadOptions={loadOptions}
-            defaultOptions
-            aria-invalid={true}
+            // defaultOptions ={options}
+            isLoading={loading}
+            // loadOptions={loadOptions}
+            options={options}
             {...props}
          />
          {

@@ -68,7 +68,7 @@ async function add(
    };
 
    try {
-      
+      console.log({body})
       if (!body.name)
          return res.status(400).json({
             code: "01",

@@ -40,14 +40,17 @@ export declare interface AsyncSelect2Props {
    name?: string;
    value?:any;
    onChange?: (value: Select2Props["value"]) => any;
-   asyncDataSelect?: (
+   dataSelect?: ((
       inputValue?: string
-   ) => Array<{ value: string; label: string }>;
+   ) => Array<{ value: string; label: string }>);
    required?: boolean = false;
    withCallApi?: boolean = false;
    options?: Array<{ value: string; label: string }> = [];
    className?: ClassAttributes;
    styles?: StylesConfig;
    sizeinput?: InputSize = "sm";
-   placeholder?: string = ""
+   placeholder?: string = "";
+   defaultInputValue?: string = '';
+   onFocus?: (e: any) => any;
+   asyncLoadData?: (search: string) => Promise<Array<{ value: string; label: string }>>
 }

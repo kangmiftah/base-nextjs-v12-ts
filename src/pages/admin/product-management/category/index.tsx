@@ -79,6 +79,8 @@ export default function Page(props: {
    let actions = {
       async addCategory(){
          setModalAdd(true)
+         setEditMode(false)
+         setDataEdit({})
       },
       async view(data: any) {
          setModalAdd(true);
