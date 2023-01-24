@@ -49,6 +49,9 @@ async function getAll(
             },
          ],
       },
+      include: {
+         category: true
+      }
    });
    return res.json({
       code: "00",

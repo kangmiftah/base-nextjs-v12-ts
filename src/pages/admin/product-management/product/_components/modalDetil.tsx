@@ -6,12 +6,12 @@ import { useGetDetilMutation } from "../../../../../redux/services/admin/users-m
 import { layoutActions } from "../../../../../redux/slices/layouts/layoutSlice";
 
 interface detilProps {
-   user_id?: number;
+   detil_id?: number;
    show: boolean;
    onClose: () => any;
 }
 
-export default function ModalDetilUser(props: detilProps) {
+export default function ModalDetil(props: detilProps) {
    const [childDetil, setChildDetil] = useState<Array<any>>([]);
    const [detil, setDetil] = useState({});
    const [getDetail] = useGetDetilMutation();
@@ -19,12 +19,12 @@ export default function ModalDetilUser(props: detilProps) {
    const disp = useDispatch();
    useEffect(
       function () {
-         if (props.show && props.user_id) {
+         if (props.show && props.detil_id) {
             (async function () {
                setLoading(true);
                try {
                   let { data = {} }: any = await getDetail({
-                     detil: parseInt((props.user_id || 0).toString()),
+                     detil: parseInt((props.detil_id || 0).toString()),
                   });
                   if (data.code !== "00")
                      disp(
@@ -48,7 +48,7 @@ export default function ModalDetilUser(props: detilProps) {
             })();
          }
       },
-      [props.show, props.user_id]
+      [props.show, props.detil_id]
    );
    return (
       <Modal

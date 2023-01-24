@@ -27,12 +27,12 @@ type FormState = {
    actions: {
       initRefInput: (name: string, refObj: any) => any;
       changeForm: (name: string, value: any) => any;
-      setErr: (s: any) => any
+      setErr?: (s: any) => any
    };
    state: {
       formData?: Object;
       refInput?: any;
-      err: Array<{
+      err?: Array<{
          name: "", 
          message: ""
       }>
@@ -668,7 +668,7 @@ const AsyncSelect2 = React.forwardRef<AsyncSelect, AsyncSelect2Props>(function (
    }
 
    useEffect(function(){
-      if((props.value !=="" && props.value !== undefined && props.value !== null) && !optionLoaded){
+      if((props.value !=="") && !optionLoaded){
          search()
          // console.log("hit")
       }

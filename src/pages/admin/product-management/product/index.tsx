@@ -7,7 +7,7 @@ import {
    useGetAllQuery,
    useAddOrUpdateMutation,
    useDeleteMutation,
-   useLazyGetAllQuery
+   useLazyGetAllQuery,
 } from "../../../../redux/services/admin/product-management/productPage";
 import {
    layoutActions,
@@ -19,6 +19,8 @@ import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
 import { generateActionListFunction } from "../../../../_modules/helpers/generateAction";
 import ModalAdd from "./_components/modalAdd";
+import { thousandSparator } from "../../../../_modules/helpers";
+import ModalDetil from "./_components/modalDetil";
 
 export default function Page(props: {
    session: any;
@@ -71,12 +73,11 @@ export default function Page(props: {
       },
       [openModalAdd]
    );
-   let onRenderActions = {
-         };
+   let onRenderActions = {};
    let actions = {
-      async addProduct(){
-         setModalAdd(true)
-         setDataEdit({})
+      async addProduct() {
+         setModalAdd(true);
+         setDataEdit({});
       },
       async view(data: any) {
          setModalAdd(true);
@@ -181,13 +182,13 @@ export default function Page(props: {
    const [modalDetil, setModalDetil] = useState<boolean>(false);
    return (
       <>
-         {/* <ModalDetilproduct
-            product_id={idDetail}
+         <ModalDetil
+            detil_id={idDetail}
             show={modalDetil}
             onClose={() => {
                setModalDetil(false);
             }}
-         /> */}
+         />
          <ModalAdd
             ref={modalRef}
             onSubmit={(valueForm: any) => {
@@ -279,7 +280,7 @@ export default function Page(props: {
          />
          <div className="">
             <h2 className="text-xl font-bold">Product Management</h2>
-            <span className="text-sm"> List of product  </span>
+            <span className="text-sm"> List of product </span>
          </div>
 
          <div className="mt-2">
@@ -287,20 +288,24 @@ export default function Page(props: {
                <Card.Header>
                   <div className=" w-full">
                      List products
-                     {
-                        actionSelected.filter(v => v.type === "BUTTON_TOOLS").map(( act, iac ) =>(
+                     {actionSelected
+                        .filter((v) => v.type === "BUTTON_TOOLS")
+                        .map((act, iac) => (
                            <Button
                               key={iac}
                               className="float-right"
                               size={"sm"}
                               type="button"
                               color="primary"
-                              onClick={actions[act.function_name as keyof typeof actions]}
+                              onClick={
+                                 actions[
+                                    act.function_name as keyof typeof actions
+                                 ]
+                              }
                            >
                               {act.name}
                            </Button>
-                        ))
-                     }
+                        ))}
                   </div>
                </Card.Header>
                <Card.Body className="">
@@ -313,9 +318,20 @@ export default function Page(props: {
                      onChangeShow={setPagination}
                      currentPage={pagination.page}
                      currentShow={pagination.show}
-                     actionsMenu={generateActionListFunction(actionSelected, actions, onRenderActions)}
+                     actionsMenu={generateActionListFunction(
+                        actionSelected,
+                        actions,
+                        onRenderActions
+                     )}
                      iterationNumber={true}
                      columns={[
+                        {
+                           title: "Category",
+                           field: "name_product",
+                           onRender(item) {
+                              return item.category?.name_category || "Tidak Ada Category"
+                           }
+                        },
                         {
                            title: "Name",
                            field: "name_product",
@@ -325,13 +341,41 @@ export default function Page(props: {
                            field: "description",
                         },
                         {
+                           title: "Price (Rp)",
+                           className:"text-right",
+                           field: "price",
+                           onRender(item) {
+                              return thousandSparator(item.price);
+                           },
+                        },
+                        {
+                           title: "Discount",
+                           className:"text-right",
+                           field: "discount",
+                        },
+                        {
+                           title: "Stock",
+                           className:"text-right",
+                           field: "stock",
+                        },
+                        {
                            title: "status",
                            field: "is_active",
                            onRender(item) {
-                              if(item.is_active) return <span className=" rounded-3xl py-0 text-xs px-3 bg-primary-500 text-white"> Active </span>
-                              return <span className=" rounded-3xl py-0 text-xs px-3 bg-secondary-500 text-white" >Not Active</span>
+                              if (item.is_active)
+                                 return (
+                                    <span className=" rounded-3xl py-0 text-xs px-3 bg-primary-500 text-white">
+                                       {" "}
+                                       Active{" "}
+                                    </span>
+                                 );
+                              return (
+                                 <span className=" rounded-3xl py-0 text-xs px-3 bg-secondary-500 text-white">
+                                    Not Active
+                                 </span>
+                              );
                            },
-                        }
+                        },
                      ]}
                      pagination={true}
                   />
@@ -345,10 +389,10 @@ export default function Page(props: {
 export const getServerSideProps: GetServerSideProps = (context) =>
    authAdminMiddleware(context, async function (session) {
       let dataSession = session;
-     
+
       return {
          props: {
-            session: dataSession
+            session: dataSession,
          },
       };
    });
