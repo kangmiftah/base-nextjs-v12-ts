@@ -662,7 +662,6 @@ const AsyncSelect2 = React.forwardRef<AsyncSelect, AsyncSelect2Props>(function (
          let data = await filter(src)
          setDataOptions(data);
       }
-      setSrc("")
       setOptLoaded(true)
       setLoading(false)
    }

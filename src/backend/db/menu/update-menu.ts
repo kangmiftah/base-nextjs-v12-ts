@@ -269,7 +269,7 @@ async function main() {
          },
          {
             id:16,
-            function_name: "deleteCategory",
+            function_name: "deleteProduct",
             menu_id:10,
             name:"Delete Product",
             type: "DROPDOWN_IN_LIST",
