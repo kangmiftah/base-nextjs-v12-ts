@@ -6,7 +6,7 @@ Template for nextjs and iclude with module :
    - swagger UI for API Doc
    - Template admin
    - Template public
-   - React component with tailwond compatible
+   - React component with tailwind compatible
 ## Getting Started
 
 ### Create next app with template
@@ -90,6 +90,3 @@ yarn update-menu
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 Open [http://admin.localhost:3000](http://admin.localhost:3000) with your browser to see the result.
-
-
-Open [http://localhost:3000/api-docs](http://localhost:3000/api-docs) with your browser to see the SwaggerUI documentation API.
