@@ -26,14 +26,25 @@ export const axiosBaseQuery =
          method?: AxiosRequestConfig["method"] | "get";
          data?: AxiosRequestConfig["data"];
          params?: AxiosRequestConfig["params"];
+         queryParam?: {}
       },
       BaseQueryApi,
       {}
    > =>
-   async ({ url, method, data, params }) => {
+   async ({ url, method, data, params, queryParam }) => {
+
+      let uri = url
+      if (queryParam) {
+         var keys = Object.keys(queryParam);
+         keys.forEach((val, key) => {
+             if (key == 0) uri = uri + '?';
+             uri = uri + (val + '=' + queryParam[val as keyof typeof queryParam]);
+             if (key != keys.length - 1) uri = uri + '&';
+         });
+     }
       try {
          const result = await axios({
-            url: baseUrl + url,
+            url: baseUrl + uri,
             method,
             data,
             params,
@@ -59,14 +70,24 @@ export const axiosBaseQuery =
          method: AxiosRequestConfig["method"];
          data?: AxiosRequestConfig["data"];
          params?: AxiosRequestConfig["params"];
+         queryParam?: {}
       },
       unknown,
       unknown
    > =>
-   async ({ url, method, data, params }, api,extraOptions) => {
+   async ({ url, method, data, params, queryParam }, api,extraOptions) => {
+      let uri = url
+      if (queryParam) {
+         var keys = Object.keys(queryParam);
+         keys.forEach((val, key) => {
+             if (key == 0) uri = uri + '?';
+             uri = uri + (val + '=' + queryParam[val as keyof typeof queryParam]);
+             if (key != keys.length - 1) uri = uri + '&';
+         });
+     }
       try {
          const result = await axios({
-            url: baseUrl + url,
+            url: baseUrl + uri,
             method,
             data,
             params,

@@ -87,7 +87,7 @@ export default function Modal(props: ModalProps): JSX.Element {
                className={`relative ${dialogClassName} 
                   duration-800 ease-in-out transform transition-all
                   bg-white rounded h-auto
-                   shadow-md overflow-auto max-w-screen max-h-[calc(calc(100vh_-_25px))]
+                   shadow-md overflow-hidden max-w-screen max-h-[calc(100vh_-_25px)]
                   ${inModal ? "translate-y-0" : "-translate-y-[500%]"}
                   ${getSize(props.size || "md")} 
                   max-w-full
@@ -119,8 +119,8 @@ Modal.Body = function (props: ModalBodyProps) {
    } = useModal()
    // ${ state.size === "full" ? "h-[calc(100vh_-_150px)]" : "min-h-[50px]"} 
    return (
-      <div className={`flex justify-center items-center w-full min-h-[50px] overflow-auto `}>
-         <div className="relative w-full p-2 ">{props.children}</div>
+      <div className={`flex justify-center items-center w-full min-h-[50px] `}>
+         <div className="relative w-full p-2 overflow-auto max-h-[calc(100vh_-_200px)]">{props.children}</div>
       </div>
    );
 };

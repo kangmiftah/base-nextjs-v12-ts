@@ -7,7 +7,7 @@ export declare interface ModalState {
          size? : ModalSizeType = "md";
       },
       actions : {
-         onHide? : () => void
+         onHide? : () => any
       }
 }
 
@@ -15,9 +15,9 @@ export declare interface ModalProps extends React.PropsWithChildren {
    size? : ModalSizeType = "md";
    className? : React.ClassAttributes = "";
    style? : React.CSSProperties = {};
-   showModal? : boolean = false;
+   showModal : boolean = false;
    backdrop? : "default" | "static" = "static";
-   onHide? : () => void
+   onHide? :()=>any
 
 }
 

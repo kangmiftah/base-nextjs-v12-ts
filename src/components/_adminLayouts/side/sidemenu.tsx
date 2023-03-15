@@ -7,6 +7,9 @@ import { useSession } from "next-auth/react";
 import { IconTypeEnum, Menu } from "@prisma/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { layoutActions } from "../../../redux/slices/layouts/layoutSlice";
+import { actionSelectedType } from "../../../@types/redux";
 
 const ComponentIconMenu = {
    ...Fi,
@@ -66,32 +69,54 @@ export default function (props: SideMenuProps): JSX.Element {
    });
    const [isOpen, setIsOpen] = useState<number | null>(null);
    const { data, status }: { data: any; status: string } = useSession();
-   const menuList: Array<Menu & { childs: Array<Menu> }> | [] =
+   const menuList: Array<Menu & { childs: Array<Menu & {actionList : Array<actionSelectedType>}>, actionList : Array<actionSelectedType> }> | [] =
       data?.menuList || [];
    let router = useRouter();
-   // useEffect(function(){
-   //    let childKey = 0;
-   //    let key = menuList.findIndex((v) => {
-   //       return v.hash_child ? v.childs.some( (vc, cx) => {
-   //          console.log(router.asPath, v.url, vc.url)
-   //          console.log(v.url === router.asPath)
-   //          if(vc.url === router.asPath) childKey = cx;
-   //          return vc.url === router.asPath
-   //       }) :
-   //       v.url === router.asPath
-   //    })
-   //    setIsActive({
-   //       key,
-   //       childKey
-   //    })
-   // },[router.asPath])
+   const disp = useDispatch();
 
-   // useEffect(function(){
-   //    console.log(isActive)
-   // },[isActive])
    function getPath() {
-      return router.asPath?.replace("#", "")
+      return router.asPath?.replace("#", "");
    }
+   useEffect(
+      function () {
+         // console.log(menuList)
+         let menu = undefined;
+         let childKey: undefined | number = undefined;
+         let key: number = -1;
+         let actionSelected : Array<actionSelectedType> = [];
+         menuList.forEach((v, i) => {
+            if (v.childs)
+               v.childs.forEach((x, ic) => {
+                  if (x.url === getPath()) {
+                     childKey = ic;
+                     key= i
+                     menu = {
+                        name: x.name,
+                        url: x.url,
+                        isActive: true,
+                     };
+                     actionSelected = x.actionList || []
+                  }
+               });
+            if (v.url === getPath()) {
+               key = i;
+               childKey= undefined;
+               menu = {
+                  name: v.name,
+                  url: v.url,
+                  isActive: true,
+               };
+               actionSelected = v.actionList|| []
+            }
+         });
+         if (menu) disp(layoutActions.setBreadcrumbs([menu]));
+         if (actionSelected) disp(layoutActions.setActionSelected(actionSelected))
+         setIsActive({
+            childKey, key
+         })
+      },
+      [router.pathname, data]
+   );
    return (
       <>
          {menuList.map(
@@ -116,10 +141,16 @@ export default function (props: SideMenuProps): JSX.Element {
                transform 
             `,
                         {
-                           "hover:bg-sidebar-800": isActive.key === x ||  ( 
-                              hash_child ? (childs.some( vc => vc.url === getPath())) : (url === getPath()) ),
-                           "bg-sidebar-800":isActive.key === x ||  ( 
-                              hash_child ? (childs.some( vc => vc.url === getPath())) : (url === getPath()) ),
+                           "hover:bg-sidebar-800":
+                              isActive.key === x ||
+                              (hash_child
+                                 ? childs.some((vc) => vc.url === getPath())
+                                 : url === getPath()),
+                           "bg-sidebar-800":
+                              isActive.key === x ||
+                              (hash_child
+                                 ? childs.some((vc) => vc.url === getPath())
+                                 : url === getPath()),
                            // "rounded-t-md":isActive
                         }
                      )}
@@ -147,11 +178,11 @@ export default function (props: SideMenuProps): JSX.Element {
                         }}
                      >
                         {/* <div className=""> */}
-                        <span className="group-hover:font-bold ml-2 mr-5 text-2xl absolute left-0">
+                        <span className="group-hover:font-bold ml-2 mr-5 text-lg absolute left-0">
                            {getComponentIcon(icon_type, icon)}
                         </span>
                         <span
-                           className={classNames(" group-hover:font-bold", {
+                           className={classNames(" group-hover:font-bold text-xs", {
                               "font-bold":
                                  isActive.key === x || url === getPath(),
                            })}
@@ -182,24 +213,27 @@ export default function (props: SideMenuProps): JSX.Element {
                            className={`${classNames(
                               " mt-3 bg-sidebar-800 py-3 rounded-md",
                               {
-                                 hidden: !(isOpen === x || childs.some( vx => vx.url === getPath())),
+                                 hidden: !(
+                                    isOpen === x ||
+                                    childs.some((vx) => vx.url === getPath())
+                                 ),
                               }
                            )}`}
                         >
                            {childs?.map((c, i) => (
                               <Link href={c.url} key={i}>
                                  <dt
-                                    onClick={() =>
+                                    onClick={() => {
                                        setIsActive({
                                           key: x,
                                           childKey: i,
-                                       })
-                                    }
+                                       });
+                                    }}
                                     className={classNames(
                                        `
                                  mx-2 hover:font-bold 
                                  cursor-pointer rounded-md 
-                                 py-1 pl-10 
+                                 py-1 pl-10  text-xs
                                  hover:bg-sidebar-600`,
                                        {
                                           "bg-sidebar-600":

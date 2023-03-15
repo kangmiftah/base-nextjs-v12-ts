@@ -21,16 +21,20 @@ model Role {
 }
 
 model Users {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique
-  name       String?
-  password   String
-  role_id    Int?
-  created_at DateTime  @default(now())
-  updated_at DateTime? @updatedAt
-  created_by Int?
-  is_public  Boolean   @default(true)
-  role       Role?     @relation("UserRole", fields: [role_id], references: [id])
+  id             Int       @id @default(autoincrement())
+  email          String    @unique
+  name           String?
+  password       String
+  role_id        Int?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime? @updatedAt
+  created_by     Int?
+  is_public      Boolean   @default(true)
+  role           Role?     @relation("UserRole", fields: [role_id], references: [id])
+  profile_user   Profile? 
+  cart           Cart[]
+  transaction    Transaction[]
+  blog           Blog[]
 
   @@map("users")
 }
@@ -50,6 +54,7 @@ model Menu {
   parent     Menu?         @relation("ParentChild", fields: [parent_id], references: [id])
   childs     Menu[]        @relation("ParentChild")
   roleList   RoleMenu[]
+  order_no   Int?
 
   @@map("menu")
 }
@@ -59,8 +64,8 @@ model RoleMenu {
   role_id     Int
   assigned_at DateTime @default(now())
   assign_by   Int?
-  menuList    Menu     @relation(fields: [menu_id], references: [id])
-  roleList    Role     @relation(fields: [role_id], references: [id])
+  menuList    Menu     @relation(fields: [menu_id], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+  roleList    Role     @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([menu_id, role_id])
   @@map("role_menu")
@@ -73,8 +78,12 @@ model ActionMenu {
   function_name String
   menu_id       Int
   created_by    Int?
+  on_render     String?
+  class_name    String?
   menu          Menu             @relation("ActionList", fields: [menu_id], references: [id])
   roleList      RoleActionMenu[]
+
+  @@map("action_menu")
 }
 
 model RoleActionMenu {
@@ -82,12 +91,131 @@ model RoleActionMenu {
   action_menu_id Int
   assigned_at    DateTime   @default(now())
   assign_by      Int?
-  role           Role       @relation(fields: [role_id], references: [id])
-  actionMenu     ActionMenu @relation(fields: [action_menu_id], references: [id])
+  role           Role       @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  actionMenu     ActionMenu @relation(fields: [action_menu_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([role_id, action_menu_id])
   @@map("role_action_menu")
 }
+
+model Profile {
+  id         Int       @id @default(autoincrement())
+  no_hp      String    @db.VarChar(20)
+  address    String    @db.Text
+  path_photo String
+  user_id    Int       @unique
+  user       Users     @relation(fields: [user_id], references: [id])
+
+  @@map("profiles")
+}
+
+model Reference {
+  id          Int       @id @default(autoincrement())
+  type        String    @db.VarChar(200)
+  item_code   String    @db.VarChar(20)
+  description String    @db.Text
+  status      Boolean
+  created_by  Int?
+
+  @@map("references")
+}
+
+model Category {
+  id            Int       @id @default(autoincrement())
+  name_category String    @db.VarChar(200)
+  description   String    @db.Text
+  is_active     Boolean
+  created_by    Int?
+  product   Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id            Int       @id @default(autoincrement())
+  category_id   Int
+  name_product  String    @db.VarChar(200)  
+  price         Int
+  discount      Int
+  stock         Int
+  rate          Int
+  is_active     Boolean
+  description   String    @db.Text
+  category      Category  @relation(fields: [category_id], references: [id])
+  created_by    Int?
+  cart          Cart[]
+  detail_transaction DetailTransaction[]
+
+  @@map("products")
+}
+
+model Cart {
+  id              Int        @id @default(autoincrement())
+  product_id      Int
+  user_id         Int
+  price           Int
+  qty             Int
+  total           Int
+  product         Product    @relation(fields: [product_id], references: [id])
+  user            Users      @relation(fields: [user_id], references: [id])
+  date_input_cart DateTime   @default(now())
+
+  @@map("carts")
+}
+
+model Transaction {
+  id                  Int         @id @default(autoincrement())
+  user_id             Int
+  code_transaction    String
+  status_pembayaran   String
+  path_photo          String
+  shipping_address    String
+  delivery_service    String
+  description         String      @db.Text
+  user                Users       @relation(fields: [user_id], references: [id])
+  date_transaction    DateTime    @default(now())
+  detail_transaction  DetailTransaction[]
+
+  @@map("transactions")
+}
+
+model DetailTransaction {
+  id                Int       @id @default(autoincrement())
+  transaction_id    Int
+  product_id        Int
+  price             Int
+  qty               Int
+  total             Int
+  transaction       Transaction  @relation(fields: [transaction_id], references: [id])
+  product           Product  @relation(fields: [product_id], references: [id])
+
+  @@map("detail_transactions")
+}
+
+model Blog {
+  id                  Int         @id @default(autoincrement())
+  user_id             Int
+  title               String
+  description         String      @db.Text
+  path_photo          String
+  created_at          DateTime    @default(now())
+  user                Users       @relation(fields: [user_id], references: [id])
+  comentar            Comentar[]
+
+  @@map("blogs")
+}
+
+model Comentar {
+  id                  Int         @id @default(autoincrement())
+  blog_id             Int
+  email               String
+  coment              String      @db.Text
+  created_at          DateTime    @default(now())
+  blog                Blog        @relation(fields: [blog_id], references: [id])
+
+  @@map("comentars")
+}
+
 
 enum IconTypeEnum {
   CSS

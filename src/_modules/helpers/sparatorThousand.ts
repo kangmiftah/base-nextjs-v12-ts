@@ -8,3 +8,5 @@ export function thousandSparator(num : string) : string {
    }
    return maskingNumber + afterComa;
 }
+
+export const removeNumbering = (num:string) => num.toString().replace(/[^0-9 .]/g, "");

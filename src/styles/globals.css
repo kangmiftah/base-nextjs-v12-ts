@@ -17,7 +17,7 @@ body {
 }
 
 .sticky-nav {
-  @apply fixed top-[25px] rounded-lg left-[20%] w-[60%] shadow-md z-50;
+  @apply fixed top-[0px] rounded-lg left-[0px] w-[100%] shadow-md z-50;
   transition: all .5s ease;
 }
 
@@ -37,7 +37,7 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: '#282c37';
+  background: #CCC;
 }
 
 /* Handle on hover */

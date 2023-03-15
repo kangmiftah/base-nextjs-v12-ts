@@ -18,29 +18,85 @@ export const optionsAuth: NextAuthOptions = {
             let { session, user, token } = params
             let newUser = await prisma.users.findFirst({
                where: {
-                  email: String(session.user?.email)
+                  email: String(session?.user?.email)
                },
-               select: {
-                  role: true,
-                  is_public: true,
-                  email: true,
-                  id: true,
-                  name: true,
-                  role_id: true,
-               },
-            })
-            let menuList = await prisma.menu.findMany({
-               where: {
-                  AND : {
-                     parent_id : null
-                  }
-               },
-               include : {
-                  childs: true
+               include: {
+                  role: true
                }
             })
-            return { ...session, userDetail : { ... newUser}, menuList}
+            // let menuList =await prisma.roleMenu.findMany({
+            //    where: {
+            //       role_id:1,
+            //       menuList:{
+            //          parent_id: null
+            //       }
+            //    },
+            //    include:{
+            //       menuList:{
+            //          include:{
+            //             childs: true
+            //          }
+            //       }
+            //    },orderBy: {
+            //       menuList: {
+            //          order_no: "asc"
+            //       }
+            //    }
+            // })
+            let menuList = await prisma.menu.findMany({
+               where: {
+                  AND: {
+                     parent_id: null,
+                     roleList: {
+                        some: {
+                           roleList: {
+                              
+                              userList: {
+                                 some: {
+                                    id: (newUser?.id || 0),
+                                    is_public: false
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }
+               },
+               include: {
+                  actionList : {
+                     where: {
+                        roleList: {
+                           some: { role_id:(newUser?.role_id || 0)  }
+                        }
+                     }
+                  },
+                  childs: {
+                     include:{
+                        actionList: {
+                           where: {
+                              roleList: {
+                                 some: { role_id:(newUser?.role_id || 0)  }
+                              }
+                           }
+                        }
+                     },
+                     where: {
+                        roleList: {
+                           some: {
+                              role_id: (newUser?.role_id || 0)
+                           }
+                        }
+                     }
+                  }
+               },
+               orderBy: {
+                  order_no:"asc"
+               }
+            })
+            // console.log({newmenuList})
+            return { ...session, role: newUser?.role , userDetail : newUser, menuList}
       },
+   
       
    },
    providers: [

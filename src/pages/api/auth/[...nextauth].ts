@@ -17,7 +17,7 @@ export const optionsAuth: NextAuthOptions = {
             let { session, user, token } = params
             let newUser = await prisma.users.findFirst({
                where: {
-                  email: String(session.user?.email)
+                  email: String(session?.user?.email)
                },
                select: {
                 

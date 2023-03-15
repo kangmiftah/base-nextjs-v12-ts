@@ -12,9 +12,9 @@ export default async function(res: NextApiResponse, req : NextApiRequest,  callb
       message: "Not authenticated",
       data : null
    }
-   if (!session.ADMIN) {
+   if (!session) {
       res.status(401).json(response)
      return;
    }
-   return callback(session.ADMIN);
+   return callback(session);
 }

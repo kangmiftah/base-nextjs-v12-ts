@@ -1,4 +1,4 @@
-import {useCallback,useState } from "react";
+import {useCallback,useState, useEffect, useRef } from "react";
 // import { layoutActions } from '../../slices/layouts/layoutSlice';
 import type { RootState } from "../../../redux/store";
 import { useSelector, useDispatch } from "react-redux";
@@ -93,7 +93,7 @@ function DropdownUser() {
          await signOut({redirect:false})
          disp(layoutActions.setLoading({
             isLoading: true,
-            loadingText:"Clearing session. Please wait ..."
+            loadingText:"Clearing session?. Please wait ..."
          }))
          setTimeout(function(){
             router.reload();
@@ -106,13 +106,24 @@ function DropdownUser() {
 
    }
    const close = useCallback(()=>setOpen(false) ,[setOpen]) 
-   const [boxRef, setBoxRef] = useState<any>(null);
-   const [triggerRef, setTriggerRef] = useState<any>(null);
-   useOutside(boxRef, triggerRef, ()=>{close()});
+   const reffDrop = useRef<HTMLDivElement>(null);
+   const onclickAnother = function (e: MouseEvent) {
+      if (
+         reffDrop.current &&
+         !reffDrop.current?.contains(e.target as HTMLElement)
+      ) {
+         close();
+      }
+   };
+   useEffect(() => {
+      document.addEventListener("mouseup", onclickAnother);
+      return () => {
+         document.removeEventListener("mouseup", onclickAnother);
+      };
+   }, []);
    return (
-      <div ref={(ref) => setBoxRef(ref)}>
+      <div ref={reffDrop}>
          <button
-            ref={(ref) => setTriggerRef(ref)}
             onClick={() => setOpen((v) => !v)}
             id="sidebar"
             type="button"

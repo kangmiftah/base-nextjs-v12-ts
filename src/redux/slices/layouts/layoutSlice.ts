@@ -7,11 +7,22 @@ import {
 import { layoutStateType } from "../../../@types/redux/slices/layouts/layoutSlice";
 import { HYDRATE } from "next-redux-wrapper";
 import { RootState } from "../../store";
+import { AlertComponentTypes } from "../../../@types/components/alert";
 const initialState: layoutStateType = {
    sidebarOpen: true,
    title: "Aran Ui",
    isSticky: false,
    screenSize: { width: 0, height: 0 },
+   breadcrumbs: [],
+   alertList: [],
+   actionSelected: [],
+   contextMenu: {
+      show: false,
+      x: 0,
+      y: 0,
+      listMenu: [],
+      indexSelected: null,
+   },
    loading: {
       isLoading: false,
       loadingText: "Please Wait",
@@ -60,6 +71,61 @@ const layoutSlice = createSlice({
             loading: action.payload,
          };
       },
+      setBreadcrumbs: (
+         state: layoutStateType,
+         action: PayloadAction<layoutStateType["breadcrumbs"]>
+      ) => {
+         return {
+            ...state,
+            breadcrumbs: action.payload,
+         };
+      },
+      setContextMenu(
+         state: layoutStateType,
+         action: PayloadAction<layoutStateType["contextMenu"]>
+      ) {
+         return {
+            ...state,
+            contextMenu: action.payload,
+         };
+      },
+      closeContextMenu(state: layoutStateType) {
+         return {
+            ...state,
+            contextMenu: {
+               show: false,
+               x: 0,
+               y: 0,
+               listMenu: [],
+               indexSelected: null,
+            },
+         };
+      },
+      openAlert(
+         state: layoutStateType,
+         action: PayloadAction<AlertComponentTypes>
+      ) {
+         let unique: number = 0;
+         if((state.alertList || []).length > 0) unique = (state.alertList || [])[(state.alertList || []).length -1]?.unique + 1
+         return {
+            ...state,
+            alertList: [...(state.alertList || []), { ...action.payload, unique}],
+         };
+      },
+      closeAlert(state: layoutStateType, action: PayloadAction<number>) {
+         return {
+            ...state,
+            alertList: (state.alertList || []).filter(
+               (c, i) => c.unique !== action.payload
+            ),
+         };
+      },
+      clearAlert(state: layoutStateType) {
+         return { ...state, alertList: [] };
+      },
+      setActionSelected(state:layoutStateType, action: PayloadAction<layoutStateType["actionSelected"]>) {
+         return { ...state, actionSelected: action.payload}
+      }
    },
    extraReducers(builder) {
       builder
